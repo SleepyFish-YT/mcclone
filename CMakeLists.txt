@@ -13,6 +13,8 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm REQUIRED)
+# openal
+find_package(OpenAL CONFIG REQUIRED)
 # stb
 find_package(stb REQUIRED)
 # other
