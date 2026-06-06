@@ -45,6 +45,8 @@ add_executable(${PROJECT_NAME}
         src/me/sleepyfish/client/settings/KeyBinding.h
         src/me/sleepyfish/client/settings/GameSettings.cpp
         src/me/sleepyfish/client/settings/GameSettings.h
+        src/me/sleepyfish/audio/SoundEngine.cpp
+        src/me/sleepyfish/audio/SoundEngine.h
 
 )
 
