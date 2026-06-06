@@ -8,6 +8,7 @@ This is a Minecraft clone coded in C++20 made by SleepyFish.
 - [GLFW](https://github.com/glfw/glfw)
 - [GLAD](https://github.com/Dav1dde/glad)
 - [GLM](https://github.com/g-truc/glm)
+- [OpenAL](https://github.com/kcat/openal-soft)
 - [STB](https://github.com/nothings/stb)
 - [nlohmann/json](https://github.com/nlohmann/json)
 - [winm](https://learn.microsoft.com/en-us/search/?terms=winmm)
