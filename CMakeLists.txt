@@ -56,6 +56,7 @@ target_link_libraries(${PROJECT_NAME}
         glfw
         glad::glad
         glm::glm
+        OpenAL::OpenAL
         nlohmann_json::nlohmann_json
         winmm
 )
