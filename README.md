@@ -11,7 +11,7 @@ This is a Minecraft clone coded in C++20 made by SleepyFish.
 - [OpenAL](https://github.com/kcat/openal-soft)
 - [STB](https://github.com/nothings/stb)
 - [nlohmann/json](https://github.com/nlohmann/json)
-- [winm](https://learn.microsoft.com/en-us/search/?terms=winmm)
+- [winmm](https://learn.microsoft.com/en-us/search/?terms=winmm)
 
 ## Download
 - [McClone 1.0.0](https://github.com/SleepyFish/McClone/releases/tag/v1.0.0)

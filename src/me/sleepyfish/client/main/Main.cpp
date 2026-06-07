@@ -168,6 +168,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
     }
 
     glWindow.execute();
+    Logger::close();
 
     return 0;
 }

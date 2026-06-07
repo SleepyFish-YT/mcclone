@@ -18,10 +18,18 @@ KeyBinding::KeyBinding(const std::string& description, int keyCode, const std::s
     this->keyCategory = category;
     this->pressed = false;
     this->pressTime = 0;
+}
 
-    KeyBinding::keybindArray.push_back(this);
-    KeyBinding::hash[keyCode] = this;
-    KeyBinding::keybindSet.insert(category);
+void KeyBinding::registerBinding(KeyBinding* binding) {
+    KeyBinding::keybindArray.push_back(binding);
+    KeyBinding::hash[binding->keyCode] = binding;
+    KeyBinding::keybindSet.insert(binding->keyCategory);
+}
+
+void KeyBinding::unregisterAllBinds() {
+    KeyBinding::keybindArray.clear();
+    KeyBinding::hash.clear();
+    KeyBinding::keybindSet.clear();
 }
 
 void KeyBinding::onTick(int keyCode) {
@@ -37,7 +45,6 @@ void KeyBinding::setKeyBindState(int keyCode, bool pressed) {
     if (keyCode != 0) {
         auto it = KeyBinding::hash.find(keyCode);
         if (it != KeyBinding::hash.end()) {
-            Logger::trace("setKeyBindState(" + std::to_string(keyCode) + ", " + std::to_string(pressed) + ")");
             it->second->pressed = pressed;
         }
     }
@@ -61,6 +68,10 @@ const std::unordered_set<std::string>& KeyBinding::getKeybinds() {
     return KeyBinding::keybindSet;
 }
 
+size_t KeyBinding::getRegisteredCount() {
+    return KeyBinding::keybindArray.size();
+}
+
 bool KeyBinding::isKeyDown() const {
     return this->pressed;
 }
@@ -71,6 +82,10 @@ bool KeyBinding::isPressed() {
     }
     --this->pressTime;
     return true;
+}
+
+bool KeyBinding::isAny() {
+    return this->pressed || this->isPressed();
 }
 
 void KeyBinding::unpressKey() {
@@ -102,3 +117,4 @@ int KeyBinding::getKeyCodeDefault() const {
 void KeyBinding::setKeyCode(int keyCode) {
     this->keyCode = keyCode;
 }
+

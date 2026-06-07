@@ -57,10 +57,12 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
         this->keyBindHotbar8      = KeyBinding("key.hotbar.8", GLFW_KEY_8, "key.categories.inventory");
         this->keyBindHotbar9      = KeyBinding("key.hotbar.9", GLFW_KEY_9, "key.categories.inventory");
 
-        this->keyBindUseItem      = KeyBinding("key.use", GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay");
+        this->keyBindUseItem      = KeyBinding("key.use", 1000 + GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay");
         this->keyBindDrop         = KeyBinding("key.drop", GLFW_KEY_Q, "key.categories.gameplay");
-        this->keyBindAttack       = KeyBinding("key.attack", GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay");
-        this->keyBindPickItem     = KeyBinding("key.pickItem", GLFW_MOUSE_BUTTON_MIDDLE, "key.categories.gameplay");
+        this->keyBindAttack       = KeyBinding("key.attack", 1000 + GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay");
+        this->keyBindPickItem     = KeyBinding("key.pickItem", 1000 + GLFW_MOUSE_BUTTON_MIDDLE, "key.categories.gameplay");
+        this->keyBindMouseBack    = KeyBinding("key.mouseBack", 1000 + GLFW_MOUSE_BUTTON_4, "key.categories.gameplay");
+        this->keyBindMouseForward = KeyBinding("key.mouseForward", 1000 + GLFW_MOUSE_BUTTON_5, "key.categories.gameplay");
 
         this->keyBindChat         = KeyBinding("key.chat", GLFW_KEY_T, "key.categories.multiplayer");
         this->keyBindPlayerList   = KeyBinding("key.playerlist", GLFW_KEY_TAB, "key.categories.multiplayer");
@@ -76,16 +78,17 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
         this->keyBindZoom         = KeyBinding("key.zoom", GLFW_KEY_C, "key.categories.misc");
     }
 
-    this->keyBindHotbar = {};
-    this->keyBindHotbar.push_back(&this->keyBindHotbar1);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar2);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar3);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar4);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar5);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar6);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar7);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar8);
-    this->keyBindHotbar.push_back(&this->keyBindHotbar9);
+    this->keyBindHotbar = {
+            &this->keyBindHotbar1,
+            &this->keyBindHotbar2,
+            &this->keyBindHotbar3,
+            &this->keyBindHotbar4,
+            &this->keyBindHotbar5,
+            &this->keyBindHotbar6,
+            &this->keyBindHotbar7,
+            &this->keyBindHotbar8,
+            &this->keyBindHotbar9
+    };
 
     this->keyBinds = {};
     this->keyBinds.push_back(&this->keyBindForward);
@@ -100,6 +103,8 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->keyBinds.push_back(&this->keyBindDrop);
     this->keyBinds.push_back(&this->keyBindAttack);
     this->keyBinds.push_back(&this->keyBindPickItem);
+    this->keyBinds.push_back(&this->keyBindMouseBack);
+    this->keyBinds.push_back(&this->keyBindMouseForward);
     this->keyBinds.push_back(&this->keyBindChat);
     this->keyBinds.push_back(&this->keyBindPlayerList);
     this->keyBinds.push_back(&this->keyBindCommand);
@@ -111,6 +116,20 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->keyBinds.push_back(&this->keyBindToggleDebugOverlay);
     this->keyBinds.push_back(&this->keyBindExitGame);
     this->keyBinds.push_back(&this->keyBindZoom);
+
+    for (auto* kb : this->keyBinds) {
+        KeyBinding::registerBinding(kb);
+    }
+
+    for (auto* kb : this->keyBindHotbar) {
+        KeyBinding::registerBinding(kb);
+    }
+
+    if (KeyBinding::getRegisteredCount() != (this->keyBinds.size() + this->keyBindHotbar.size())) {
+        Logger::error("Failed to register one or more keybinds! Expected {}, got {}",
+                      this->keyBinds.size() + this->keyBindHotbar.size(),
+                      KeyBinding::getRegisteredCount());
+    }
 
     if (std::filesystem::exists(this->settingsFilePath)) {
         this->loadSettings();
@@ -179,6 +198,9 @@ void GameSettings::loadSettings() {
     this->gammaSetting         = this->settingsJson.value("gammaSetting", 1.0f);
     this->saturation           = this->settingsJson.value("saturation", 0.0f);
 
+    KeyBinding::resetKeyBindingArrayAndHash();
+    KeyBinding::unregisterAllBinds();
+
     for (auto& keybind : this->keyBinds) {
         if (this->settingsJson.contains(keybind->getKeyDescription())) {
             keybind->setKeyCode(this->settingsJson[keybind->getKeyDescription()]);
@@ -189,6 +211,20 @@ void GameSettings::loadSettings() {
         if (this->settingsJson.contains(keybind->getKeyDescription())) {
             keybind->setKeyCode(this->settingsJson[keybind->getKeyDescription()]);
         }
+    }
+
+    for (auto* kb : this->keyBinds) {
+        KeyBinding::registerBinding(kb);
+    }
+
+    for (auto* kb : this->keyBindHotbar) {
+        KeyBinding::registerBinding(kb);
+    }
+
+    if (KeyBinding::getRegisteredCount() != (this->keyBinds.size() + this->keyBindHotbar.size())) {
+        Logger::error("Failed to register one or more keybinds! Expected {}, got {}",
+                      this->keyBinds.size() + this->keyBindHotbar.size(),
+                      KeyBinding::getRegisteredCount());
     }
 
     Logger::log("Settings loaded from {}", this->settingsFilePath.string());

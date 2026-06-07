@@ -32,16 +32,21 @@ private:
 
 public:
 
+    KeyBinding() : keyCode(0), keyCodeDefault(0), pressed(false), pressTime(0) {}
     KeyBinding(const std::string& description, int keyCode, const std::string& category);
 
+    static void registerBinding(KeyBinding* binding);
+    static void unregisterAllBinds();
     static void onTick(int keyCode);
     static void setKeyBindState(int keyCode, bool pressed);
     static void unPressAllKeys();
     static void resetKeyBindingArrayAndHash();
     static const std::unordered_set<std::string>& getKeybinds();
+    static size_t getRegisteredCount();
 
     bool isKeyDown() const;
     bool isPressed();
+    bool isAny();
     std::string getKeyDescription() const;
     std::string getKeyCategory() const;
     std::string getKeyName() const;

@@ -1,3 +1,10 @@
+# lars keep annoying me when will this be opensource
+
+# folder for researching
+.research/
+
+# other random stuff
 .idea/
 cmake-build-debug/
 cmake-build-release/
+

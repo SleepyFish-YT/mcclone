@@ -6,13 +6,15 @@
 #ifndef MCCLONE_MINECRAFT_H
 #define MCCLONE_MINECRAFT_H
 
-#include <atomic>
-#include <thread>
-#include <chrono>
 #include "../util/Runnable.h"
 #include "../profiler/Profiler.h"
 #include "settings/GameSettings.h"
 #include "main/GameConfiguration.h"
+#include "audio/SoundEngine.h"
+
+#include <atomic>
+#include <thread>
+#include <chrono>
 
 /**
  * @author SleepyFish
@@ -46,7 +48,9 @@ public:
 
     Profiler mcProfiler;
 
-    GameSettings gameSettings;
+    GameSettings* gameSettings;
+
+    SoundEngine soundEngine;
 
     Minecraft(const GameConfiguration& gameConfig);
 

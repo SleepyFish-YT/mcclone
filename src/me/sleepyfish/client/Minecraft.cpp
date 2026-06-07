@@ -6,7 +6,7 @@
 #include "Minecraft.h"
 #include "../debug/Logger.h"
 
-Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable() {
+Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEngine(gameConfig.folderInformation.mcDataDir / "sounds") {
     this->mcDataDir = gameConfig.folderInformation.mcDataDir;
 
     this->leftClickCounter = 0;
@@ -19,7 +19,7 @@ Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable() {
     this->mcProfiler = Profiler();
     this->mcProfiler.profilingEnabled = true;
 
-    this->gameSettings = GameSettings(this->mcDataDir);
+    this->gameSettings = new GameSettings(this->mcDataDir);
 }
 
 void Minecraft::run() {
@@ -50,6 +50,7 @@ void Minecraft::runGameLoop() {
     ++this->tickCounter;
 
     auto now = std::chrono::steady_clock::now();
+
     if (std::chrono::duration_cast<std::chrono::milliseconds>(now - this->prevFrameTime).count() >= 1000) {
         this->prevFrameTime = now;
         this->tpsCounter = this->tickCounter;
@@ -58,6 +59,15 @@ void Minecraft::runGameLoop() {
         //Logger::trace("TPS: " + std::to_string(this->tpsCounter));
     }
 
+    if (this->gameSettings->keyBindAttack.isPressed()) {
+        Logger::trace("Keybind attack pressed");
+    }
+
+    this->mcProfiler.startSection("soundEngine");
+    {
+        this->soundEngine.cleanup();
+    }
+    this->mcProfiler.endSection();
 }
 
 bool Minecraft::isGamePaused() const {

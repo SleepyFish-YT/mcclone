@@ -121,16 +121,11 @@ void OpenGLWindow::run() {
 void OpenGLWindow::execute() {
     this->running = true;
 
-    // Release context so render thread can claim it
     glfwMakeContextCurrent(nullptr);
 
-    // Start minecraft update thread
     this->minecraft->start();
-
-    // Start render thread via Runnable::start()
     this->start();
 
-    // Main thread pumps events (must stay on main thread)
     while (this->running && !glfwWindowShouldClose(this->window)) {
         glfwPollEvents();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -146,18 +141,22 @@ void OpenGLWindow::execute() {
 }
 
 void OpenGLWindow::shutdown() {
+    this->minecraft->soundEngine.destory();
     Logger::log("Shutting down...\n");
-    Logger::close();
     glfwTerminate();
 }
 
 void OpenGLWindow::toggleFullscreen() {
+    static int x = 100;
+    static int y = 100;
+
     if (this->fullscreen) {
-        glfwSetWindowMonitor(this->window, nullptr, 100, 100, this->displayInfo.width, this->displayInfo.height, GLFW_DONT_CARE);
+        glfwSetWindowMonitor(this->window, nullptr, x, y, this->displayInfo.width, this->displayInfo.height, GLFW_DONT_CARE);
         this->fullscreen = false;
     } else {
+        glfwGetWindowPos(this->window, &x, &y); // save position for next toggle
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+        glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), x, y, mode->width, mode->height, mode->refreshRate);
         this->fullscreen = true;
     }
 }
@@ -170,14 +169,11 @@ void OpenGLWindow::toggleCaptureMouse() {
 void OpenGLWindow::handleKeypress(int key, int scancode, int action, int mods) {
     this->minecraft->mcProfiler.startSection("keyboard");
     {
-        GameSettings& settings = this->minecraft->gameSettings;
+        GameSettings& settings = *this->minecraft->gameSettings;
 
         if (action == GLFW_PRESS || action == GLFW_REPEAT) {
             KeyBinding::setKeyBindState(key, true);
-
-            if (action == GLFW_PRESS) {
-                KeyBinding::onTick(key);
-            }
+            KeyBinding::onTick(key);
         }
 
         if (action == GLFW_RELEASE) {
@@ -218,8 +214,6 @@ void OpenGLWindow::handleKeypress(int key, int scancode, int action, int mods) {
 
                 // F3 + key shortcuts
                 if (mods & GLFW_MOD_CONTROL) {
-
-                    // F3+F - render distance
                     if (key == GLFW_KEY_F) {
                         if (mods & GLFW_MOD_SHIFT) {
                             settings.renderDistanceChunks--;
@@ -241,23 +235,19 @@ void OpenGLWindow::handleKeypress(int key, int scancode, int action, int mods) {
                         // this->minecraft->refreshResources();
                     }
 
-                    // F3+R - refresh resources (alt)
                     if (key == GLFW_KEY_R) {
                         // this->minecraft->refreshResources();
                     }
 
-                    // F3+G - advanced tooltips
                     if (key == GLFW_KEY_G) {
                         settings.advancedItemTooltips = !settings.advancedItemTooltips;
                         settings.saveSettings();
                     }
 
-                    // F3+B - debug bounding boxes
                     if (key == GLFW_KEY_B) {
                         // this->minecraft->renderManager.setDebugBoundingBox(!this->minecraft->renderManager.isDebugBoundingBox());
                     }
 
-                    // F3+P - pause on lost focus
                     if (key == GLFW_KEY_P) {
                         settings.pauseOnLostFocus = !settings.pauseOnLostFocus;
                         settings.saveSettings();
@@ -274,60 +264,61 @@ void OpenGLWindow::handleKeypress(int key, int scancode, int action, int mods) {
                     // settings.hideGUI = !settings.hideGUI;
                 }
 
-                // F3 - debug overlay
                 if (key == settings.keyBindToggleDebugOverlay.getKeyCode()) {
                     settings.showDebugInfo = !settings.showDebugInfo;
                 }
             }
 
-            return;
-
-            // Hotbar 1-9
-            for (int i = 0; i < 9; i++) {
-                if (settings.keyBindHotbar[i]->isPressed()) {
+            for (int i = 0; i < 9; ++i) {
+                KeyBinding* keybinding = settings.keyBindHotbar[i];
+                if (keybinding != nullptr) {
                     // if (this->minecraft->thePlayer.isSpectator()) {
-                    //     this->minecraft->ingameGUI.getSpectatorGui().func_175260_a(i);
+                    //     this->minecraft->ingameGUI.getSpectatorGui().func_175260_a(l);
                     // } else {
-                    //     this->minecraft->thePlayer.inventory.currentItem = i;
+                    //     this->minecraft->thePlayer.inventory.currentItem = l;
                     // }
                 }
             }
 
             // Inventory
-            while (settings.keyBindInventory.isPressed()) {
-                // this->minecraft->displayGuiScreen(new GuiInventory(this->minecraft->thePlayer));
+            if (key == settings.keyBindInventory.getKeyCode()) {
+                // this->minecraft->displayGuiScreen(GuiInventory(this->minecraft->thePlayer));
             }
 
             // Drop item
-            while (settings.keyBindDrop.isPressed()) {
+            if (key == settings.keyBindDrop.getKeyCode()) {
                 // if (!this->minecraft->thePlayer.isSpectator()) {
                 //     this->minecraft->thePlayer.dropOneItem((mods & GLFW_MOD_CONTROL) != 0);
                 // }
             }
 
             // Chat
-            while (settings.keyBindChat.isPressed()) {
-                // this->minecraft->displayGuiScreen(new GuiChat());
+            if (key == settings.keyBindChat.getKeyCode()) {
+                // this->minecraft->displayGuiScreen(GuiChat());
             }
 
             // Command
-            while (settings.keyBindCommand.isPressed()) {
-                // this->minecraft->displayGuiScreen(new GuiChat("/"));
+            if (key == settings.keyBindCommand.getKeyCode()) {
+                // this->minecraft->displayGuiScreen(GuiChat("/"));
             }
 
-            // Attack / use item / pick block
             // if (this->minecraft->thePlayer.isUsingItem()) {
             //     if (!settings.keyBindUseItem.isKeyDown()) {
             //         this->minecraft->playerController.onStoppedUsingItem(this->minecraft->thePlayer);
             //     }
             // } else {
-            //     while (settings.keyBindAttack.isPressed())    { this->minecraft->leftClickMouse(); }
-            //     while (settings.keyBindUseItem.isPressed())   { this->minecraft->rightClickMouse(); }
-            //     while (settings.keyBindPickBlock.isPressed()) { this->minecraft->middleClickMouse(); }
+            //     if (key = settings.keyBindAttack.getKeyCode()) {
+            //         this->minecraft->leftClickMouse();
+            //     }
+            //     if (key = settings.keyBindUseItem.getKeyCode()) {
+            //         this->minecraft->rightClickMouse();
+            //     }
+            //     if (key = settings.keyBindPickBlock.getKeyCode()) {
+            //         this->minecraft->middleClickMouse();
+            //     }
             // }
 
-            // F12 - close window
-            if (key == GLFW_KEY_F12) {
+            if (key == settings.keyBindExitGame.getKeyCode()) {
                 glfwSetWindowShouldClose(this->window, true);
             }
         }
@@ -338,28 +329,38 @@ void OpenGLWindow::handleKeypress(int key, int scancode, int action, int mods) {
 void OpenGLWindow::handleMouseButton(int button, int action, int mods) {
     this->minecraft->mcProfiler.startSection("mouse");
     {
-        int keyCode = button;
+        int keyCode = 1000 + button;
 
         KeyBinding::setKeyBindState(keyCode, action == GLFW_PRESS);
 
         if (action == GLFW_PRESS) {
-            // Middle click - spectator GUI
-            if (button == GLFW_MOUSE_BUTTON_MIDDLE) {
+            KeyBinding::onTick(keyCode);
+
+            if (keyCode == this->minecraft->gameSettings->keyBindPickItem.getKeyCode()) {
                 // if (this->minecraft->thePlayer.isSpectator()) {
                 //     this->minecraft->ingameGUI.getSpectatorGui().func_175261_b();
                 // } else {
-                KeyBinding::onTick(keyCode);
+                //     this->minecraft->displayGuiScreen(GuiInventory(this->minecraft->thePlayer));
                 // }
-            } else {
-                KeyBinding::onTick(keyCode);
+                Logger::log("Middle click mouse");
             }
 
-            if (button == GLFW_MOUSE_BUTTON_LEFT) {
+            if (keyCode == this->minecraft->gameSettings->keyBindAttack.getKeyCode()) {
                 // this->minecraft->leftClickMouse();
+                // Logger::log("Left click mouse");
             }
 
-            if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+            if (keyCode == this->minecraft->gameSettings->keyBindUseItem.getKeyCode()) {
                 // this->minecraft->rightClickMouse();
+                // Logger::log("Right click mouse");
+            }
+
+            if (keyCode == this->minecraft->gameSettings->keyBindMouseForward.getKeyCode()) {
+                // Logger::log("Forward click mouse");
+            }
+
+            if (keyCode == this->minecraft->gameSettings->keyBindMouseBack.getKeyCode()) {
+                // Logger::log("Back click mouse");
             }
         }
 
@@ -382,13 +383,11 @@ void OpenGLWindow::handleMouseMove(double x, double y) {
 }
 
 void OpenGLWindow::handleMouseScroll(double xOffset, double yOffset) {
-    GameSettings& settings = this->minecraft->gameSettings;
-
     if (yOffset != 0) {
         int delta = yOffset > 0 ? 1 : -1;
 
         // if (this->minecraft->thePlayer.isSpectator()) {
-        //     if (this->minecraft->ingameGUI.getSpectatorGui().func_175262_a()) {
+        //     if (this->minecraft->ingameGUI.getSpectatorGui().func_175262_a()) { // func_175262_a = this.SpectatorMenu != null
         //         this->minecraft->ingameGUI.getSpectatorGui().func_175259_b(-delta);
         //     } else {
         //         float speed = std::clamp(thePlayer.capabilities.getFlySpeed() + delta * 0.005f, 0.0f, 0.2f);

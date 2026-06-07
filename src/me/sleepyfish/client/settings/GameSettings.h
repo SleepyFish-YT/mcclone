@@ -8,6 +8,8 @@
 
 #include "KeyBinding.h"
 
+#include <vector>
+#include <array>
 #include <glfw/glfw3.h>
 #include <nlohmann/json.hpp>
 #include <filesystem>
@@ -24,6 +26,11 @@ private:
     nlohmann::ordered_json settingsJson;
 
 public:
+
+    GameSettings(const GameSettings&) = delete;
+    GameSettings& operator=(const GameSettings&) = delete;
+    GameSettings(GameSettings&&) = delete;
+    GameSettings& operator=(GameSettings&&) = delete;
 
     float mouseSensitivity;
     bool  invertMouse;
@@ -72,6 +79,8 @@ public:
     KeyBinding keyBindDrop {"", 0, ""};
     KeyBinding keyBindAttack {"", 0, ""};
     KeyBinding keyBindPickItem {"", 0, ""};
+    KeyBinding keyBindMouseBack {"", 0, ""};
+    KeyBinding keyBindMouseForward {"", 0, ""};
 
     // Multiplayer
     KeyBinding keyBindChat {"", 0, ""};
@@ -88,7 +97,7 @@ public:
     KeyBinding keyBindExitGame {"", 0, ""};
     KeyBinding keyBindZoom {"", 0, ""};
 
-    std::vector<KeyBinding*> keyBindHotbar;
+    std::array<KeyBinding*, 9> keyBindHotbar;
     std::vector<KeyBinding*> keyBinds;
 
     GameSettings();
