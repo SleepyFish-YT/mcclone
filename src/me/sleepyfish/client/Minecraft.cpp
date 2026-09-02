@@ -36,8 +36,8 @@ void Minecraft::run() {
 
             auto elapsed = std::chrono::steady_clock::now() - tickStart;
             if (elapsed < TICK_DURATION) {
-                std::this_thread::sleep_for(TICK_DURATION - elapsed - std::chrono::milliseconds(1));
-                while (std::chrono::steady_clock::now() - tickStart < TICK_DURATION) {}
+                auto remaining = TICK_DURATION - elapsed;
+                std::this_thread::sleep_for(remaining); // sleep for the entire remaining time
             }
         }
     }
