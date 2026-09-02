@@ -27,7 +27,7 @@ void Minecraft::run() {
 
     ::timeBeginPeriod(1);
     {
-        const auto TICK_DURATION = std::chrono::milliseconds(50);
+        const auto TICK_DURATION = std::chrono::milliseconds(50); // 20 ticks/second
 
         while (this->running) {
             auto tickStart = std::chrono::steady_clock::now();
