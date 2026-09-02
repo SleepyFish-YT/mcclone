@@ -1,4 +1,4 @@
-# McClone 1.0.0 by SleepyFish
+# McClone 1.0.1 by SleepyFish
 
 ## Description
 This is a Minecraft clone coded in C++20 made by SleepyFish.
@@ -14,7 +14,7 @@ This is a Minecraft clone coded in C++20 made by SleepyFish.
 - [winmm](https://learn.microsoft.com/en-us/search/?terms=winmm)
 
 ## Download
-- [McClone 1.0.0](https://github.com/SleepyFish/McClone/releases/tag/v1.0.0)
+- [McClone 1.0.1](https://github.com/SleepyFish-YT/McClone/releases/tag/v1.0.1)
 
 ###### Signed by SleepyFish
 

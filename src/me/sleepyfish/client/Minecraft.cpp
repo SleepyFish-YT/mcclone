@@ -25,7 +25,7 @@ Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEng
 void Minecraft::run() {
     Logger::log("Minecraft update thread started");
 
-    timeBeginPeriod(1);
+    ::timeBeginPeriod(1);
     {
         const auto TICK_DURATION = std::chrono::milliseconds(50);
 
@@ -41,7 +41,7 @@ void Minecraft::run() {
             }
         }
     }
-    timeEndPeriod(1);
+    ::timeEndPeriod(1);
 
     Logger::log("Minecraft update thread stopped");
 }
@@ -60,7 +60,7 @@ void Minecraft::runGameLoop() {
     }
 
     if (this->gameSettings->keyBindAttack.isPressed()) {
-        Logger::trace("Keybind attack pressed");
+        //this->soundEngine.playSound("sigma", 0.8f, 0.7f);
     }
 
     this->mcProfiler.startSection("soundEngine");
@@ -79,5 +79,6 @@ bool Minecraft::isFramerateLimitBelowMax() const {
 }
 
 uint16_t Minecraft::getLimitFramerate() const {
-    return this->isGamePaused() ? 240 / 2 : 240;
+    const uint16_t framerate_limit = 240;
+    return this->isGamePaused() ? framerate_limit / 2 : framerate_limit;
 }

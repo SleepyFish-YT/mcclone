@@ -7,8 +7,11 @@
 #include "../../debug/Logger.h"
 
 extern "C" {
+
     #include "stb_vorbis.c"
+
     int stb_vorbis_decode_filename(const char *filename, int *channels, int *sample_rate, short **output);
+
 }
 
 SoundEngine::SoundEngine() {
@@ -19,8 +22,8 @@ SoundEngine::SoundEngine() {
     Logger::log("Created empty sound engine");
 }
 
-SoundEngine::SoundEngine(const std::filesystem::path& soundDir) {
-    this->soundDir = soundDir;
+SoundEngine::SoundEngine(const std::filesystem::path& sound_dir) {
+    this->soundDir = sound_dir;
 
     try {
         if (!std::filesystem::exists(this->soundDir)) {
@@ -78,22 +81,17 @@ void SoundEngine::destory(bool msg) {
     }
 }
 
-ALuint SoundEngine::loadBuffer(const std::string& n) {
-    std::string name = n + ".ogg";
+ALuint SoundEngine::loadBuffer(const std::string& audio_name) {
+    std::string file_name = audio_name + ".ogg";
 
-    if (!name.ends_with(".ogg")) {
-        Logger::error("Failed to load sound: " + name + " (unsupported format, only .ogg is supported)");
-        return 0;
-    }
-
-    std::filesystem::path soundPath = this->soundDir / name;
+    std::filesystem::path soundPath = this->soundDir / file_name;
     if (!std::filesystem::exists(soundPath)) {
-        Logger::warn("Sound not found in soundDir, falling back to path: " + name);
-        soundPath = std::filesystem::path(name);
+        Logger::warn("Sound not found in soundDir, falling back to path: " + file_name);
+        soundPath = std::filesystem::path(file_name);
     }
 
     if (!std::filesystem::exists(soundPath)) {
-        Logger::error("Failed to find sound: " + name);
+        Logger::error("Failed to find sound: " + file_name);
         return 0;
     }
 
@@ -121,16 +119,20 @@ void SoundEngine::setListenerPosition3D(float x, float y, float z) {
 }
 
 void SoundEngine::playSound(const std::string& name, float volume, float pitch) {
-    std::lock_guard<std::mutex> lock(this->mutex);
-
-    ALuint buffer = loadBuffer(name);
-    if (buffer == 0) {
-        Logger::error("Failed to load buffer from sound: " + name);
+    if (volume <= 0.0f || volume > 1.0f) {
         return;
     }
 
     if (pitch <= 0.0f) {
         pitch = 1.0f;
+    }
+
+    std::lock_guard<std::mutex> lock(this->mutex);
+
+    ALuint buffer = this->loadBuffer(name);
+    if (buffer == 0) {
+        Logger::error("Failed to load buffer from sound: " + name);
+        return;
     }
 
     ALuint source;
@@ -146,9 +148,17 @@ void SoundEngine::playSound(const std::string& name, float volume, float pitch) 
 }
 
 void SoundEngine::playSound3D(const std::string& name, float x, float y, float z, float volume, float pitch) {
+    if (volume <= 0.0f || volume > 1.0f) {
+        return;
+    }
+
+    if (pitch <= 0.0f) {
+        pitch = 1.0f;
+    }
+
     std::lock_guard<std::mutex> lock(this->mutex);
 
-    ALuint buffer = loadBuffer(name);
+    ALuint buffer = this->loadBuffer(name);
     if (buffer == 0) {
         Logger::error("Failed to load buffer from sound: " + name);
         return;

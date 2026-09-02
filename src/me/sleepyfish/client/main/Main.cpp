@@ -24,7 +24,7 @@ Main::Main() {
     // Version
     this->majorVersion = "1";
     this->minorVersion = "0";
-    this->patchVersion = "0";
+    this->patchVersion = "1";
 }
 
 int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
@@ -109,7 +109,6 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
         }
     }
 
-    // IntelliJ IDEA Project: src (C:/Users/Luca/Desktop/-/-/java/mcp1.8.9op/src)
     try {
         std::filesystem::path gameDir = executablePath; // std::filesystem::current_path();
 

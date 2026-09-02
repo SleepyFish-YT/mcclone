@@ -1,56 +1,86 @@
-# cmake
+# ======================== project variables ========================
+set(PROJECT_NAME "mcclone")
+set(PROJECT_VERSION "1.0.1")
+set(PROJECT_AUTHOR "sleepyfish")
+set(PROJECT_GITHUB "https://github.com/${PROJECT_AUTHOR}-yt/${PROJECT_NAME}")
+# ======================== project variables ========================
+
+# ======================== cmake ========================
 cmake_minimum_required(VERSION 3.31)
+# ======================== cmake ========================
 
-# project
-project(mcclone)
+# ======================== project ========================
+project(${PROJECT_NAME})
+# ======================== project ========================
 
-# c++
+# ======================== cxx ========================
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# ======================== cxx ========================
 
-# opengl
+# ======================== c ========================
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+# ======================== c ========================
+
+# ======================== render packages ========================
 find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm REQUIRED)
-# openal
-find_package(OpenAL CONFIG REQUIRED)
-# stb
-find_package(stb REQUIRED)
-# other
-find_package(nlohmann_json REQUIRED)
+# ======================== render packages ========================
 
-# files
+# ======================== openal ========================
+find_package(OpenAL CONFIG REQUIRED)
+# ======================== openal ========================
+
+# ======================== stb ========================
+find_package(stb REQUIRED)
+# ======================== stb ========================
+
+# ======================== json ========================
+find_package(nlohmann_json REQUIRED)
+# ======================== json ========================
+
+# ======================== files ========================
+set(SRC_DIR "${CMAKE_SOURCE_DIR}/src/me/${PROJECT_AUTHOR}")
+
 add_executable(${PROJECT_NAME}
         # main file
         main.cpp
 
         # src
-        src/me/sleepyfish/client/main/Main.cpp
-        src/me/sleepyfish/client/main/Main.h
-        src/me/sleepyfish/client/main/GameConfiguration.cpp
-        src/me/sleepyfish/client/main/GameConfiguration.h
-        src/me/sleepyfish/render/RenderInformation.cpp
-        src/me/sleepyfish/render/RenderInformation.h
-        src/me/sleepyfish/render/OpenGLWindow.cpp
-        src/me/sleepyfish/render/OpenGLWindow.h
-        src/me/sleepyfish/debug/Logger.cpp
-        src/me/sleepyfish/debug/Logger.h
-        src/me/sleepyfish/client/Minecraft.cpp
-        src/me/sleepyfish/client/Minecraft.h
-        src/me/sleepyfish/util/Runnable.h
-        src/me/sleepyfish/profiler/Profiler.cpp
-        src/me/sleepyfish/profiler/Profiler.h
-        src/me/sleepyfish/client/settings/KeyBinding.cpp
-        src/me/sleepyfish/client/settings/KeyBinding.h
-        src/me/sleepyfish/client/settings/GameSettings.cpp
-        src/me/sleepyfish/client/settings/GameSettings.h
-        src/me/sleepyfish/client/audio/SoundEngine.cpp
-        src/me/sleepyfish/client/audio/SoundEngine.h
+        ${SRC_DIR}/client/main/Main.cpp
+        ${SRC_DIR}/client/main/Main.h
+        ${SRC_DIR}/client/main/GameConfiguration.cpp
+        ${SRC_DIR}/client/main/GameConfiguration.h
+
+        ${SRC_DIR}/client/Minecraft.cpp
+        ${SRC_DIR}/client/Minecraft.h
+
+        ${SRC_DIR}/client/settings/KeyBinding.cpp
+        ${SRC_DIR}/client/settings/KeyBinding.h
+        ${SRC_DIR}/client/settings/GameSettings.cpp
+        ${SRC_DIR}/client/settings/GameSettings.h
+        ${SRC_DIR}/client/audio/SoundEngine.cpp
+        ${SRC_DIR}/client/audio/SoundEngine.h
+
+        ${SRC_DIR}/render/RenderInformation.cpp
+        ${SRC_DIR}/render/RenderInformation.h
+        ${SRC_DIR}/render/OpenGLWindow.cpp
+        ${SRC_DIR}/render/OpenGLWindow.h
+        ${SRC_DIR}/debug/Logger.cpp
+        ${SRC_DIR}/debug/Logger.h
+
+        ${SRC_DIR}/util/Runnable.h
+        ${SRC_DIR}/profiler/Profiler.cpp
+        ${SRC_DIR}/profiler/Profiler.h
+
 
 )
+# ======================== files ========================
 
-# linking libraries
+# ======================== linking libraries ========================
 target_link_libraries(${PROJECT_NAME}
         OpenGL::GL
         glfw
@@ -60,9 +90,19 @@ target_link_libraries(${PROJECT_NAME}
         nlohmann_json::nlohmann_json
         winmm
 )
+# ======================== linking libraries ========================
 
-# include the header only libraries
+# ======================== include the header only libraries ========================
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${stb_INCLUDE_DIRS}
 )
+# ======================== include the header only libraries ========================
 
+# ======================== other information ========================
+# IntelliJ IDEA Project: src (C:/Users/Luca/Desktop/-/-/java/mcp1.8.9op/src)
+#
+#
+#
+#
+#
+# ======================== other information ========================

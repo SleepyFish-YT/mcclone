@@ -98,7 +98,8 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
     for (const auto& [key, val] : this->profilingMap) {
         if (key.length() > prefix.length()
             && key.starts_with(prefix)
-            && key.find('.', prefix.length() + 1) == std::string::npos) {
+            && key.find('.', prefix.length() + 1) == std::string::npos
+        ) {
             double d0 = (double) val * 100.0 / (double) k;
             double d1 = (double) val * 100.0 / (double) i;
             std::string sectionName = key.substr(prefix.length());
@@ -132,14 +133,14 @@ void Profiler::printProfilerSection(const std::string &section) {
         const auto& result = data[i];
 
         int barWidth = 30;
-        int filled = (int)(result.usePercentage / 100.0 * barWidth);
+        int filled = (int) (result.usePercentage / 100.0 * barWidth);
         filled = std::clamp(filled, 0, barWidth);
 
         std::string bar = "[" + std::string(filled, '#') + std::string(barWidth - filled, '-') + "]";
         std::string line = "  " + bar + " " + result.name;
 
         while (line.length() < 52) line += " ";
-        line += std::to_string((int)result.usePercentage) + "." + std::to_string((int)(result.usePercentage * 10) % 10) + "%";
+        line += std::to_string((int) result.usePercentage) + "." + std::to_string((int) (result.usePercentage * 10) % 10) + "%";
 
         Logger::log(line);
     }
