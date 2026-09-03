@@ -93,6 +93,9 @@ add_executable(${PROJECT_NAME}
         # client/renderer
         ${SRC_DIR}/client/renderer/StitcherException.h
 
+        # client/renderer/culling
+        ${SRC_DIR}/client/renderer/culling/ICamera.h
+
         # debug
         ${SRC_DIR}/debug/Logger.cpp
         ${SRC_DIR}/debug/Logger.h
