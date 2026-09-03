@@ -18,14 +18,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: 'a42af01b72c28a8e1d7b48107b33e4f286a55ef9'
+      - name: Clone vcpkg
+        shell: pwsh
+        run: git clone https://github.com/microsoft/vcpkg.git C:/vcpkg
+
+      - name: Bootstrap vcpkg
+        shell: pwsh
+        run: C:/vcpkg/bootstrap-vcpkg.bat
 
       - name: Install dependencies
         shell: pwsh
-        run: vcpkg install glfw3 glad glm openal-soft stb nlohmann-json --triplet x64-windows
+        run: |
+          C:/vcpkg/vcpkg install glfw3 glad glm openal-soft stb nlohmann-json --triplet x64-windows
 
       - name: Configure CMake
         shell: pwsh
