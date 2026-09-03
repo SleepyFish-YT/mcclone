@@ -110,6 +110,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/block/material/MaterialLogic.h
         ${SRC_DIR}/block/material/MaterialLiquid.h
 
+        # world
+        ${SRC_DIR}/world/ColorizerFoliage.h
+
         # block/properties
         ${SRC_DIR}/block/properties/IProperty.h
         ${SRC_DIR}/block/properties/PropertyBool.h
