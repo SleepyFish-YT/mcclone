@@ -18,14 +18,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clone vcpkg
-        shell: pwsh
-        run: git clone https://github.com/microsoft/vcpkg.git C:/vcpkg
-
-      - name: Bootstrap vcpkg
-        shell: pwsh
-        run: C:/vcpkg/bootstrap-vcpkg.bat
-
       - name: Install dependencies
         shell: pwsh
         run: |
