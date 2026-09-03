@@ -71,9 +71,22 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/settings/GameSettings.cpp
         ${SRC_DIR}/client/settings/GameSettings.h
 
-        # client/audio
+        # client/audio - engine
         ${SRC_DIR}/client/audio/SoundEngine.cpp
         ${SRC_DIR}/client/audio/SoundEngine.h
+        # client/audio - others
+        ${SRC_DIR}/client/audio/ISound.h
+        ${SRC_DIR}/client/audio/ISoundEventAccessor.h
+        ${SRC_DIR}/client/audio/SoundEventAccessor.h
+        ${SRC_DIR}/client/audio/ITickableSound.h
+        ${SRC_DIR}/client/audio/SoundPoolEntry.h
+        ${SRC_DIR}/client/audio/SoundEventAccessorComposite.h
+        ${SRC_DIR}/client/audio/SoundRegistry.h
+        ${SRC_DIR}/client/audio/PositionedSound.h
+        ${SRC_DIR}/client/audio/MovingSound.h
+        ${SRC_DIR}/client/audio/PositionedSoundRecord.h
+        ${SRC_DIR}/client/audio/SoundCategory.h
+        ${SRC_DIR}/client/audio/SoundList.h
 
         # debug
         ${SRC_DIR}/debug/Logger.cpp
@@ -115,6 +128,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/ITickable.h
         ${SRC_DIR}/util/IStringSerializable.h
         ${SRC_DIR}/util/IProgressUpdate.h
+        ${SRC_DIR}/util/IRegistry.h
+        ${SRC_DIR}/util/RegistrySimple.h
         ${SRC_DIR}/util/FrameTimer.h
         ${SRC_DIR}/util/EnumWorldBlockLayer.h
         ${SRC_DIR}/util/EnchantmentNameParts.h
