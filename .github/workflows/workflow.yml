@@ -24,25 +24,18 @@ jobs:
           vcpkgGitCommitId: 'a42af01b72c28a8e1d7b48107b33e4f286a55ef9'
 
       - name: Install dependencies
-        run: |
-          vcpkg install opengl glfw3 glad glm openal-soft stb nlohmann-json --triplet x64-windows
+        run: vcpkg install opengl glfw3 glad glm openal-soft stb nlohmann-json --triplet x64-windows
 
-      - name: Configure CMake (Release)
-        if: matrix.build_type == 'Release'
+      - name: Configure CMake
         run: |
-          cmake -B build -S . ^
-            -DCMAKE_BUILD_TYPE=Release ^
-            -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-
-      - name: Configure CMake (Debug)
-        if: matrix.build_type == 'Debug'
-        run: |
-          cmake -B build -S . ^
-            -DCMAKE_BUILD_TYPE=Debug ^
-            -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake -B build -S . `
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
+            -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        shell: pwsh
 
       - name: Build
         run: cmake --build build --config ${{ matrix.build_type }}
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
