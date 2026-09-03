@@ -28,9 +28,7 @@ Timer::Timer(float tps) noexcept :
 void Timer::updateTimer() {
     const long long i = Minecraft::getSystemTime();
     const long long j = i - this->lastSyncSysClock;
-    const long long k = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now().time_since_epoch()
-    ).count();
+    const long long k = Minecraft::getHighResTime();
 
     const double d0 = static_cast<double>(k) / 1000.0;
 
@@ -57,7 +55,7 @@ void Timer::updateTimer() {
 
     double d2 = (d0 - this->lastHRTime) * this->timeSyncAdjustment;
     this->lastHRTime = d0;
-    d2 = std::clamp(d2, 0.0, 1.0);
+    d2 = std::clamp(d2, 0.0, 1.0); // not sure if clamp is needed.
 
     this->elapsedPartialTicks += static_cast<float>(d2 * this->timerSpeed * this->ticksPerSecond);
     this->elapsedTicks = static_cast<int>(this->elapsedPartialTicks);
