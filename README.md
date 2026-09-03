@@ -17,4 +17,3 @@ This is a Minecraft clone coded in C++20 made by SleepyFish.
 - [McClone 1.0.1](https://github.com/SleepyFish-YT/McClone/releases/tag/v1.0.1)
 
 ###### Signed by SleepyFish
-
