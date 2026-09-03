@@ -100,6 +100,14 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/debug/Logger.cpp
         ${SRC_DIR}/debug/Logger.h
 
+        # block/properties
+        ${SRC_DIR}/block/properties/IProperty.h
+        ${SRC_DIR}/block/properties/PropertyBool.h
+        ${SRC_DIR}/block/properties/PropertyDirection.h
+        ${SRC_DIR}/block/properties/PropertyEnum.h
+        ${SRC_DIR}/block/properties/PropertyHelper.h
+        ${SRC_DIR}/block/properties/PropertyInteger.h
+
         # profiler
         ${SRC_DIR}/profiler/Profiler.cpp
         ${SRC_DIR}/profiler/Profiler.h
