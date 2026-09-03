@@ -112,6 +112,8 @@ add_executable(${PROJECT_NAME}
 
         # world
         ${SRC_DIR}/world/ColorizerFoliage.h
+        ${SRC_DIR}/world/WorldType.h
+        ${SRC_DIR}/world/WorldSettings.h
 
         # block/properties
         ${SRC_DIR}/block/properties/IProperty.h

@@ -16,32 +16,28 @@ class MapColor {
 
 public:
 
-    static constexpr uint16_t ALPHA_FULL = 255;
-    static constexpr uint16_t ALPHA_NORMAL = 220;
-    static constexpr uint16_t ALPHA_DIM = 180;
-    static constexpr uint16_t ALPHA_DARK = 135;
+    static constexpr int ALPHA_MAP[] = {180, 220, 255, 135};
 
-    uint32_t colorValue;
+    int colorValue;
 
-    const uint8_t colorIndex;
+    const int colorIndex;
 
-     int getMapColor(const uint8_t lightLevel) const {
-         static constexpr uint16_t alphaMap[] = {ALPHA_DIM, ALPHA_NORMAL, ALPHA_FULL, ALPHA_DARK};
-         const uint16_t alpha = (lightLevel < 4) ? alphaMap[lightLevel] : 0;
+     int getMapColor(const int lightLevel) const {
+         const int alpha = (lightLevel < 4) ? ALPHA_MAP[lightLevel] : 0;
          if (alpha == 0) return 0;
 
-         const uint32_t r = ((this->colorValue >> 16) & 0xFF);
-         const uint32_t g = ((this->colorValue >> 8) & 0xFF);
-         const uint32_t b = (this->colorValue & 0xFF);
+         const int r_i = ((this->colorValue >> 16) & 0xFF);
+         const int g_i = ((this->colorValue >> 8) & 0xFF);
+         const int b_i = (this->colorValue & 0xFF);
 
-         const uint32_t red = r * alpha / 255;
-         const uint32_t green = g * alpha / 255;
-         const uint32_t blue = b * alpha / 255;
+         const int r = r_i * alpha / 255;
+         const int g = g_i * alpha / 255;
+         const int b = b_i * alpha / 255;
 
-         return (0xFF000000) | (red << 16) | (green << 8) | blue;
+         return (0xFF000000) | (r << 16) | (g << 8) | b;
      }
 
-    MapColor(const uint8_t index, const uint32_t color) :
+    MapColor(const int index, const int color) :
         colorIndex(index),
         colorValue(color)
     {
