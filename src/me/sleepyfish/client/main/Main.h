@@ -24,7 +24,7 @@ class Main {
 
 private:
 
-    HWND consoleWindow;
+    ::HWND consoleWindow;
 
     glm::ivec2 screenSize;
 
@@ -48,6 +48,8 @@ public:
 
     Main();
 
+    static inline const std::string AUTHOR = "SleepyFish";
+
     /**
      * @author SleepyFish
      * @brief This function starts the main window and holds the main loop
@@ -57,11 +59,11 @@ public:
 
     std::string getVersion() const;
 
-    void setConsoleWindow(HWND wnd) {
+    void setConsoleWindow(::HWND wnd) {
         this->consoleWindow = wnd;
     }
 
-    HWND getConsoleWindow() {
+    ::HWND getConsoleWindow() {
         return this->consoleWindow;
     }
 

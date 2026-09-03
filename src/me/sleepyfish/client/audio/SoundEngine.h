@@ -8,6 +8,7 @@
 
 #include <AL/al.h>
 #include <AL/alc.h>
+
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -22,8 +23,8 @@ class SoundEngine {
 public:
 
     struct ActiveSound {
-        ALuint source;
-        ALuint buffer;
+        ::ALuint source;
+        ::ALuint buffer;
     };
 
     SoundEngine();
@@ -42,10 +43,10 @@ public:
 
 private:
 
-    ALuint loadBuffer(const std::string& name);
+    ::ALuint loadBuffer(const std::string& name);
 
-    ALCdevice* device;
-    ALCcontext* context;
+    ::ALCdevice* device;
+    ::ALCcontext* context;
     std::filesystem::path soundDir;
     std::vector<ActiveSound> activeSources;
     std::mutex mutex;

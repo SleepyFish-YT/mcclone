@@ -35,6 +35,9 @@ public:
     KeyBinding() : keyCode(0), keyCodeDefault(0), pressed(false), pressTime(0) {}
     KeyBinding(const std::string& description, int keyCode, const std::string& category);
 
+    // disable const copy
+    KeyBinding(const KeyBinding&) = delete;
+
     static void registerBinding(KeyBinding* binding);
     static void unregisterAllBinds();
     static void onTick(int keyCode);

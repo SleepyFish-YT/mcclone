@@ -4,6 +4,7 @@
 //
 
 #include "Profiler.h"
+
 #include "../debug/Logger.h"
 
 Profiler::Profiler() {

@@ -21,6 +21,7 @@ class Profiler {
 public:
 
     struct Result {
+
         std::string name;
         double usePercentage;
         double totalUsePercentage;
@@ -42,6 +43,7 @@ public:
         int getColor() const {
             return (std::hash<std::string>{}(this->name) & 11184810) + 4473924;
         }
+
     };
 
     bool profilingEnabled;

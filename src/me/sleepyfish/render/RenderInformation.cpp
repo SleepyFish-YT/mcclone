@@ -8,12 +8,12 @@
 #include "../debug/Logger.h"
 
 void RenderInformation::init() {
-    this->vendor   = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
-    this->renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
-    this->version  = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    this->vendor   = reinterpret_cast<const char*>(::glGetString(GL_VENDOR));
+    this->renderer = reinterpret_cast<const char*>(::glGetString(GL_RENDERER));
+    this->version  = reinterpret_cast<const char*>(::glGetString(GL_VERSION));
 
-    glGetIntegerv(GL_MAJOR_VERSION, &this->majorVersion);
-    glGetIntegerv(GL_MINOR_VERSION, &this->minorVersion);
+    ::glGetIntegerv(GL_MAJOR_VERSION, &this->majorVersion);
+    ::glGetIntegerv(GL_MINOR_VERSION, &this->minorVersion);
 }
 
 void RenderInformation::print() const {

@@ -3,9 +3,11 @@
 // Project: mcclone
 //
 
-#include <GLFW/glfw3.h>
 #include "KeyBinding.h"
+
 #include "../../debug/Logger.h"
+
+#include <GLFW/glfw3.h>
 
 std::vector<KeyBinding*> KeyBinding::keybindArray {};
 std::unordered_map<int, KeyBinding*> KeyBinding::hash {};
@@ -102,7 +104,7 @@ std::string KeyBinding::getKeyCategory() const {
 }
 
 std::string KeyBinding::getKeyName() const {
-    const char* name = glfwGetKeyName(this->keyCode, 0);
+    const char* name = ::glfwGetKeyName(this->keyCode, 0);
     return name ? std::string(name) : "UNKNOWN";
 }
 

@@ -6,7 +6,6 @@
 #ifndef MCCLONE_LOGGER_H
 #define MCCLONE_LOGGER_H
 
-#include <windows.h>
 #include <string>
 #include <filesystem>
 #include <format>
@@ -42,6 +41,8 @@ public:
 
     static void error(const std::string& txt, bool writeToFile = true);
 
+    static void fatal(const std::string& txt, bool writeToFile = true);
+
     /**
      * @brief This function is used to log trace information without writing to the file
      */
@@ -60,6 +61,11 @@ public:
     template<typename... Args>
     static void error(const std::string& fmt, Args&&... args) {
         Logger::error(std::vformat(fmt, std::make_format_args(args...)));
+    }
+
+    template<typename... Args>
+    static void fatal(const std::string& fmt, Args&&... args) {
+        Logger::fatal(std::vformat(fmt, std::make_format_args(args...)));
     }
 
     /**

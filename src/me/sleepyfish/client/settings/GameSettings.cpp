@@ -4,8 +4,10 @@
 //
 
 #include "GameSettings.h"
+
 #include "../../debug/Logger.h"
 
+#include <glfw/glfw3.h>
 #include <fstream>
 
 GameSettings::GameSettings() {
@@ -15,7 +17,7 @@ GameSettings::GameSettings() {
 GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->settingsFilePath = (std::filesystem::path(settingsParentPath) / "options.json");
 
-    this->mouseSensitivity = 0.5F;
+    this->mouseSensitivity = 0.5f;
     this->invertMouse = false;
 
     this->limitFramerate = 240;
@@ -76,6 +78,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
         this->keyBindToggleDebugOverlay = KeyBinding("key.toggleDebugOverlay", GLFW_KEY_F3, "key.categories.misc");
         this->keyBindExitGame     = KeyBinding("key.exitGame", GLFW_KEY_F12, "key.categories.misc");
         this->keyBindZoom         = KeyBinding("key.zoom", GLFW_KEY_C, "key.categories.misc");
+        this->keyFreelook         = KeyBinding("key.freelook", GLFW_KEY_LEFT_ALT, "key.categories.misc");
     }
 
     this->keyBindHotbar = {
@@ -116,6 +119,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->keyBinds.push_back(&this->keyBindToggleDebugOverlay);
     this->keyBinds.push_back(&this->keyBindExitGame);
     this->keyBinds.push_back(&this->keyBindZoom);
+    this->keyBinds.push_back(&this->keyFreelook);
 
     for (auto* kb : this->keyBinds) {
         KeyBinding::registerBinding(kb);
@@ -139,8 +143,8 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     }
 }
 
-nlohmann::ordered_json GameSettings::createDefaultSettings() {
-    nlohmann::ordered_json json = {
+::nlohmann::ordered_json GameSettings::createDefaultSettings() {
+    ::nlohmann::ordered_json json = {
             {"mouseSensitivity", 0.5f},
             {"invertMouse", false},
             {"limitFramerate", 240},

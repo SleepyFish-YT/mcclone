@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <ctime>
+#include <windows.h>
+#include <debugapi.h>
 
 std::string Logger::getPrefix() {
     std::time_t t = std::time(nullptr);
@@ -89,7 +91,7 @@ void Logger::close() {
 void Logger::log(const std::string& txt, bool writeToFile) {
     std::string formatted = Logger::getPrefix() + "[main/INFO]: " + txt;
     std::cout << formatted << std::endl;
-    OutputDebugStringA((formatted + "\n").c_str());
+    ::OutputDebugStringA((formatted + "\n").c_str());
 
     if (writeToFile) {
         Logger::writeToFile(formatted);
@@ -99,7 +101,7 @@ void Logger::log(const std::string& txt, bool writeToFile) {
 void Logger::warn(const std::string& txt, bool writeToFile) {
     std::string formatted = Logger::getPrefix() + "[main/WARN]: " + txt;
     std::cerr << formatted << std::endl;
-    OutputDebugStringA((formatted + "\n").c_str());
+    ::OutputDebugStringA((formatted + "\n").c_str());
 
     if (writeToFile) {
         Logger::writeToFile(formatted);
@@ -109,7 +111,17 @@ void Logger::warn(const std::string& txt, bool writeToFile) {
 void Logger::error(const std::string& txt, bool writeToFile) {
     std::string formatted = Logger::getPrefix() + "[main/ERROR]: " + txt;
     std::cerr << formatted << std::endl;
-    OutputDebugStringA((formatted + "\n").c_str());
+    ::OutputDebugStringA((formatted + "\n").c_str());
+
+    if (writeToFile) {
+        Logger::writeToFile(formatted);
+    }
+}
+
+void Logger::fatal(const std::string& txt, bool writeToFile) {
+    std::string formatted = Logger::getPrefix() + "[main/FATAL]: " + txt;
+    std::cerr << formatted << std::endl;
+    ::OutputDebugStringA((formatted + "\n").c_str());
 
     if (writeToFile) {
         Logger::writeToFile(formatted);
@@ -119,7 +131,7 @@ void Logger::error(const std::string& txt, bool writeToFile) {
 void Logger::trace(const std::string& txt, bool writeToFile) {
     std::string formatted = Logger::getPrefix() + "[main/TRACE]: " + txt;
     std::cout << formatted << std::endl;
-    OutputDebugStringA((formatted + "\n").c_str());
+    ::OutputDebugStringA((formatted + "\n").c_str());
 
     if (writeToFile) {
         Logger::writeToFile(formatted);

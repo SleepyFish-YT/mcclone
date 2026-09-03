@@ -4,6 +4,7 @@
 //
 
 #include "Main.h"
+
 #include "../../debug/Logger.h"
 #include "../../render/OpenGLWindow.h"
 
@@ -29,17 +30,19 @@ Main::Main() {
 
 int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
     this->arguments = std::vector<std::string>(argv, argv + argc);
-    this->screenSize = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
+    this->screenSize = {::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN)};
 
     glm::ivec2 windowSize = {1050, 700};
+
+    // clion shows this is unused but it is used. (search for this->gameConfiguration =) to find it.
     bool showGlErrors = true;
-    bool fullscreen = false;
+    bool isFullscreen = false;
     bool isDemo = false;
-    bool debug = false;
+    bool isDebug = false;
 
     // Check arguments
     {
-        std::string args_str = "";
+        std::string args_str; // initializing this is useless performance waste
         for (const std::string& arg : this->arguments) {
             args_str += arg + " ";
         }
@@ -50,7 +53,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
 
             if (arg == "--debug") {
                 Logger::log("Debug mode enabled");
-                debug = true;
+                isDebug = true;
             }
 
             if (arg == "--ignoreGlErrors") {
@@ -70,7 +73,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
                 if (this->arguments[i + 1] == "fullscreen") {
                     windowSize.x = this->screenSize.x;
                     windowSize.y = this->screenSize.y;
-                    fullscreen = true;
+                    isFullscreen = true;
                     i += 1; // skip "fullscreen"
                 } else {
                     if (i + 2 >= this->arguments.size()) {
@@ -91,8 +94,8 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
             }
         }
 
-        if (!debug) {
-            ShowWindow(this->consoleWindow, SW_HIDE);
+        if (!isDebug) {
+            ::ShowWindow(this->consoleWindow, SW_HIDE);
         }
     }
 
@@ -103,14 +106,14 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
             return -1;
         }
 
-        if (windowSize.x > this->screenSize.x || windowSize.y > this->screenSize.y) {
+        if (windowSize.x > this->screenSize.x + 8 || windowSize.y > this->screenSize.y + 8) { // + 8 to account other things
             Logger::error("Window size does not fit on screen");
             return -1;
         }
     }
 
     try {
-        std::filesystem::path gameDir = executablePath; // std::filesystem::current_path();
+        const std::filesystem::path& gameDir = executablePath; // changed from copy. better this way for memory
 
         std::filesystem::path gameDirRessourcepacks = gameDir / "ressourcepacks";
         if (!std::filesystem::exists(gameDirRessourcepacks)) {
@@ -146,12 +149,12 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
         }
 
         this->gameConfiguration = {
-                GameConfiguration::DisplayInformation(windowSize.x, windowSize.y, fullscreen, showGlErrors),
+                GameConfiguration::DisplayInformation(windowSize.x, windowSize.y, isFullscreen, showGlErrors),
                 GameConfiguration::FolderInformation(gameDir, gameDirRessourcepacks, gameDirAssets, assetIndex),
                 GameConfiguration::GameInformation(isDemo, this->getVersion()),
                 GameConfiguration::ServerInformation("testName.de", 3333),
                 GameConfiguration::UserInformation("username"),
-                debug
+                isDebug
         };
     } catch (const std::exception& e) {
         Logger::error("Failed to create game configuration: " + std::string(e.what()));
@@ -160,8 +163,9 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
 
     Minecraft minecraft {this->gameConfiguration};
 
-    std::string title = "McClone [" + this->getVersion() + "] (C++20) by SleepyFish";
-    OpenGLWindow glWindow {this->gameConfiguration.displayInformation, title, &minecraft};
+    // if im correct, std::move should be used here, to move it from local to OpenGLWindow, since it is not used after this.
+    std::string title = "McClone [" + this->getVersion() + "] (C++20) by " + Main::AUTHOR;
+    OpenGLWindow glWindow {this->gameConfiguration.displayInformation, std::move(title), &minecraft};
     if (!glWindow.init()) {
         return -1;
     }

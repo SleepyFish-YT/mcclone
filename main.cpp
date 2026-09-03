@@ -11,13 +11,9 @@ int main(int argc, char* argv[]) {
     Main mainInstance;
 
     // Get executable path without file name
-    std::string executablePath = argv[0];
-    std::string::size_type pos = executablePath.find_last_of("\\/");
-    if (pos != std::string::npos) {
-        executablePath = executablePath.substr(0, pos);
-    }
+    const std::filesystem::path executablePath = std::filesystem::path(argv[0]).parent_path();
 
-    if (executablePath.empty()) {
+    if (executablePath.empty() || !std::filesystem::is_directory(executablePath)) {
         Logger::error("Failed to get executable path");
         return -1;
     }
@@ -28,15 +24,14 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    Logger::init((std::filesystem::path(executablePath) / "logs"));
+    Logger::init(executablePath / "logs");
     if (!Logger::isInitialized()) {
         Logger::error("Failed to initialize logger");
         return -1;
     }
 
-    // Pass console window handle to main instance
-    mainInstance.setConsoleWindow(GetConsoleWindow());
-
+    // Pass console window handle to main instance even tho since 1.0.0 it is not used.
+    mainInstance.setConsoleWindow(::GetConsoleWindow());
     return mainInstance.main(argc, argv, executablePath);
 }
 

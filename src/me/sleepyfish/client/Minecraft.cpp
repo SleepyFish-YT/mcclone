@@ -4,9 +4,18 @@
 //
 
 #include "Minecraft.h"
+
+#include "../profiler/Profiler.h"
+#include "settings/GameSettings.h"
+#include "audio/SoundEngine.h"
+
 #include "../debug/Logger.h"
 
-Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEngine(gameConfig.folderInformation.mcDataDir / "sounds") {
+#include <windows.h>
+#include <timeapi.h>
+#include <glfw/glfw3.h>
+
+Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEngine(new SoundEngine(gameConfig.folderInformation.mcDataDir / "sounds")) {
     this->mcDataDir = gameConfig.folderInformation.mcDataDir;
 
     this->leftClickCounter = 0;
@@ -16,16 +25,28 @@ Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEng
     this->prevFrameTime = std::chrono::steady_clock::now();
     this->gamePaused = false;
 
-    this->mcProfiler = Profiler();
-    this->mcProfiler.profilingEnabled = true;
+    this->mcProfiler = new Profiler();
+    this->mcProfiler->profilingEnabled = true;
 
     this->gameSettings = new GameSettings(this->mcDataDir);
+}
+
+long long Minecraft::getSystemTime() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+    ).count();
+}
+
+long long Minecraft::getHighResTime() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()
+    ).count();
 }
 
 void Minecraft::run() {
     Logger::log("Minecraft update thread started");
 
-    ::timeBeginPeriod(1);
+    ::timeBeginPeriod(1u);
     {
         const auto TICK_DURATION = std::chrono::milliseconds(50); // 20 ticks/second
 
@@ -41,7 +62,7 @@ void Minecraft::run() {
             }
         }
     }
-    ::timeEndPeriod(1);
+    ::timeEndPeriod(1u);
 
     Logger::log("Minecraft update thread stopped");
 }
@@ -60,14 +81,14 @@ void Minecraft::runGameLoop() {
     }
 
     if (this->gameSettings->keyBindAttack.isPressed()) {
-        //this->soundEngine.playSound("sigma", 0.8f, 0.7f);
+        this->soundEngine->playSound("sigma", 0.8f, 0.9f);
     }
 
-    this->mcProfiler.startSection("soundEngine");
+    this->mcProfiler->startSection("soundEngine");
     {
-        this->soundEngine.cleanup();
+        this->soundEngine->cleanup();
     }
-    this->mcProfiler.endSection();
+    this->mcProfiler->endSection();
 }
 
 bool Minecraft::isGamePaused() const {
@@ -84,7 +105,7 @@ uint16_t Minecraft::getLimitFramerate() const {
 }
 
 void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
-    this->mcProfiler.startSection("keyboard");
+    this->mcProfiler->startSection("keyboard");
     {
         GameSettings &settings = *this->gameSettings;
 
@@ -232,11 +253,11 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
             // }
         }
     }
-    this->mcProfiler.endSection();
+    this->mcProfiler->endSection();
 }
 
 void Minecraft::handleMouseButton(int button, int action, int mods) {
-    this->mcProfiler.startSection("mouse");
+    this->mcProfiler->startSection("mouse");
     {
         int keyCode = 1000 + button;
 
@@ -280,7 +301,7 @@ void Minecraft::handleMouseButton(int button, int action, int mods) {
             // }
         }
     }
-    this->mcProfiler.endSection();
+    this->mcProfiler->endSection();
 }
 
 void Minecraft::handleMouseScroll(double xOffset, double yOffset) {

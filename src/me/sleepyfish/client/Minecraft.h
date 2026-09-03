@@ -7,14 +7,17 @@
 #define MCCLONE_MINECRAFT_H
 
 #include "../util/Runnable.h"
-#include "../profiler/Profiler.h"
-#include "settings/GameSettings.h"
+
 #include "main/GameConfiguration.h"
-#include "audio/SoundEngine.h"
 
 #include <atomic>
 #include <thread>
 #include <chrono>
+#include <filesystem>
+
+class Profiler;
+class GameSettings;
+class SoundEngine;
 
 /**
  * @author SleepyFish
@@ -46,19 +49,33 @@ public:
 
     std::filesystem::path mcDataDir;
 
-    Profiler mcProfiler;
+    Profiler *mcProfiler;
 
-    GameSettings* gameSettings;
+    GameSettings *gameSettings;
 
-    SoundEngine soundEngine;
+    SoundEngine *soundEngine;
 
-    Minecraft(const GameConfiguration& gameConfig);
+    explicit Minecraft(const GameConfiguration& gameConfig);
+
+    static long long getSystemTime();
+
+    static long long getHighResTime();
 
     bool isGamePaused() const;
 
     bool isFramerateLimitBelowMax() const;
 
     uint16_t getLimitFramerate() const;
+
+    void handleKeypress(int key, int scancode, int action, int mods);
+
+    void handleMouseButton(int button, int action, int mods);
+
+    void handleMouseScroll(double xOffset, double yOffset);
+
+    void handleMouseMove(double x, double y);
+
+    void onFullscreenChange(bool fullscreen);
 
 };
 

@@ -8,11 +8,10 @@
 
 #include "KeyBinding.h"
 
-#include <vector>
-#include <array>
-#include <glfw/glfw3.h>
 #include <nlohmann/json.hpp>
 #include <filesystem>
+#include <vector>
+#include <array>
 
 /**
  * @author SleepyFish
@@ -23,33 +22,34 @@ class GameSettings {
 private:
 
     std::filesystem::path settingsFilePath;
-    nlohmann::ordered_json settingsJson;
+    ::nlohmann::ordered_json settingsJson;
 
 public:
 
+    // disable copy and move
     GameSettings(const GameSettings&) = delete;
     GameSettings& operator=(const GameSettings&) = delete;
     GameSettings(GameSettings&&) = delete;
     GameSettings& operator=(GameSettings&&) = delete;
 
     float mouseSensitivity;
-    bool  invertMouse;
+    bool invertMouse;
 
-    int   limitFramerate;
+    int limitFramerate;
 
-    int   renderDistanceChunks;
-    bool  enableVsync;
-    bool  fboEnable;
-    bool  useVbo;
+    int renderDistanceChunks;
+    bool enableVsync;
+    bool fboEnable;
+    bool useVbo;
 
-    bool  fullScreen;
-    bool  pauseOnLostFocus;
-    bool  showDebugInfo;
-    bool  heldItemTooltips;
-    bool  advancedItemTooltips;
+    bool fullScreen;
+    bool pauseOnLostFocus;
+    bool showDebugInfo;
+    bool heldItemTooltips;
+    bool advancedItemTooltips;
 
-    int   thirdPersonView;
-    int   fovSetting;
+    int thirdPersonView;
+    int fovSetting;
     float gammaSetting;
     float saturation;
 
@@ -96,6 +96,7 @@ public:
     KeyBinding keyBindFullscreen {"", 0, ""};
     KeyBinding keyBindExitGame {"", 0, ""};
     KeyBinding keyBindZoom {"", 0, ""};
+    KeyBinding keyFreelook {"", 0, ""};
 
     std::array<KeyBinding*, 9> keyBindHotbar;
     std::vector<KeyBinding*> keyBinds;
@@ -103,7 +104,7 @@ public:
     GameSettings();
     GameSettings(const std::filesystem::path& settingsParentPath);
 
-    nlohmann::ordered_json createDefaultSettings();
+    ::nlohmann::ordered_json createDefaultSettings();
 
     void saveSettings();
 
