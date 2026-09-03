@@ -191,6 +191,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/nbt/NBTTagIntArray.h
         ${SRC_DIR}/nbt/NBTTagFloat.h
 
+        # entity/player
+        ${SRC_DIR}/entity/player/PlayerCapabilities.h
+
         # command
         ${SRC_DIR}/command/ICommandSender.h
         ${SRC_DIR}/command/CommandException.h
