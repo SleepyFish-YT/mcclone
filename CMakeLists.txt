@@ -120,6 +120,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/EnchantmentNameParts.h
         ${SRC_DIR}/util/ChatComponentTranslationFormatException.h
         ${SRC_DIR}/util/ChatAllowedCharacters.h
+        ${SRC_DIR}/util/ResourceLocation.h
 
         # nbt - i hate nbt...
         ${SRC_DIR}/nbt/NBTException.h

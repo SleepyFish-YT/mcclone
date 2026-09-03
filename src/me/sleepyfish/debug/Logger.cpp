@@ -20,7 +20,7 @@ std::string Logger::getPrefix() {
 
 void Logger::writeToFile(const std::string& txt) {
     if (!Logger::initialized) {
-        // Fail silently
+        // fail silently
         return;
     }
 

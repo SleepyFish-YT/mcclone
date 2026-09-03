@@ -44,7 +44,7 @@ long long Minecraft::getHighResTime() {
 }
 
 void Minecraft::run() {
-    Logger::log("McClone update thread started");
+    Logger::log("Update thread started");
 
     ::timeBeginPeriod(1u);
     {
@@ -64,7 +64,7 @@ void Minecraft::run() {
     }
     ::timeEndPeriod(1u);
 
-    Logger::log("McClone update thread stopped");
+    Logger::log("Update thread stopped");
 }
 
 void Minecraft::runGameLoop() {
