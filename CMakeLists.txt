@@ -100,6 +100,14 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/debug/Logger.cpp
         ${SRC_DIR}/debug/Logger.h
 
+        # block/material
+        ${SRC_DIR}/block/material/MapColor.h
+        ${SRC_DIR}/block/material/Material.h
+        ${SRC_DIR}/block/material/Materials.h
+        ${SRC_DIR}/block/material/MaterialTransparent.h
+        ${SRC_DIR}/block/material/MaterialPortal.h
+        ${SRC_DIR}/block/material/MaterialLogic.h
+
         # block/properties
         ${SRC_DIR}/block/properties/IProperty.h
         ${SRC_DIR}/block/properties/PropertyBool.h
