@@ -11,7 +11,9 @@
 
 #include "../debug/Logger.h"
 
+#ifdef _WIN32
 #include <windows.h>
+#endif //_WIN32
 #include <timeapi.h>
 #include <glfw/glfw3.h>
 

@@ -10,7 +10,9 @@
 #include "../../debug/Logger.h"
 #include "GameConfiguration.h"
 
+#ifdef _WIN32
 #include <windows.h>
+#endif //_WIN32
 #include <vector>
 #include <string>
 #include <thread>

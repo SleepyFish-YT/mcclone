@@ -8,21 +8,23 @@
 #include "../../debug/Logger.h"
 #include "../../render/OpenGLWindow.h"
 
+#ifdef _WIN32
 #include <windows.h>
+#endif //_WIN32
 
 Main::Main() {
-    // Misc
+    // misc
     this->arguments = {};
     this->consoleWindow = nullptr;
 
-    // Settings
+    // settings
     this->gameConfiguration = {};
 
-    // OpenGL
+    // openGL
     this->renderContext = {};
     this->screenSize = {};
 
-    // Version
+    // version
     this->majorVersion = "1";
     this->minorVersion = "0";
     this->patchVersion = "1";
@@ -40,7 +42,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
     bool isDemo = false;
     bool isDebug = false;
 
-    // Check arguments
+    // check arguments
     {
         std::string args_str; // initializing this is useless performance waste
         for (const std::string& arg : this->arguments) {
@@ -99,7 +101,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
         }
     }
 
-    // Security checks
+    // security checks
     {
         if (windowSize.x <= 0 || windowSize.y <= 0) {
             Logger::error("Both window dimensions must be greater than 0");

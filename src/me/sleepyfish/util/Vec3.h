@@ -34,6 +34,15 @@ public:
         Vec3(vec.x, vec.y, vec.z)
     {}
 
+    Vec3& operator=(const Vec3& other) {
+        if (this != &other) {
+            const_cast<double&>(xCoord) = other.xCoord;
+            const_cast<double&>(yCoord) = other.yCoord;
+            const_cast<double&>(zCoord) = other.zCoord;
+        }
+        return *this;
+    }
+
     Vec3 subtractReverse(const Vec3 &vec) const noexcept {
         return {
             vec.xCoord - this->xCoord,

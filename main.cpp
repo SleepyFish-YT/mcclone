@@ -3,6 +3,9 @@
 // Project: mcclone
 //
 
+#ifndef MCCLONE_MAIN_CPP
+#define MCCLONE_MAIN_CPP
+
 #include "src/me/sleepyfish/client/main/Main.h"
 #include "src/me/sleepyfish/debug/Logger.h"
 
@@ -30,8 +33,10 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    // pass console window handle to main instance even tho since 1.0.0 it is not used.
+    // pass console window handle to main instance
     mainInstance.setConsoleWindow(::GetConsoleWindow());
     return mainInstance.main(argc, argv, executablePath);
 }
 
+
+#endif //MCCLONE_MAIN_CPP

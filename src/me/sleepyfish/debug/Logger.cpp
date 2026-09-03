@@ -7,7 +7,9 @@
 
 #include <iostream>
 #include <ctime>
+#ifdef _WIN32
 #include <windows.h>
+#endif //_WIN32
 #include <debugapi.h>
 
 std::string Logger::getPrefix() {

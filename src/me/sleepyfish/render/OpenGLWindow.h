@@ -33,7 +33,6 @@ private:
     GameConfiguration::DisplayInformation displayInfo;
     RenderInformation renderContext;
 
-
     void run() override;
 
 public:

@@ -49,17 +49,17 @@ public:
     SoundPoolEntry cloneEntry() override {
         const int total = getWeight();
 
-        if (!soundPool.empty() && total != 0) {
+        if (!this->soundPool.empty() && total != 0) {
             std::uniform_int_distribution<int> dist(0, total - 1);
-            int j = dist(rnd);
+            int j = dist(this->rnd);
 
-            for (const auto& accessor : soundPool) {
+            for (const auto& accessor : this->soundPool) {
                 j -= accessor->getWeight();
 
                 if (j < 0) {
                     SoundPoolEntry entry = accessor->cloneEntry();
-                    entry.setPitch(entry.getPitch() * eventPitch);
-                    entry.setVolume(entry.getVolume() * eventVolume);
+                    entry.setPitch(entry.getPitch() * this->eventPitch);
+                    entry.setVolume(entry.getVolume() * this->eventVolume);
                     return entry;
                 }
             }
@@ -69,15 +69,15 @@ public:
     }
 
     void addSoundToEventPool(ISoundEventAccessor<SoundPoolEntry>* sound) {
-        soundPool.push_back(sound);
+        this->soundPool.push_back(sound);
     }
 
     const ResourceLocation& getSoundEventLocation() const {
-        return soundLocation;
+        return this->soundLocation;
     }
 
     SoundCategory getSoundCategory() const {
-        return category;
+        return this->category;
     }
 
 };

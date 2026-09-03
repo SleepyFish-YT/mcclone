@@ -11,6 +11,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Sound event accessor
  */
 class SoundEventAccessor : public ISoundEventAccessor<SoundPoolEntry> {
 

@@ -61,9 +61,11 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/main/GameConfiguration.cpp
         ${SRC_DIR}/client/main/GameConfiguration.h
 
-        # client/Minecraft
+        # client/
         ${SRC_DIR}/client/Minecraft.cpp
         ${SRC_DIR}/client/Minecraft.h
+        ${SRC_DIR}/client/AnvilConverterException.h
+        ${SRC_DIR}/client/ClientBrandRetriever.h
 
         # client/settings
         ${SRC_DIR}/client/settings/KeyBinding.cpp
@@ -88,6 +90,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/audio/SoundCategory.h
         ${SRC_DIR}/client/audio/SoundList.h
 
+        # client/renderer
+        ${SRC_DIR}/client/renderer/StitcherException.h
+
         # debug
         ${SRC_DIR}/debug/Logger.cpp
         ${SRC_DIR}/debug/Logger.h
@@ -96,6 +101,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/profiler/Profiler.cpp
         ${SRC_DIR}/profiler/Profiler.h
 
+        # window render
         ${SRC_DIR}/render/RenderInformation.cpp
         ${SRC_DIR}/render/RenderInformation.h
         ${SRC_DIR}/render/OpenGLWindow.cpp
@@ -111,6 +117,10 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/WeightedRandom.h
         ${SRC_DIR}/util/Vec3i.h
         ${SRC_DIR}/util/Vec3.h
+        ${SRC_DIR}/util/EnumFacing.h
+        ${SRC_DIR}/util/MovingObjectPosition.h
+        ${SRC_DIR}/util/BlockPos.h
+        ${SRC_DIR}/util/AxisAlignedBB.h
         ${SRC_DIR}/util/Tuple.h
         ${SRC_DIR}/util/Timer.cpp
         ${SRC_DIR}/util/Timer.h
@@ -157,6 +167,16 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/nbt/NBTTagIntArray.h
         ${SRC_DIR}/nbt/NBTTagFloat.h
 
+        # command
+        ${SRC_DIR}/command/ICommandSender.h
+        ${SRC_DIR}/command/CommandException.h
+        ${SRC_DIR}/command/ICommand.h
+        ${SRC_DIR}/command/WrongUsageException.h
+        ${SRC_DIR}/command/SyntaxErrorException.h
+        ${SRC_DIR}/command/PlayerNotFoundException.h
+        ${SRC_DIR}/command/NumberInvalidException.h
+        ${SRC_DIR}/command/EntityNotFoundException.h
+        ${SRC_DIR}/command/CommandNotFoundException.h
 
 )
 # ======================== files ========================

@@ -64,7 +64,7 @@ bool OpenGLWindow::init() {
         this->renderContext.print();
 
         ::glViewport(0, 0, this->displayInfo.width, this->displayInfo.height);
-        ::glClearColor(0.53f, 0.81f, 0.92f, 1.0f);
+        ::glClearColor(0.53f, 0.41f, 0.72f, 1.0f);
 
         ::glfwSetWindowUserPointer(this->window, this);
 
