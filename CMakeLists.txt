@@ -102,11 +102,13 @@ add_executable(${PROJECT_NAME}
 
         # block/material
         ${SRC_DIR}/block/material/MapColor.h
+        ${SRC_DIR}/block/material/MapColors.h
         ${SRC_DIR}/block/material/Material.h
         ${SRC_DIR}/block/material/Materials.h
         ${SRC_DIR}/block/material/MaterialTransparent.h
         ${SRC_DIR}/block/material/MaterialPortal.h
         ${SRC_DIR}/block/material/MaterialLogic.h
+        ${SRC_DIR}/block/material/MaterialLiquid.h
 
         # block/properties
         ${SRC_DIR}/block/properties/IProperty.h

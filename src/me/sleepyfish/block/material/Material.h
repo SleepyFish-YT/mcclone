@@ -28,37 +28,6 @@ private:
 
     int mobilityFlag;
 
-    Material setTranslucent() {
-        this->isTranslucent = true;
-        return *this;
-    }
-
-    Material setRequiresTool() {
-        this->requiresNoTool = false;
-        return *this;
-    }
-
-    Material setBurning() {
-        this->canBurn = true;
-        return *this;
-    }
-
-protected:
-
-    Material setNoPushMobility() {
-        this->mobilityFlag = 1;
-        return *this;
-    }
-
-    Material setImmovableMobility() {
-        this->mobilityFlag = 2;
-        return *this;
-    }
-
-    Material setAdventureModeExempt() const {
-        return *this;
-    }
-
 public:
 
     explicit Material(const MapColor& color) :
@@ -83,6 +52,35 @@ public:
 
     MapColor getMaterialMapColor() const {
         return this->materialMapColor;
+    }
+    
+    Material setAdventureModeExempt() const {
+        return *this;
+    }
+
+    Material setTranslucent() {
+        this->isTranslucent = true;
+        return *this;
+    }
+
+    Material setRequiresTool() {
+        this->requiresNoTool = false;
+        return *this;
+    }
+
+    Material setBurning() {
+        this->canBurn = true;
+        return *this;
+    }
+
+    Material setNoPushMobility() {
+        this->mobilityFlag = 1;
+        return *this;
+    }
+
+    Material setImmovableMobility() {
+        this->mobilityFlag = 2;
+        return *this;
     }
 
     Material setReplaceable() {

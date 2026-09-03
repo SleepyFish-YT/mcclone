@@ -44,11 +44,9 @@ public:
          return (0xFF << 24) | (red << 16) | (green << 8) | blue;
      }
 
-private:
-
     MapColor(const int index, const int color) :
-            colorIndex(index),
-            colorValue(color)
+        colorIndex(index),
+        colorValue(color)
     {
         if (index < 0 || index > 63) {
             throw std::out_of_range("Map color ID must be between 0 and 63 (inclusive)");
