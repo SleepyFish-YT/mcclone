@@ -48,6 +48,10 @@ long long Minecraft::getHighResTime() {
 void Minecraft::run() {
     Logger::log("Update thread started");
 
+    CommandBase base = CommandBase();
+    Logger::log(base.getCommandAliases().at(0)); // command base test 0
+    Logger::log(base.getCommandAliases().at(1)); // command base test 1
+
     ::timeBeginPeriod(1u);
     {
         const auto TICK_DURATION = std::chrono::milliseconds(50); // 20 ticks/second
