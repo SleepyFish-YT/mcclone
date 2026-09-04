@@ -6,6 +6,14 @@
 #ifndef MCCLONE_ICOMMANDSENDER_H
 #define MCCLONE_ICOMMANDSENDER_H
 
+#include "../util/Vec3.h"
+#include "../util/BlockPos.h"
+// IChatComponent
+// World
+// Entity
+
+#include <string>
+
 /**
  * @author SleepyFish
  * @brief Command sender interface
@@ -14,7 +22,27 @@ class ICommandSender {
 
 public:
 
-    // not implemented yet.
+    // not FULLY implemented yet.
+
+    virtual std::string getName() const = 0;
+
+    // virtual IChatComponent getDisplayName() = 0;
+
+    // virtual void addChatMessage(IChatComponent component) = 0;
+
+    virtual bool canCommandSenderUseCommand(int permLevel, std::string commandName) = 0;
+
+    virtual BlockPos getPosition() = 0;
+
+    virtual Vec3 getPositionVector() = 0;
+
+    // virtual World getEntityWorld() = 0;
+
+    // virtual Entity getCommandSenderEntity() = 0;
+
+    virtual bool sendCommandFeedback() = 0;
+
+    // virtual void setCommandStat(CommandResultStats::Type type, int amount) = 0;
 
 };
 

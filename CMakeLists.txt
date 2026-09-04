@@ -199,7 +199,10 @@ add_executable(${PROJECT_NAME}
         # command
         ${SRC_DIR}/command/ICommandSender.h
         ${SRC_DIR}/command/CommandException.h
+        ${SRC_DIR}/command/ICommandManager.h
         ${SRC_DIR}/command/ICommand.h
+        ${SRC_DIR}/command/IAdminCommand.h
+        ${SRC_DIR}/command/CommandBase.h
         ${SRC_DIR}/command/WrongUsageException.h
         ${SRC_DIR}/command/SyntaxErrorException.h
         ${SRC_DIR}/command/PlayerNotFoundException.h
