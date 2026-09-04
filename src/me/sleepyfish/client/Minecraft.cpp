@@ -10,6 +10,8 @@
 #include "audio/SoundEngine.h"
 
 #include "../debug/Logger.h"
+#include "../command/CommandBase.h"
+#include "../command/ICommandSender.h"
 
 #ifdef _WIN32
 #include <windows.h>

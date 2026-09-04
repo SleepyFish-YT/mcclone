@@ -7,6 +7,7 @@
 #define MCCLONE_COMMANDEXCEPTION_H
 
 #include <stdexcept>
+#include <utility>
 #include <vector>
 #include <any>
 #include <string>
@@ -26,9 +27,14 @@ public:
     const std::vector<std::any> errorObjects;
 
     template<typename... Args>
-    CommandException(const std::string& msg, Args&&... args) :
-        message(msg),
+    explicit CommandException(std::string  msg, Args&&... args) :
+        message(std::move(msg)),
         errorObjects({ std::any(std::forward<Args>(args))... })
+    {}
+
+    explicit CommandException(std::string  message, const std::vector<std::string>& params) :
+        message(std::move(message)),
+        errorObjects({ std::any(params) })
     {}
 
     const char* what() const noexcept override {

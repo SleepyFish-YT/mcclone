@@ -24,6 +24,10 @@ public:
         CommandException(message, std::forward<Args>(args)...)
     {}
 
+    explicit NumberInvalidException(const std::string& message, const std::vector<std::string>& params) :
+        CommandException(message, params)
+    {}
+
 };
 
 

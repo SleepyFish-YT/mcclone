@@ -14,6 +14,8 @@
 
 #include <string>
 
+// not FULLY implemented yet.
+
 /**
  * @author SleepyFish
  * @brief Command sender interface
@@ -21,8 +23,6 @@
 class ICommandSender {
 
 public:
-
-    // not FULLY implemented yet.
 
     virtual std::string getName() const = 0;
 

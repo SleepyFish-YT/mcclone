@@ -8,14 +8,10 @@
 
 #include "CommandException.h"
 #include "ICommandSender.h"
+#include "../util/BlockPos.h"
 
 #include <string>
 #include <vector>
-#include <stdexcept>
-
-class ICommandSender;
-
-struct BlockPos;
 
 /**
  * @author SleepyFish
@@ -41,7 +37,7 @@ public:
 
     virtual bool isUsernameIndex(const std::vector<std::string> &args, int index) = 0;
 
-    virtual bool operator<(ICommand &other) { // comparable<ICommand> operator
+    virtual bool operator<(ICommand &other) { // comparable operator
         return getCommandName() < other.getCommandName();
     }
 
