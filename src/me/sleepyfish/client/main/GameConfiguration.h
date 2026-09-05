@@ -6,6 +6,7 @@
 #ifndef MCCLONE_GAMECONFIGURATION_H
 #define MCCLONE_GAMECONFIGURATION_H
 
+#include <filesystem>
 #include <string>
 #include <filesystem>
 
