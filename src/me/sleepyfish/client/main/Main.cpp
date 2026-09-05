@@ -125,7 +125,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
         std::filesystem::path resourcepacks_dir(gameDir_dir / "resourcepacks");
         if (!std::filesystem::exists(resourcepacks_dir)) {
             std::filesystem::create_directory(resourcepacks_dir);
-            Logger::log("Created ressourcepacks folder");
+            Logger::log("Created resourcepacks folder");
         }
 
         std::filesystem::path assets_dir = gameDir_dir / "assets";
