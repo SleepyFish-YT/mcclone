@@ -41,7 +41,31 @@ bool OpenGLWindow::init() {
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     ::glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    this->window = ::glfwCreateWindow(this->displayInfo.width, this->displayInfo.height, this->title.c_str(), nullptr, nullptr);
+    ::GLFWmonitor* monitor = nullptr;
+    int width  = this->displayInfo.width;
+    int height = this->displayInfo.height;
+
+    if (this->displayInfo.fullscreen) {
+        monitor = ::glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = ::glfwGetVideoMode(monitor);
+
+        ::glfwWindowHint(GLFW_RED_BITS,     mode->redBits);
+        ::glfwWindowHint(GLFW_GREEN_BITS,   mode->greenBits);
+        ::glfwWindowHint(GLFW_BLUE_BITS,    mode->blueBits);
+        ::glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+        width = mode->width;
+        height = mode->height;
+
+        this->fullscreen = true;
+
+        this->savedWindowWidth  = 900;
+        this->savedWindowHeight = 600;
+        this->savedWindowPosX = (mode->width  - this->savedWindowWidth)  / 2;
+        this->savedWindowPosY = (mode->height - this->savedWindowHeight) / 2;
+    }
+
+    this->window = ::glfwCreateWindow(width, height, this->title.c_str(), monitor, nullptr);
     if (!this->window) {
         Logger::error("Failed to create window (glfwCreateWindow)");
         ::glfwTerminate();
