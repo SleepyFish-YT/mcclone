@@ -1,4 +1,29 @@
-# McClone 1.0.1 by SleepyFish
+# McClone
+
+> A Minecraft clone written in C++20.
+
+**Version:** 1.0.1  
+**Author:** [SleepyFish](https://github.com/SleepyFish-YT)
+
+---
+
+## Supported platforms:
+- Windows (x64) by Microsoft
+###### Maybe someday, i will add linux support
+
+---
+
+## About
+
+McClone is a from-scratch Minecraft-inspired voxel game written in modern C++20.
+It aims to replicate core Minecraft mechanics while being built entirely in C++ using
+OpenGL for rendering and OpenAL for spatial audio.
+
+---
+
+## Building
+
+### Requirements
 
 ## Description
 This is a Minecraft clone coded in C++20 made by SleepyFish.
