@@ -117,9 +117,9 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
     try {
         const std::filesystem::path& gameDir = executablePath; // changed from copy. better this way for memory
 
-        std::filesystem::path gameDirRessourcepacks = gameDir / "ressourcepacks";
-        if (!std::filesystem::exists(gameDirRessourcepacks)) {
-            std::filesystem::create_directory(gameDirRessourcepacks);
+        std::filesystem::path gameDirResourcepacks = gameDir / "ressourcepacks";
+        if (!std::filesystem::exists(gameDirResourcepacks)) {
+            std::filesystem::create_directory(gameDirResourcepacks);
             Logger::log("Created ressourcepacks folder");
         }
 
