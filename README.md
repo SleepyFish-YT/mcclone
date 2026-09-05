@@ -71,6 +71,11 @@ Run the executable directly or with optional arguments:
 
 ---
 
+## Discord Server
+<a href="https://discord.gg/7JXXvkufJK"><img src="https://invidget.switchblade.xyz/7JXXvkufJK" alt="https://discord.gg/7JXXvkufJK"/></a>
+
+---
+
 ## Licenses
 
 Third-party library licenses are located in [`./licenses/`](./licenses/).
