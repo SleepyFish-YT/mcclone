@@ -103,6 +103,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/debug/Logger.cpp
         ${SRC_DIR}/debug/Logger.h
 
+        # config
+        ${SRC_DIR}/config/Config.h
+
         # block/material
         ${SRC_DIR}/block/material/MapColor.h
         ${SRC_DIR}/block/material/MapColors.h
