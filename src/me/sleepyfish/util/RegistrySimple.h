@@ -7,6 +7,7 @@
 #define MCCLONE_REGISTRYSIMPLE_H
 
 #include "IRegistry.h"
+#include "../debug/Logger.h"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -39,7 +40,7 @@ public:
         */
 
         if (this->registryObjects.count(key)) {
-            std::cout << "[debug] Adding duplicate key to registry\n";
+            Logger::warn("Adding duplicate key to registry");
         }
 
         this->registryObjects.insert_or_assign(key, std::move(value));
@@ -56,19 +57,19 @@ public:
         return this->registryObjects.count(key) > 0;
     }
 
-    auto begin() {
+    auto begin() noexcept {
         return this->registryObjects.begin();
     }
 
-    auto end() {
+    auto end() noexcept {
         return this->registryObjects.end();
     }
 
-    auto begin() const {
+    auto begin() const noexcept {
         return this->registryObjects.begin();
     }
 
-    auto end() const {
+    auto end() const noexcept {
         return this->registryObjects.end();
     }
 

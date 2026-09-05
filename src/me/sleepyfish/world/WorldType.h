@@ -9,6 +9,7 @@
 #include <string>
 #include <array>
 #include <algorithm>
+#include <stdexcept>
 
 /**
  * @author SleepyFish
@@ -19,13 +20,18 @@ class WorldType {
 private:
 
     int worldTypeId;
+
     std::string worldType;
+
     int generatorVersion;
+
     bool canBeCreated = true;
+
     bool isWorldTypeVersioned = false;
+
     bool hasNotificationData = false;
 
-    WorldType(int id, const std::string& name, int version = 0) :
+    WorldType(int id, const std::string& name, int version = 0) noexcept :
         worldTypeId(id),
         worldType(name),
         generatorVersion(version),
@@ -34,17 +40,17 @@ private:
         WorldType::worldTypes[id] = this;
     }
 
-    WorldType& setVersioned() {
+    WorldType& setVersioned() noexcept {
         this->isWorldTypeVersioned = true;
         return *this;
     }
 
-    WorldType& setCanBeCreated(bool enable) {
+    WorldType& setCanBeCreated(bool enable) noexcept {
         this->canBeCreated = enable;
         return *this;
     }
 
-    WorldType& setNotificationData() {
+    WorldType& setNotificationData() noexcept {
         this->hasNotificationData = true;
         return *this;
     }
@@ -53,15 +59,23 @@ public:
 
     static std::array<WorldType*, 8> worldTypes;
 
+
+
     static WorldType DEFAULT;
+
     static WorldType FLAT;
+
     static WorldType LARGE_BIOMES;
+
     static WorldType AMPLIFIED;
+
     static WorldType CUSTOMIZED;
+
     static WorldType DEBUG_WORLD;
+
     static WorldType DEFAULT_1_1;
 
-    std::string getWorldTypeName() const {
+    std::string getWorldTypeName() const noexcept {
         return this->worldType;
     }
 
@@ -73,27 +87,27 @@ public:
         return this->getTranslateName() + ".info";
     }
 
-    int getGeneratorVersion() const {
+    int getGeneratorVersion() const noexcept {
         return this->generatorVersion;
     }
 
-    WorldType* getWorldTypeForGeneratorVersion(int version) {
+    WorldType* getWorldTypeForGeneratorVersion(int version) noexcept {
         return this == &DEFAULT && version == 0 ? &DEFAULT_1_1 : this;
     }
 
-    bool getCanBeCreated() const {
+    bool getCanBeCreated() const noexcept {
         return this->canBeCreated;
     }
 
-    bool isVersioned() const {
+    bool isVersioned() const noexcept {
         return this->isWorldTypeVersioned;
     }
 
-    bool showWorldInfoNotice() const {
+    bool showWorldInfoNotice() const noexcept {
         return this->hasNotificationData;
     }
 
-    int getWorldTypeID() const {
+    int getWorldTypeID() const noexcept {
         return this->worldTypeId;
     }
 
@@ -112,14 +126,23 @@ public:
 
 };
 
+
 inline std::array<WorldType*, 8> WorldType::worldTypes = {};
 
+
+
 inline WorldType WorldType::DEFAULT      = WorldType(0, "default", 1).setVersioned();
+
 inline WorldType WorldType::FLAT         = WorldType(1, "flat");
+
 inline WorldType WorldType::LARGE_BIOMES = WorldType(2, "largeBiomes");
+
 inline WorldType WorldType::AMPLIFIED    = WorldType(3, "amplified").setNotificationData();
+
 inline WorldType WorldType::CUSTOMIZED   = WorldType(4, "customized");
+
 inline WorldType WorldType::DEBUG_WORLD  = WorldType(5, "debug_all_block_states");
+
 inline WorldType WorldType::DEFAULT_1_1  = WorldType(8, "default_1_1", 0).setCanBeCreated(false);
 
 

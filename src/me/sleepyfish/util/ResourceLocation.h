@@ -63,11 +63,11 @@ public:
             throw std::invalid_argument("resourcePath must not be null/empty");
     }
 
-    std::string getResourcePath() const {
+    std::string getResourcePath() const noexcept {
         return this->resourcePath;
     }
 
-    std::string getResourceDomain() const {
+    std::string getResourceDomain() const noexcept {
         return this->resourceDomain;
     }
 

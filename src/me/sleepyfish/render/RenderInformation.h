@@ -18,9 +18,15 @@ class RenderInformation {
 private:
 
     std::string vendor;
+
     std::string renderer;
+
     std::string version;
+
+
+
     int majorVersion;
+
     int minorVersion;
 
 public:
@@ -29,12 +35,21 @@ public:
 
     void print() const;
 
+
+
     const std::string& getVendor() const;
+
     const std::string& getRenderer() const;
+
     const std::string& getVersion() const;
 
+
+
     int getMajorVersion() const;
+
     int getMinorVersion() const;
+
+
 
     bool isVersionAtLeast(int major, int minor) const;
 

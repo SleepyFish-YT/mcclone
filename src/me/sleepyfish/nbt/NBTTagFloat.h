@@ -89,4 +89,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_NBTTAGFLOAT_H

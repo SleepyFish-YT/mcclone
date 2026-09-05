@@ -41,8 +41,8 @@ private:
 
 public:
 
-    static constexpr float PI   = std::numbers::pi_v<float>;
-    static constexpr float PI2  = std::numbers::pi_v<float> * 2.0f;
+    static constexpr float PI = std::numbers::pi_v<float>;
+    static constexpr float PI2 = std::numbers::pi_v<float> * 2.0f;
     static constexpr float PId2 = std::numbers::pi_v<float> / 2.0f;
 
     static float asin(float value) {
@@ -63,7 +63,7 @@ public:
         return std::reduce(vals.begin(), vals.end(), 0);
     }
 
-    static int roundDownToPowerOfTwo(int val) {
+    static int roundDownToPowerOfTwo(int val) noexcept {
         // next power of two
         int i = 1;
         while (i < val) i <<= 1;
@@ -74,11 +74,11 @@ public:
         return std::abs(f1 - f2) <= delta;
     }
 
-    static float toDeg(float angle) {
+    static float toDeg(float angle) noexcept {
         return angle * 180.0f / PI;
     }
 
-    static float toRad(float angle) {
+    static float toRad(float angle) noexcept {
         return angle / 180.0f * PI;
     }
 

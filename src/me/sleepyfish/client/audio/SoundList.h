@@ -21,21 +21,21 @@ class SoundList {
     public:
 
         enum class Type {
-            FILE,
+            FILE = 0,
             SOUND_EVENT
         };
 
-        static const char* getTypeName(Type type) {
+        static const char* getTypeName(SoundEntry::Type type) {
             switch (type) {
-                case Type::FILE: return "file";
-                case Type::SOUND_EVENT: return "event";
+                case SoundEntry::Type::FILE: return "file";
+                case SoundEntry::Type::SOUND_EVENT: return "event";
                 default: return nullptr;
             }
         }
 
-        static Type* getType(const std::string& name) {
-            static Type FILE_TYPE = Type::FILE;
-            static Type SOUND_EVENT_TYPE = Type::SOUND_EVENT;
+        static SoundEntry::Type* getType(const std::string& name) {
+            static SoundEntry::Type FILE_TYPE = Type::FILE;
+            static SoundEntry::Type SOUND_EVENT_TYPE = Type::SOUND_EVENT;
 
             if (name == "file") return &FILE_TYPE;
             if (name == "event") return &SOUND_EVENT_TYPE;
@@ -45,10 +45,15 @@ class SoundList {
     private:
 
         std::string name;
-        float volume = 1.0F;
-        float pitch = 1.0F;
+
+        float volume = 1.0f;
+
+        float pitch = 1.0f;
+
         int weight = 1;
-        Type type = Type::FILE;
+
+        SoundEntry::Type type = SoundEntry::Type::FILE;
+
         bool streaming = false;
 
     public:
@@ -85,11 +90,11 @@ class SoundList {
             this->weight = w;
         }
 
-        Type getSoundEntryType() const {
+        SoundEntry::Type getSoundEntryType() const {
             return this->type;
         }
 
-        void setSoundEntryType(Type t) {
+        void setSoundEntryType(SoundEntry::Type t) {
             this->type = t;
         }
 
@@ -105,19 +110,19 @@ class SoundList {
 
 private:
 
-    std::vector<SoundEntry> soundList;
+    std::vector<SoundList::SoundEntry> soundList;
 
-    /** if true it will override all the sounds from the resourcepacks loaded before */
     bool replaceExisting = false;
+
     SoundCategory category = SoundCategory::MASTER;
 
 public:
 
-    std::vector<SoundEntry>& getSoundList() {
+    std::vector<SoundList::SoundEntry>& getSoundList() {
         return this->soundList;
     }
 
-    const std::vector<SoundEntry>& getSoundList() const {
+    const std::vector<SoundList::SoundEntry>& getSoundList() const {
         return this->soundList;
     }
 

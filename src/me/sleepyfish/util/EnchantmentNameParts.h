@@ -43,7 +43,7 @@ public:
     EnchantmentNameParts(const EnchantmentNameParts&) = delete;
     EnchantmentNameParts& operator=(const EnchantmentNameParts&) = delete;
 
-    static EnchantmentNameParts& getInstance() {
+    static EnchantmentNameParts& getInstance() noexcept {
         static EnchantmentNameParts instance;
         return instance;
     }

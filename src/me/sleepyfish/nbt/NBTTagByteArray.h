@@ -82,4 +82,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_NBTTAGBYTEARRAY_H

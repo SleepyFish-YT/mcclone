@@ -57,7 +57,7 @@ void Profiler::endSection() {
         this->profilingMap[currentSection] = k;
     }
 
-    if (k > 100000000LL) {
+    if (k > 100000000ll) {
         Logger::warn("Something's taking too long! '" + currentSection + "' took approx " + std::to_string((double) k / 1000000.0) + " ms");
     }
 
@@ -70,15 +70,15 @@ void Profiler::endStartSection(const std::string& name) {
     this->startSection(name);
 }
 
-std::string Profiler::getNameOfLastSection() const {
+std::string Profiler::getNameOfLastSection() const noexcept {
     return this->sectionList.empty() ? "[UNKNOWN]" : this->sectionList.back();
 }
 
 std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& profilerName) {
     if (!this->profilingEnabled) return {};
 
-    long long i = this->profilingMap.count("root") ? this->profilingMap.at("root") : 0LL;
-    long long j = this->profilingMap.count(profilerName) ? this->profilingMap.at(profilerName) : -1LL;
+    long long i = this->profilingMap.count("root") ? this->profilingMap.at("root") : 0ll;
+    long long j = this->profilingMap.count(profilerName) ? this->profilingMap.at(profilerName) : -1ll;
 
     std::vector<Result> list;
     std::string prefix = profilerName.empty() ? "" : profilerName + ".";
@@ -92,7 +92,7 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
         }
     }
 
-    float f = (float) k;
+    auto f = (float) k;
     if (k < j) k = j;
     if (i < k) i = k;
 
@@ -110,7 +110,7 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
 
     // Decay all values by 95%
     for (auto& [key, val] : this->profilingMap) {
-        val = val * 950LL / 1000LL;
+        val = val * 950ll / 1000ll;
     }
 
     if ((float) k > f) {

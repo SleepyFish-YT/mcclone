@@ -57,6 +57,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
         for (const std::string& arg : this->arguments) {
             args_str += arg + " ";
         }
+
         Logger::log("Arguments: " + args_str);
 
         for (int i = 0; i < this->arguments.size(); i++) {
@@ -177,7 +178,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
     std::string title = "McClone [" + this->getVersion() + "] (C++20) by " + Main::AUTHOR;
     OpenGLWindow glWindow {this->gameConfiguration.displayInformation, std::move(title), &minecraft};
     if (!glWindow.init()) {
-        return -1;
+        return MCCLONE_ERR_OPENGL_INIT;
     }
 
     glWindow.execute();

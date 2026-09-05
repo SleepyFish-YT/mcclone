@@ -20,7 +20,7 @@ public:
             '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '"', ':'
     };
 
-    static bool IsAllowedCharacter(unsigned char character) {
+    static bool IsAllowedCharacter(unsigned char character) noexcept {
         return character != 167 && character >= 32 && character != 127;
     }
 
@@ -37,5 +37,6 @@ public:
     }
 
 };
+
 
 #endif //MCCLONE_CHATALLOWEDCHARACTERS_H

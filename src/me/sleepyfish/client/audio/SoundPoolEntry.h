@@ -17,6 +17,7 @@ class SoundPoolEntry {
 private:
 
     double pitch;
+
     double volume;
 
 public:

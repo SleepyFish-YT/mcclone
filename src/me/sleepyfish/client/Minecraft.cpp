@@ -64,13 +64,13 @@ void Minecraft::onStop() {
     this->soundEngine->destory();
 }
 
-long long Minecraft::getSystemTime() {
+long long Minecraft::getSystemTime() noexcept {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
     ).count();
 }
 
-long long Minecraft::getHighResTime() {
+long long Minecraft::getHighResTime() noexcept {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now().time_since_epoch()
     ).count();
@@ -100,16 +100,16 @@ void Minecraft::runGameLoop() {
     this->mcProfiler->endSection();
 }
 
-bool Minecraft::isGamePaused() const {
+bool Minecraft::isGamePaused() const noexcept {
     return this->gamePaused;
 }
 
-bool Minecraft::isFramerateLimitBelowMax() const {
-    return this->getLimitFramerate() < 120; // this.getLimitFramerate() < GameSettings.Options.FRAMERATE_LIMIT.getValueMax();
+bool Minecraft::isFramerateLimitBelowMax() const noexcept {
+    return this->getLimitFramerate() < this->gameSettings->limitFramerate;
 }
 
-uint16_t Minecraft::getLimitFramerate() const {
-    const uint16_t framerate_limit = 240;
+uint16_t Minecraft::getLimitFramerate() const noexcept {
+    const uint16_t framerate_limit = this->gameSettings->limitFramerate;
     return this->isGamePaused() ? framerate_limit / 2 : framerate_limit;
 }
 

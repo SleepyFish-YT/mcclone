@@ -28,8 +28,11 @@ public:
     };
 
     MovingObjectType typeOfHit;
+
     EnumFacing sideHit;
+
     Vec3 hitVec;
+
     Entity *entityHit = nullptr;
 
 private:
@@ -38,28 +41,28 @@ private:
 
 public:
 
-    MovingObjectPosition(const Vec3 &hitVecIn, EnumFacing facing, const BlockPos &blockPosIn) :
+    MovingObjectPosition(const Vec3 &hitVecIn, EnumFacing facing, const BlockPos &blockPosIn) noexcept :
         typeOfHit(MovingObjectType::BLOCK),
         sideHit(facing),
         hitVec(hitVecIn.xCoord, hitVecIn.yCoord, hitVecIn.zCoord),
         blockPos(blockPosIn)
     {}
 
-    MovingObjectPosition(const Vec3 &hitVecIn, EnumFacing facing) :
+    MovingObjectPosition(const Vec3 &hitVecIn, EnumFacing facing) noexcept :
         typeOfHit(MovingObjectType::BLOCK),
         sideHit(facing),
         hitVec(hitVecIn.xCoord, hitVecIn.yCoord, hitVecIn.zCoord),
         blockPos(BlockPos::ORIGIN)
     {}
 
-    MovingObjectPosition(MovingObjectType typeOfHitIn, const Vec3 &hitVecIn, EnumFacing sideHitIn, const BlockPos &blockPosIn) :
+    MovingObjectPosition(MovingObjectType typeOfHitIn, const Vec3 &hitVecIn, EnumFacing sideHitIn, const BlockPos &blockPosIn) noexcept :
         typeOfHit(typeOfHitIn),
         sideHit(sideHitIn),
         hitVec(hitVecIn.xCoord, hitVecIn.yCoord, hitVecIn.zCoord),
         blockPos(blockPosIn)
     {}
 
-    MovingObjectPosition(Entity *entityHitIn, const Vec3 &hitVecIn) :
+    MovingObjectPosition(Entity *entityHitIn, const Vec3 &hitVecIn) noexcept :
         typeOfHit(MovingObjectType::ENTITY),
         sideHit(EnumFacing::NORTH),
         hitVec(hitVecIn),
@@ -67,7 +70,7 @@ public:
         blockPos(BlockPos::ORIGIN)
     {}
 
-    const BlockPos &getBlockPos() const {
+    const BlockPos &getBlockPos() const noexcept {
         return this->blockPos;
     }
 

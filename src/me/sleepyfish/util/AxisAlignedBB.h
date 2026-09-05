@@ -23,35 +23,40 @@
 class AxisAlignedBB {
 
     const double minX;
+
     const double minY;
+
     const double minZ;
+
     const double maxX;
+
     const double maxY;
+
     const double maxZ;
 
-    AxisAlignedBB(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2)
-            : minX(std::min(x1, x2))
-            , minY(std::min(y1, y2))
-            , minZ(std::min(z1, z2))
-            , maxX(std::max(x1, x2))
-            , maxY(std::max(y1, y2))
-            , maxZ(std::max(z1, z2))
+    AxisAlignedBB(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2) :
+        minX(std::min(x1, x2)),
+        minY(std::min(y1, y2)),
+        minZ(std::min(z1, z2)),
+        maxX(std::max(x1, x2)),
+        maxY(std::max(y1, y2)),
+        maxZ(std::max(z1, z2))
     {}
 
-    AxisAlignedBB(const BlockPos& pos1, const BlockPos& pos2)
-            : minX(pos1.x)
-            , minY(pos1.y)
-            , minZ(pos1.z)
-            , maxX(pos2.x)
-            , maxY(pos2.y)
-            , maxZ(pos2.z)
+    AxisAlignedBB(const BlockPos& pos1, const BlockPos& pos2) :
+        minX(pos1.x),
+        minY(pos1.y),
+        minZ(pos1.z),
+        maxX(pos2.x),
+        maxY(pos2.y),
+        maxZ(pos2.z)
     {}
 
     static AxisAlignedBB fromBounds(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2) {
-        return AxisAlignedBB(
-                std::min(x1, x2), std::min(y1, y2), std::min(z1, z2),
-                std::max(x1, x2), std::max(y1, y2), std::max(z1, z2)
-        );
+        return {
+            std::min(x1, x2), std::min(y1, y2), std::min(z1, z2),
+            std::max(x1, x2), std::max(y1, y2), std::max(z1, z2)
+        };
     }
 
     AxisAlignedBB addCoord(const double x, const double y, const double z) const {
@@ -62,35 +67,38 @@ class AxisAlignedBB {
         if (y < 0.0) d1 += y; else if (y > 0.0) d4 += y;
         if (z < 0.0) d2 += z; else if (z > 0.0) d5 += z;
 
-        return AxisAlignedBB(d0, d1, d2, d3, d4, d5);
+        return {
+            d0, d1, d2,
+            d3, d4, d5
+        };
     }
 
     AxisAlignedBB expand(const double x, const double y, const double z) const {
-        return AxisAlignedBB(
-                this->minX - x, this->minY - y, this->minZ - z,
-                this->maxX + x, this->maxY + y, this->maxZ + z
-        );
+        return {
+            this->minX - x, this->minY - y, this->minZ - z,
+            this->maxX + x, this->maxY + y, this->maxZ + z
+        };
     }
 
     AxisAlignedBB contract(const double x, const double y, const double z) const {
-        return AxisAlignedBB(
-                this->minX + x, this->minY + y, this->minZ + z,
-                this->maxX - x, this->maxY - y, this->maxZ - z
-        );
+        return {
+            this->minX + x, this->minY + y, this->minZ + z,
+            this->maxX - x, this->maxY - y, this->maxZ - z
+        };
     }
 
     AxisAlignedBB offset(const double x, const double y, const double z) const {
-        return AxisAlignedBB(
-                this->minX + x, this->minY + y, this->minZ + z,
-                this->maxX + x, this->maxY + y, this->maxZ + z
-        );
+        return {
+            this->minX + x, this->minY + y, this->minZ + z,
+            this->maxX + x, this->maxY + y, this->maxZ + z
+        };
     }
 
     AxisAlignedBB union_(const AxisAlignedBB& other) const {
-        return AxisAlignedBB(
-                std::min(this->minX, other.minX), std::min(this->minY, other.minY), std::min(this->minZ, other.minZ),
-                std::max(this->maxX, other.maxX), std::max(this->maxY, other.maxY), std::max(this->maxZ, other.maxZ)
-        );
+        return {
+            std::min(this->minX, other.minX), std::min(this->minY, other.minY), std::min(this->minZ, other.minZ),
+            std::max(this->maxX, other.maxX), std::max(this->maxY, other.maxY), std::max(this->maxZ, other.maxZ)
+        };
     }
 
     double calculateXOffset(const AxisAlignedBB& other, double offsetX) const {
@@ -103,6 +111,7 @@ class AxisAlignedBB {
                 if (d0 > offsetX) offsetX = d0;
             }
         }
+
         return offsetX;
     }
 
@@ -116,6 +125,7 @@ class AxisAlignedBB {
                 if (d0 > offsetY) offsetY = d0;
             }
         }
+
         return offsetY;
     }
 
@@ -129,6 +139,7 @@ class AxisAlignedBB {
                 if (d0 > offsetZ) offsetZ = d0;
             }
         }
+
         return offsetZ;
     }
 
@@ -153,10 +164,12 @@ class AxisAlignedBB {
             if (!v) return std::nullopt;
             return isVecInYZ(*v) ? v : std::nullopt;
         };
+
         auto getIfInXZ = [&](std::optional<Vec3> v) -> std::optional<Vec3> {
             if (!v) return std::nullopt;
             return isVecInXZ(*v) ? v : std::nullopt;
         };
+
         auto getIfInXY = [&](std::optional<Vec3> v) -> std::optional<Vec3> {
             if (!v) return std::nullopt;
             return isVecInXY(*v) ? v : std::nullopt;

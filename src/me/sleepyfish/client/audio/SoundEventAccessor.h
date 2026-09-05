@@ -32,7 +32,7 @@ public:
     }
 
     SoundPoolEntry cloneEntry() override {
-        return SoundPoolEntry(this->entry);
+        return {this->entry};
     }
 
 };

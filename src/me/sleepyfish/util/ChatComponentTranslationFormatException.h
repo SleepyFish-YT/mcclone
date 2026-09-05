@@ -34,7 +34,7 @@ public:
         std::invalid_argument(std::format("Error while parsing: {} (caused by: {})", "component.toString()", cause.what()))
     {}
 
-
 };
+
 
 #endif //MCCLONE_CHATCOMPONENTTRANSLATIONFORMATEXCEPTION_H

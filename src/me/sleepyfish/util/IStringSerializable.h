@@ -21,4 +21,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_ISTRINGSERIALIZABLE_H

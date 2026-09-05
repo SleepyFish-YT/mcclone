@@ -24,18 +24,18 @@ class EnumFacing {
 public:
 
     enum class Plane {
-        HORIZONTAL,
+        HORIZONTAL = 0,
         VERTICAL
     };
 
     enum class Axis {
-        X,
+        X = 0,
         Y,
         Z
     };
 
     enum class AxisDirection {
-        POSITIVE,
+        POSITIVE = 0,
         NEGATIVE
     };
 
@@ -51,19 +51,33 @@ public:
 private:
 
     struct FacingData {
+
         int index;
+
         int opposite;
+
         int horizontalIndex;
+
         std::string name;
+
         AxisDirection axisDirection;
+
         Axis axis;
+
         Vec3i directionVec;
+
     };
 
+
+
     static const FacingData DATA[6];
+
     static const int HORIZONTALS[4];
+
     static std::unordered_map<std::string, Value> NAME_LOOKUP;
+
     static std::unordered_map<std::string, Axis> AXIS_NAME_LOOKUP;
+
     static bool initialized;
 
     static void initialize() {
@@ -84,68 +98,68 @@ private:
 
 public:
 
-    EnumFacing(Value v) : value(v) { initialize(); }
+    EnumFacing(Value v) : value(v) { EnumFacing::initialize(); }
 
-    static EnumFacing down() { return EnumFacing(DOWN); }
+    static EnumFacing down() noexcept { return {DOWN}; }
 
-    static EnumFacing up() { return EnumFacing(UP); }
+    static EnumFacing up() noexcept { return {UP}; }
 
-    static EnumFacing north() { return EnumFacing(NORTH); }
+    static EnumFacing north() noexcept { return {NORTH}; }
 
-    static EnumFacing south() { return EnumFacing(SOUTH); }
+    static EnumFacing south() noexcept { return {SOUTH}; }
 
-    static EnumFacing west() { return EnumFacing(WEST); }
+    static EnumFacing west() noexcept { return {WEST}; }
 
-    static EnumFacing east() { return EnumFacing(EAST); }
+    static EnumFacing east() noexcept { return {EAST}; }
 
-    bool operator==(const EnumFacing &other) const { return value == other.value; }
+    bool operator==(const EnumFacing &other) const noexcept { return value == other.value; }
 
-    bool operator!=(const EnumFacing &other) const { return value != other.value; }
+    bool operator!=(const EnumFacing &other) const noexcept { return value != other.value; }
 
-    int getIndex() const { return DATA[value].index; }
+    int getIndex() const noexcept { return DATA[value].index; }
 
-    int getHorizontalIndex() const { return DATA[value].horizontalIndex; }
+    int getHorizontalIndex() const noexcept { return DATA[value].horizontalIndex; }
 
-    AxisDirection getAxisDirection() const { return DATA[value].axisDirection; }
+    AxisDirection getAxisDirection() const noexcept { return DATA[value].axisDirection; }
 
-    Axis getAxis() const { return DATA[value].axis; }
+    Axis getAxis() const noexcept { return DATA[value].axis; }
 
-    const Vec3i &getDirectionVec() const { return DATA[value].directionVec; }
+    const Vec3i &getDirectionVec() const noexcept { return DATA[value].directionVec; }
 
-    std::string getName() const { return DATA[value].name; }
+    std::string getName() const noexcept { return DATA[value].name; }
 
-    std::string toString() const { return DATA[value].name; }
+    std::string toString() const noexcept { return DATA[value].name; }
 
-    static int getAxisOffset(AxisDirection dir) {
+    static int getAxisOffset(AxisDirection dir) noexcept {
         return dir == AxisDirection::POSITIVE ? 1 : -1;
     }
 
-    int getFrontOffsetX() const {
+    int getFrontOffsetX() const noexcept {
         return DATA[value].axis == Axis::X ? getAxisOffset(DATA[value].axisDirection) : 0;
     }
 
-    int getFrontOffsetY() const {
+    int getFrontOffsetY() const noexcept {
         return DATA[value].axis == Axis::Y ? getAxisOffset(DATA[value].axisDirection) : 0;
     }
 
-    int getFrontOffsetZ() const {
+    int getFrontOffsetZ() const noexcept {
         return DATA[value].axis == Axis::Z ? getAxisOffset(DATA[value].axisDirection) : 0;
     }
 
-    EnumFacing getOpposite() const {
-        return EnumFacing((Value) DATA[value].opposite);
+    EnumFacing getOpposite() const noexcept {
+        return {(Value) DATA[value].opposite};
     }
 
     EnumFacing rotateY() const {
         switch (value) {
             case NORTH:
-                return EnumFacing(EAST);
+                return {EAST};
             case EAST:
-                return EnumFacing(SOUTH);
+                return {SOUTH};
             case SOUTH:
-                return EnumFacing(WEST);
+                return {WEST};
             case WEST:
-                return EnumFacing(NORTH);
+                return {NORTH};
             default:
                 throw std::runtime_error("Unable to get Y-rotated facing of " + getName());
         }
@@ -154,13 +168,13 @@ public:
     EnumFacing rotateYCCW() const {
         switch (value) {
             case NORTH:
-                return EnumFacing(WEST);
+                return {WEST};
             case EAST:
-                return EnumFacing(NORTH);
+                return {NORTH};
             case SOUTH:
-                return EnumFacing(EAST);
+                return {EAST};
             case WEST:
-                return EnumFacing(SOUTH);
+                return {SOUTH};
             default:
                 throw std::runtime_error("Unable to get CCW facing of " + getName());
         }
@@ -169,13 +183,13 @@ public:
     EnumFacing rotateX() const {
         switch (value) {
             case NORTH:
-                return EnumFacing(DOWN);
+                return {DOWN};
             case SOUTH:
-                return EnumFacing(UP);
+                return {UP};
             case UP:
-                return EnumFacing(NORTH);
+                return {NORTH};
             case DOWN:
-                return EnumFacing(SOUTH);
+                return {SOUTH};
             default:
                 throw std::runtime_error("Unable to get X-rotated facing of " + getName());
         }
@@ -184,13 +198,13 @@ public:
     EnumFacing rotateZ() const {
         switch (value) {
             case EAST:
-                return EnumFacing(DOWN);
+                return {DOWN};
             case WEST:
-                return EnumFacing(UP);
+                return {UP};
             case UP:
-                return EnumFacing(EAST);
+                return {EAST};
             case DOWN:
-                return EnumFacing(WEST);
+                return {WEST};
             default:
                 throw std::runtime_error("Unable to get Z-rotated facing of " + getName());
         }
@@ -219,25 +233,25 @@ public:
         auto it = NAME_LOOKUP.find(lower);
         if (it == NAME_LOOKUP.end())
             throw std::runtime_error("No facing with name: " + name);
-        return EnumFacing(it->second);
+        return {it->second};
     }
 
-    static EnumFacing getFront(int index) {
-        return EnumFacing((Value) (MathHelper::abs_int(index % 6)));
+    static EnumFacing getFront(int index) noexcept {
+        return {(Value) (MathHelper::abs_int(index % 6))};
     }
 
-    static EnumFacing getHorizontal(int index) {
+    static EnumFacing getHorizontal(int index) noexcept {
         static const Value horizontals[4] = {SOUTH, WEST, NORTH, EAST};
-        return EnumFacing(horizontals[MathHelper::abs_int(index % 4)]);
+        return {horizontals[MathHelper::abs_int(index % 4)]};
     }
 
-    static EnumFacing fromAngle(double angle) {
+    static EnumFacing fromAngle(double angle) noexcept {
         return getHorizontal(MathHelper::floor_double(angle / 90.0 + 0.5) & 3);
     }
 
     static EnumFacing random(std::mt19937 &rand) {
         std::uniform_int_distribution<int> dist(0, 5);
-        return EnumFacing((Value) dist(rand));
+        return {(Value) dist(rand)};
     }
 
     static EnumFacing getFacingFromVector(float x, float y, float z) {
@@ -263,12 +277,13 @@ public:
             if (f.getAxisDirection() == dir && f.getAxis() == axis)
                 return f;
         }
+
         throw std::runtime_error("No such direction");
     }
 
-    static bool isHorizontal(Axis axis) { return axis == Axis::X || axis == Axis::Z; }
+    static bool isHorizontal(Axis axis) noexcept { return axis == Axis::X || axis == Axis::Z; }
 
-    static bool isVertical(Axis axis) { return axis == Axis::Y; }
+    static bool isVertical(Axis axis) noexcept { return axis == Axis::Y; }
 
     static Axis axisByName(const std::string &name) {
         initialize();
@@ -297,9 +312,10 @@ public:
         return facings[dist(rand)];
     }
 
-    Value getValue() const { return value; }
+    Value getValue() const noexcept { return value; }
 
 };
+
 
 inline const EnumFacing::FacingData EnumFacing::DATA[6] = {
         {0, 1, -1, "down", EnumFacing::AxisDirection::NEGATIVE, EnumFacing::Axis::Y, Vec3i(0, -1, 0)},
@@ -311,7 +327,10 @@ inline const EnumFacing::FacingData EnumFacing::DATA[6] = {
 };
 
 inline std::unordered_map<std::string, EnumFacing::Value> EnumFacing::NAME_LOOKUP;
+
 inline std::unordered_map<std::string, EnumFacing::Axis> EnumFacing::AXIS_NAME_LOOKUP;
+
 inline bool EnumFacing::initialized = false;
+
 
 #endif //MCCLONE_ENUMFACING_H

@@ -27,7 +27,7 @@ public:
 
     virtual void setDoneWorking() = 0;
 
-
 };
+
 
 #endif //MCCLONE_IPROGRESSUPDATE_H

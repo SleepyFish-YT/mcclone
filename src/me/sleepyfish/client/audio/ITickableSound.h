@@ -17,8 +17,6 @@ class ITickableSound : public ISound, public ITickable {
 
 public:
 
-    virtual ~ITickableSound() override = default;
-
     virtual bool isDonePlaying() = 0;
 
 };

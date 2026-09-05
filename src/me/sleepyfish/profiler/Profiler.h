@@ -52,21 +52,32 @@ public:
     Profiler();
 
     void clearProfiling();
+
     void startSection(const std::string& name);
+
     void endSection();
+
     void endStartSection(const std::string& name);
-    std::string getNameOfLastSection() const;
+
+    std::string getNameOfLastSection() const noexcept;
+
     std::vector<Result> getProfilingData(const std::string& profilerName);
+
     void printProfilerSection(const std::string& profilerName);
 
 private:
 
     std::vector<std::string> sectionList;
+
     std::vector<long long> timestampList;
+
     std::string profilingSection;
+
     std::unordered_map<std::string, long long> profilingMap;
+
     bool profilerLocalEnabled;
 
 };
+
 
 #endif //MCCLONE_PROFILER_H

@@ -269,4 +269,3 @@ void GameSettings::saveSettings() {
         Logger::log("Settings saved to {}", this->settingsFilePath.string());
     }
 }
-

@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 template<typename T>
-int WeightedRandom::getTotalWeight(const std::vector<T>& collection) {
+int WeightedRandom::getTotalWeight(const std::vector<T>& collection) noexcept {
     int total = 0;
 
     for (const auto& item : collection) {

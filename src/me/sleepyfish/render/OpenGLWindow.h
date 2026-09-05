@@ -25,13 +25,21 @@ class OpenGLWindow : public Runnable {
 
 private:
 
-    Minecraft* minecraft;
-    ::GLFWwindow* window;
-    std::string title;
-    bool fullscreen;
-    bool mouseCaptured;
-    GameConfiguration::DisplayInformation displayInfo;
-    RenderInformation renderContext;
+    Minecraft* minecraft{};
+
+    ::GLFWwindow* window{};
+
+    std::string title{};
+
+    bool fullscreen{};
+
+    bool mouseCaptured{};
+
+    GameConfiguration::DisplayInformation displayInfo{};
+
+    RenderInformation renderContext{};
+
+
 
     void run() override;
 
@@ -40,30 +48,46 @@ private:
 public:
 
     uint16_t debugFps;
+
     uint64_t frameCount;
 
     int savedWindowPosX;
+
     int savedWindowPosY;
+
     int savedWindowWidth;
+
     int savedWindowHeight;
 
     double mouseX;
+
     double mouseY;
+
     std::chrono::steady_clock::time_point lastFpsTime;
 
-    OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft);
+    OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept;
 
     bool init();
+
     void execute();
+
     void toggleFullscreen();
+
     void toggleCaptureMouse();
+
     void handleKeypress(int key, int scancode, int action, int mods);
+
     void handleMouseButton(int button, int action, int mods);
+
     void handleMouseMove(double x, double y);
+
     void handleMouseScroll(double xOffset, double yOffset);
-    RenderInformation& getRenderContext();
-    ::GLFWwindow* getWindow();
+
+    RenderInformation& getRenderContext() noexcept;
+
+    ::GLFWwindow* getWindow() noexcept;
 
 };
+
 
 #endif //MCCLONE_OPENGLWINDOW_H

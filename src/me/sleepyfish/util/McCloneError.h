@@ -17,4 +17,5 @@ class McCloneError : public std::exception {
 
 };
 
+
 #endif //MCCLONE_MCCLONEERROR_H

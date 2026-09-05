@@ -30,7 +30,7 @@ public:
         return std::regex_replace(str, StringUtils::PATTERN_CONTROL_CODE, "");
     }
 
-    static bool IsNullOrEmpty(const std::string& str) {
+    static bool IsNullOrEmpty(const std::string& str) noexcept {
         return str.empty();
     }
 

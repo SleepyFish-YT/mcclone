@@ -136,6 +136,10 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/render/OpenGLWindow.cpp
         ${SRC_DIR}/render/OpenGLWindow.h
 
+        # network
+        ${SRC_DIR}/network/INetHandler.h
+        ${SRC_DIR}/network/Packet.h
+
         # util
         ${SRC_DIR}/util/Runnable.h
         ${SRC_DIR}/util/Util.cpp

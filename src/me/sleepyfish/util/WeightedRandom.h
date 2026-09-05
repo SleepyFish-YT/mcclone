@@ -23,14 +23,14 @@ public:
 
         int itemWeight;
 
-        explicit Item(int weight) noexcept : itemWeight(weight) {}
-
         virtual ~Item() = default;
+
+        explicit Item(int weight) noexcept : itemWeight(weight) {}
 
     };
 
     template<typename T>
-    static int getTotalWeight(const std::vector<T>& collection);
+    static int getTotalWeight(const std::vector<T>& collection) noexcept;
 
     template<typename T>
     static T getRandomItem(std::mt19937& random, const std::vector<T>& collection, int totalWeight);

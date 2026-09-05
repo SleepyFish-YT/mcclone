@@ -32,31 +32,39 @@ private:
 
 public:
 
-    BlockPos(int x, int y, int z) : Vec3i(x, y, z) {}
+    BlockPos(int x, int y, int z) noexcept :
+        Vec3i(x, y, z)
+    {}
 
-    BlockPos(double x, double y, double z) : Vec3i((int) x, (int) y, (int) z) {}
+    BlockPos(double x, double y, double z) noexcept :
+        Vec3i((int) x, (int) y, (int) z)
+    {}
 
-    explicit BlockPos(const Vec3& source) : Vec3i((int) source.xCoord, (int) source.yCoord, (int) source.zCoord) {}
+    explicit BlockPos(const Vec3& source) noexcept :
+        Vec3i((int) source.xCoord, (int) source.yCoord, (int) source.zCoord)
+    {}
 
-    explicit BlockPos(const Vec3i& source) : Vec3i(source.x, source.y, source.z) {}
+    explicit BlockPos(const Vec3i& source) noexcept :
+        Vec3i(source.x, source.y, source.z)
+    {}
 
-    BlockPos add(double x, double y, double z) const {
+    BlockPos add(double x, double y, double z) const noexcept {
         return (x == 0.0 && y == 0.0 && z == 0.0) ? *this : BlockPos((double) this->x + x, (double) this->y + y, (double) this->z + z);
     }
 
-    BlockPos add(int x, int y, int z) const {
+    BlockPos add(int x, int y, int z) const noexcept {
         return (x == 0 && y == 0 && z == 0) ? *this : BlockPos(this->x + x, this->y + y, this->z + z);
     }
 
-    BlockPos add(const Vec3i& vec) const {
+    BlockPos add(const Vec3i& vec) const noexcept {
         return (vec.x == 0 && vec.y == 0 && vec.z == 0) ? *this : BlockPos(this->x + vec.x, this->y + vec.y, this->z + vec.z);
     }
 
-    BlockPos subtract(const Vec3i& vec) const {
+    BlockPos subtract(const Vec3i& vec) const noexcept {
         return (vec.x == 0 && vec.y == 0 && vec.z == 0) ? *this : BlockPos(this->x - vec.x, this->y - vec.y, this->z - vec.z);
     }
 
-    BlockPos up(int n = 1) const { return this->offset(EnumFacing::UP, n); }
+    BlockPos up(int n = 1) const noexcept { return this->offset(EnumFacing::UP, n); }
 
     BlockPos down(int n = 1) const { return this->offset(EnumFacing::DOWN, n); }
 
@@ -68,9 +76,9 @@ public:
 
     BlockPos east(int n = 1) const { return this->offset(EnumFacing::EAST, n); }
 
-    BlockPos offset(EnumFacing facing) const { return this->offset(facing, 1); }
+    BlockPos offset(EnumFacing facing) const noexcept { return this->offset(facing, 1); }
 
-    BlockPos offset(EnumFacing facing, int n) const {
+    BlockPos offset(EnumFacing facing, int n) const noexcept {
         return n == 0 ? *this : BlockPos(
                 this->x + facing.getFrontOffsetX() * n,
                 this->y + facing.getFrontOffsetY() * n,
@@ -78,25 +86,25 @@ public:
         );
     }
 
-    BlockPos crossProduct(const Vec3i& vec) const {
-        return BlockPos(
-                this->y * vec.z - this->z * vec.y,
-                this->z * vec.x - this->x * vec.z,
-                this->x * vec.y - this->y * vec.x
-        );
+    BlockPos crossProduct(const Vec3i& vec) const noexcept {
+        return {
+            this->y * vec.z - this->z * vec.y,
+            this->z * vec.x - this->x * vec.z,
+            this->x * vec.y - this->y * vec.x
+        };
     }
 
-    long toLong() const {
+    long toLong() const noexcept {
         return ((long) this->x & X_MASK) << X_SHIFT |
                ((long) this->y & Y_MASK) << Y_SHIFT |
                ((long) this->z & Z_MASK);
     }
 
-    static BlockPos fromLong(long serialized) {
+    static BlockPos fromLong(long serialized) noexcept {
         const int i = (int) (serialized << 64 - X_SHIFT - NUM_X_BITS >> 64 - NUM_X_BITS);
         const int j = (int) (serialized << 64 - Y_SHIFT - NUM_Y_BITS >> 64 - NUM_Y_BITS);
         const int k = (int) (serialized << 64 - NUM_Z_BITS >> 64 - NUM_Z_BITS);
-        return BlockPos(i, j, k);
+        return {i, j, k};
     }
 
     static std::vector<BlockPos> getAllInBox(const BlockPos& from, const BlockPos& to) {
@@ -120,6 +128,7 @@ public:
     }
 
     static const BlockPos ORIGIN;
+
 };
 
 inline const BlockPos BlockPos::ORIGIN(0, 0, 0);
@@ -130,11 +139,21 @@ public:
 
     int x, y, z;
 
-    MutableBlockPos() : BlockPos(0, 0, 0), x(0), y(0), z(0) {}
+    MutableBlockPos() noexcept :
+        BlockPos(0, 0, 0),
+        x(0),
+        y(0),
+        z(0)
+    {}
 
-    MutableBlockPos(int x_, int y_, int z_) : BlockPos(0, 0, 0), x(x_), y(y_), z(z_) {}
+    MutableBlockPos(int x_, int y_, int z_) noexcept :
+        BlockPos(0, 0, 0),
+        x(x_),
+        y(y_),
+        z(z_)
+    {}
 
-    MutableBlockPos& set(int xIn, int yIn, int zIn) {
+    MutableBlockPos& set(int xIn, int yIn, int zIn) noexcept {
         this->x = xIn;
         this->y = yIn;
         this->z = zIn;
@@ -142,5 +161,6 @@ public:
     }
 
 };
+
 
 #endif //MCCLONE_BLOCKPOS_H

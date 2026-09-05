@@ -11,14 +11,15 @@
  */
 struct MovementInput {
 
-    float moveStrafe;
-    float moveForward;
+    float moveStrafe{};
+    float moveForward{};
 
-    bool jump;
-    bool sneak;
+    bool jump{};
+    bool sneak{};
 
     virtual void updatePlayerMoveState() = 0;
 
 };
+
 
 #endif //MCCLONE_MOVEMENTINPUT_H

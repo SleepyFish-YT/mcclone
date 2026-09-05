@@ -44,4 +44,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_MOUSEFILTER_H

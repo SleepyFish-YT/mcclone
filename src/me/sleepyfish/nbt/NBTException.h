@@ -8,6 +8,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 /**
  * @author SleepyFish
@@ -21,9 +22,9 @@ private:
 
 public:
 
-    explicit NBTException(const std::string& message) :
+    explicit NBTException(std::string  message) :
         std::exception(),
-        message(message)
+        message(std::move(message))
     {}
 
     const char* what() const override {

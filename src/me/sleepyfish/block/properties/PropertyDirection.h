@@ -47,4 +47,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_PROPERTYDIRECTION_H

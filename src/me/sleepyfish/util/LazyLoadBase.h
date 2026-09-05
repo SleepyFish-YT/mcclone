@@ -16,7 +16,7 @@ class LazyLoadBase {
 private:
 
     T value;
-    bool isLoaded;
+    bool isLoaded{};
 
 public:
 
@@ -34,5 +34,6 @@ public:
     virtual ~LazyLoadBase() = default;
 
 };
+
 
 #endif //MCCLONE_LAZYLOADBASE_H

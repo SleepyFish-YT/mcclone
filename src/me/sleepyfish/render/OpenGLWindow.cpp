@@ -10,10 +10,12 @@
 #include "../client/settings/GameSettings.h"
 #include "../client/audio/SoundEngine.h"
 
-OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) {
+#include <utility>
+
+OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept {
     this->minecraft = minecraft;
     this->window = nullptr;
-    this->title = title;
+    this->title = std::move(title);
     this->fullscreen = false;
     this->mouseCaptured = false;
     this->displayInfo = displayInfo;
@@ -108,10 +110,6 @@ bool OpenGLWindow::init() {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseScroll(xOffset, yOffset);
         });
-
-        if (this->displayInfo.fullscreen) {
-            this->toggleFullscreen();
-        }
     }
     ::glfwMakeContextCurrent(nullptr);
     // Release context so render thread can claim it
@@ -174,7 +172,7 @@ void OpenGLWindow::execute() {
 }
 
 void OpenGLWindow::onStop() {
-    Logger::log("Shutting down glfwWindow...\n");
+    Logger::log("Shutting down glfwWindow...");
     ::glfwTerminate();
 }
 
@@ -247,10 +245,10 @@ void OpenGLWindow::handleMouseScroll(double xOffset, double yOffset) {
     this->minecraft->handleMouseScroll(xOffset, yOffset);
 }
 
-::GLFWwindow* OpenGLWindow::getWindow() {
+::GLFWwindow* OpenGLWindow::getWindow() noexcept {
     return this->window;
 }
 
-RenderInformation& OpenGLWindow::getRenderContext() {
+RenderInformation& OpenGLWindow::getRenderContext() noexcept {
     return this->renderContext;
 }

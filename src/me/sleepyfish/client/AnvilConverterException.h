@@ -8,6 +8,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 /**
  * @author SleepyFish
@@ -20,8 +21,8 @@ private:
 
 public:
 
-    explicit AnvilConverterException(const std::string& exceptionMessage) :
-        message(exceptionMessage)
+    explicit AnvilConverterException(std::string  exceptionMessage) :
+        message(std::move(exceptionMessage))
     {}
 
     const char* what() const noexcept override {

@@ -59,15 +59,15 @@ public:
 
     explicit Minecraft(const GameConfiguration& gameConfig);
 
-    static long long getSystemTime();
+    static long long getSystemTime() noexcept;
 
-    static long long getHighResTime();
+    static long long getHighResTime() noexcept;
 
-    bool isGamePaused() const;
+    bool isGamePaused() const noexcept;
 
-    bool isFramerateLimitBelowMax() const;
+    bool isFramerateLimitBelowMax() const noexcept;
 
-    uint16_t getLimitFramerate() const;
+    uint16_t getLimitFramerate() const noexcept;
 
     void handleKeypress(int key, int scancode, int action, int mods);
 

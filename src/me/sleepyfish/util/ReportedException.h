@@ -8,6 +8,8 @@
 
 #include <vcruntime_exception.h>
 
+// not FULLY implemented yet.
+
 /**
  * @author SleepyFish
  * @brief This class is used to report exceptions
@@ -17,13 +19,11 @@ class ReportedException : public std::exception {
 public:
 
     /*
-
         const CrashReport crashReport;
 
         ReportedException(CrashReport crashReport) :
             crashReport(crashReport)
         {}
-
      */
 
     char const* what() const override {

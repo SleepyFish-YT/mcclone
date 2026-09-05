@@ -12,7 +12,7 @@ namespace {
     public:
 
         InfiniteNBTSizeTracker() :
-            NBTSizeTracker(0LL)
+            NBTSizeTracker(0ll)
         {}
 
         void read(int64_t bits) override {

@@ -9,11 +9,13 @@
 #include "ISoundEventAccessor.h"
 #include "SoundPoolEntry.h"
 #include "SoundCategory.h"
-#include "ResourceLocation.h"
-#include "SoundHandler.h"
+#include "../../util/ResourceLocation.h"
+// #include "SoundHandler.h"
 
 #include <vector>
 #include <random>
+
+// not FULLY implemented yet.
 
 /**
  * @author SleepyFish
@@ -47,7 +49,7 @@ public:
     }
 
     SoundPoolEntry cloneEntry() override {
-        const int total = getWeight();
+        const int total = this->getWeight();
 
         if (!this->soundPool.empty() && total != 0) {
             std::uniform_int_distribution<int> dist(0, total - 1);
@@ -65,7 +67,8 @@ public:
             }
         }
 
-        return SoundHandler::missing_sound;
+        return {this->soundLocation, 0.0, 0.0, false};
+        // return SoundHandler::missing_sound;
     }
 
     void addSoundToEventPool(ISoundEventAccessor<SoundPoolEntry>* sound) {

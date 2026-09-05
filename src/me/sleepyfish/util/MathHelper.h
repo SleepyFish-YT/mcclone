@@ -25,11 +25,11 @@ class MathHelper {
 
 private:
 
-    static inline const float radToIndex     = MathUtils::roundToFloat(651.8986469044033);
+    static inline const float radToIndex = MathUtils::roundToFloat(651.8986469044033);
 
     static inline const double field_181163_d = std::bit_cast<double>(4805340802404319232LL);
 
-    static inline const std::array<int,    32>    multiplyDeBruijnBitPosition = {
+    static inline const std::array<int, 32> multiplyDeBruijnBitPosition = {
             0,1,28,2,29,14,24,3,30,22,20,15,25,17,4,8,31,27,13,23,21,19,16,7,26,12,18,6,11,5,10,9
     };
 
@@ -67,7 +67,7 @@ private:
         return table;
     }
 
-    static bool isPowerOfTwo(int value) {
+    static bool isPowerOfTwo(int value) noexcept {
         return value != 0 && (value & (value - 1)) == 0;
     }
 
@@ -78,24 +78,24 @@ private:
 
     static double func_181161_i(double value) {
         const double d0 = 0.5 * value;
-        long long i = std::bit_cast<long long>(value);
+        auto i = std::bit_cast<long long>(value);
         i = 6910469410427058090LL - (i >> 1);
         value = std::bit_cast<double>(i);
         value = value * (1.5 - d0 * value * value);
         return value;
     }
 
-    static inline const std::array<float,  65536> SIN_TABLE       = buildSinTable();
-    static inline const std::array<float,  4096>  SIN_TABLE_FAST  = buildSinTableFast();
-    static inline const std::array<double, 257>   field_181164_e  = buildField181164e();
-    static inline const std::array<double, 257>   field_181165_f  = buildField181165f();
+    static inline const std::array<float, 65536> SIN_TABLE = buildSinTable();
+    static inline const std::array<float, 4096> SIN_TABLE_FAST = buildSinTableFast();
+    static inline const std::array<double, 257> field_181164_e = buildField181164e();
+    static inline const std::array<double, 257> field_181165_f = buildField181165f();
 
 public:
 
     static inline bool fastMath = false;
 
-    static inline const float PI      = MathUtils::roundToFloat(std::numbers::pi);
-    static inline const float PId2    = MathUtils::roundToFloat(std::numbers::pi / 2.0);
+    static inline const float PI = MathUtils::roundToFloat(std::numbers::pi);
+    static inline const float PId2 = MathUtils::roundToFloat(std::numbers::pi / 2.0);
     static inline const float deg2Rad = MathUtils::roundToFloat(0.017453292519943295);
 
     static float sin(float value) {
@@ -118,70 +118,70 @@ public:
         return static_cast<float>(std::sqrt(value));
     }
 
-    static int floor_float(float value) {
+    static int floor_float(float value) noexcept {
         const int i = static_cast<int>(value);
         return value < static_cast<float>(i) ? i - 1 : i;
     }
 
-    static int truncateDoubleToInt(double value) {
+    static int truncateDoubleToInt(double value) noexcept {
         return static_cast<int>(value + 1024.0) - 1024;
     }
 
-    static int floor_double(double value) {
+    static int floor_double(double value) noexcept {
         const int i = static_cast<int>(value);
         return value < static_cast<double>(i) ? i - 1 : i;
     }
 
-    static long long floor_double_long(double value) {
+    static long long floor_double_long(double value) noexcept {
         const long long i = static_cast<long long>(value);
         return value < static_cast<double>(i) ? i - 1LL : i;
     }
 
-    static int func_154353_e(double value) {
+    static int func_154353_e(double value) noexcept {
         return static_cast<int>(value >= 0.0 ? value : -value + 1.0);
     }
 
-    static float abs(float value) {
+    static float abs(float value) noexcept {
         return value >= 0.0f ? value : -value;
     }
 
-    static int abs_int(int value) {
+    static int abs_int(int value) noexcept {
         return value >= 0 ? value : -value;
     }
 
-    static int ceiling_float_int(float value) {
+    static int ceiling_float_int(float value) noexcept {
         const int i = static_cast<int>(value);
         return value > static_cast<float>(i) ? i + 1 : i;
     }
 
-    static int ceiling_double_int(double value) {
+    static int ceiling_double_int(double value) noexcept {
         const int i = static_cast<int>(value);
         return value > static_cast<double>(i) ? i + 1 : i;
     }
 
-    static int clamp_int(int num, int min, int max) {
+    static int clamp_int(int num, int min, int max) noexcept {
         return num < min ? min : (num > max ? max : num);
     }
 
-    static float clamp_float(float num, float min, float max) {
+    static float clamp_float(float num, float min, float max) noexcept {
         return num < min ? min : (num > max ? max : num);
     }
 
-    static double clamp_double(double num, double min, double max) {
+    static double clamp_double(double num, double min, double max) noexcept {
         return num < min ? min : (num > max ? max : num);
     }
 
-    static double denormalizeClamp(double lowerBnd, double upperBnd, double slide) {
+    static double denormalizeClamp(double lowerBnd, double upperBnd, double slide) noexcept {
         return slide < 0.0 ? lowerBnd : (slide > 1.0 ? upperBnd : lowerBnd + (upperBnd - lowerBnd) * slide);
     }
 
-    static double abs_max(double a, double b) {
+    static double abs_max(double a, double b) noexcept {
         if (a < 0.0) a = -a;
         if (b < 0.0) b = -b;
         return a > b ? a : b;
     }
 
-    static int bucketInt(int a, int b) {
+    static int bucketInt(int a, int b) noexcept {
         return a < 0 ? -((-a - 1) / b) - 1 : a / b;
     }
 
@@ -197,28 +197,28 @@ public:
         return min >= max ? min : std::uniform_real_distribution<double>(min, max)(rand);
     }
 
-    static double average(std::span<const long long> values) {
+    static double average(std::span<const long long> values) noexcept {
         long long sum = 0LL;
         for (const long long v : values) sum += v;
         return static_cast<double>(sum) / static_cast<double>(values.size());
     }
 
-    static bool epsilonEquals(float a, float b) {
+    static bool epsilonEquals(float a, float b) noexcept {
         return abs(b - a) < 1.0E-5f;
     }
 
-    static int normalizeAngle(int value, int mod) {
+    static int normalizeAngle(int value, int mod) noexcept {
         return (value % mod + mod) % mod;
     }
 
-    static float wrapAngleTo180_float(float value) {
+    static float wrapAngleTo180_float(float value) noexcept {
         value = std::fmod(value, 360.0f);
         if (value >= 180.0f)  value -= 360.0f;
         if (value < -180.0f) value += 360.0f;
         return value;
     }
 
-    static double wrapAngleTo180_double(double value) {
+    static double wrapAngleTo180_double(double value) noexcept {
         value = std::fmod(value, 360.0);
         if (value >= 180.0)  value -= 360.0;
         if (value < -180.0) value += 360.0;
@@ -243,7 +243,7 @@ public:
         return std::max(max, parseDoubleWithDefault(str, defaultVal));
     }
 
-    static int roundUpToPowerOfTwo(int value) {
+    static int roundUpToPowerOfTwo(int value) noexcept {
         int i = value - 1;
         i |= i >> 1;
         i |= i >> 2;
@@ -257,7 +257,7 @@ public:
         return calculateLogBaseTwoDeBruijn(value) - (isPowerOfTwo(value) ? 0 : 1);
     }
 
-    static int roundUp(int value, int step) {
+    static int roundUp(int value, int step) noexcept {
         if (step == 0) return 0;
         if (value == 0) return step;
         if (value < 0) step *= -1;
@@ -265,15 +265,15 @@ public:
         return i == 0 ? value : value + step - i;
     }
 
-    static int func_180183_b(float r, float g, float b) {
+    static int func_180183_b(float r, float g, float b) noexcept {
         return func_180181_b(floor_float(r * 255.0f), floor_float(g * 255.0f), floor_float(b * 255.0f));
     }
 
-    static int func_180181_b(int r, int g, int b) {
+    static int func_180181_b(int r, int g, int b) noexcept {
         return (r << 16) | (g << 8) | b;
     }
 
-    static int func_180188_d(int a, int b) {
+    static int func_180188_d(int a, int b) noexcept {
         const int i  = (a & 0xFF0000) >> 16;
         const int j  = (b & 0xFF0000) >> 16;
         const int k  = (a & 0xFF00) >> 8;
@@ -290,17 +290,17 @@ public:
         return value - std::floor(value);
     }
 
-    static long long getPositionRandom(const Vec3i& pos) {
+    static long long getPositionRandom(const Vec3i& pos) noexcept {
         return getCoordinateRandom(pos.x, pos.y, pos.z);
     }
 
-    static long long getCoordinateRandom(int x, int y, int z) {
+    static long long getCoordinateRandom(int x, int y, int z) noexcept {
         long long i = (static_cast<long long>(x) * 3129871LL) ^ (static_cast<long long>(z) * 116129781LL) ^ static_cast<long long>(y);
         i = i * i * 42317861LL + i * 11LL;
         return i;
     }
 
-    static double func_181160_c(double a, double b, double c) {
+    static double func_181160_c(double a, double b, double c) noexcept {
         return (a - b) / (c - b);
     }
 

@@ -315,4 +315,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_NBTTAGCOMPOUND_H

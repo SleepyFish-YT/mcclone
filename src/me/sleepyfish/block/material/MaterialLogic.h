@@ -36,4 +36,5 @@ public:
 
 };
 
+
 #endif //MCCLONE_MATERIALLOGIC_H

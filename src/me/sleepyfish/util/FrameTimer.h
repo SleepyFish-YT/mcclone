@@ -26,7 +26,7 @@ private:
 
 public:
 
-    void addFrame(long long runningTime) {
+    void addFrame(long long runningTime) noexcept {
         this->frames[this->index] = runningTime;
         ++this->index;
 
@@ -43,24 +43,24 @@ public:
     }
 
     // never used in minecraft
-    int getLagometerValue(long long time, int multiplier) const {
+    int getLagometerValue(long long time, int multiplier) const noexcept {
         const double d0 = static_cast<double>(time) / 1.6666666e7;
         return static_cast<int>(d0 * static_cast<double>(multiplier));
     }
 
-    int getLastIndex() const {
+    int getLastIndex() const noexcept {
         return this->lastIndex;
     }
 
-    int getIndex() const {
+    int getIndex() const noexcept {
         return this->index;
     }
 
-    int parseIndex(int rawIndex) const {
+    int parseIndex(int rawIndex) const noexcept {
         return rawIndex % 240;
     }
 
-    const std::array<long long, 240>& getFrames() const {
+    const std::array<long long, 240>& getFrames() const noexcept {
         return this->frames;
     }
 
