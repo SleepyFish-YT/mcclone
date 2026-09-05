@@ -25,20 +25,56 @@ OpenGL for rendering and OpenAL for spatial audio.
 
 ### Requirements
 
-## Description
-This is a Minecraft clone coded in C++20 made by SleepyFish.
+- CMake 3.31+
+- C++20-compatible compiler (MSVC recommended on Windows)
+- [vcpkg](https://github.com/microsoft/vcpkg)
 
-## Libraries
-- [OpenGL](https://www.opengl.org/)
-- [GLFW](https://github.com/glfw/glfw)
-- [GLAD](https://github.com/Dav1dde/glad)
-- [GLM](https://github.com/g-truc/glm)
-- [OpenAL](https://github.com/kcat/openal-soft)
-- [STB](https://github.com/nothings/stb)
-- [nlohmann/json](https://github.com/nlohmann/json)
-- [winmm](https://learn.microsoft.com/en-us/search/?terms=winmm)
+### Dependencies (via vcpkg)
+
+| Library | Purpose |
+|---|---|
+| [OpenGL](https://www.opengl.org/) | Graphics API |
+| [GLFW](https://github.com/glfw/glfw) | Window & input |
+| [GLAD](https://github.com/Dav1dde/glad) | OpenGL loader |
+| [GLM](https://github.com/g-truc/glm) | Math library |
+| [OpenAL Soft](https://github.com/kcat/openal-soft) | Spatial audio |
+| [STB](https://github.com/nothings/stb) | Image loading |
+| [nlohmann/json](https://github.com/nlohmann/json) | JSON parsing |
+| winmm | Windows multimedia |
+
+### Steps
+
+```bash
+cmake -B build -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+cmake --build build --config Release
+```
+
+---
+
+## Usage
+
+Run the executable directly or with optional arguments:
+
+| Argument                  | Description |
+|---------------------------|---|
+| `--debug`                 | Show console window and enable debug logging |
+| `--demo`                  | Run in demo mode |
+| `--ignoreGlErrors`        | Suppress OpenGL error output |
+| `--resolution <w> <h>`    | Set window size (e.g. `--resolution 1920 1080`) |
+| `--resolution fullscreen` | Run at native screen resolution |
+
+---
 
 ## Download
-- [McClone 1.0.1](https://github.com/SleepyFish-YT/McClone/releases/tag/v1.0.1)
+
+[Latest McClone Release](https://github.com/SleepyFish-YT/McClone/releases/latest) (./releases/latest)
+
+---
+
+## Licenses
+
+Third-party library licenses are located in [`./licenses/`](./licenses/).
+
+---
 
 ###### Signed by SleepyFish
