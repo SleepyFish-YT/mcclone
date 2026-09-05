@@ -134,8 +134,6 @@ void OpenGLWindow::run() {
 void OpenGLWindow::execute() {
     this->running = true;
 
-    ::glfwMakeContextCurrent(nullptr);
-
     this->minecraft->start();
     this->start();
 
