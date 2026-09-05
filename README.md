@@ -2,7 +2,7 @@
 
 > A Minecraft clone written in C++20.
 
-**Version:** 1.0.1  
+**Version:** 1.0.2
 **Author:** [SleepyFish](https://github.com/SleepyFish-YT)
 
 ---

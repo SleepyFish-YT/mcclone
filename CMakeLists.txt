@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.31)
 
 # ======================== project variables ========================
 set(PROJECT_NAME "mcclone")
-set(PROJECT_VERSION "1.0.1")
+set(PROJECT_VERSION "1.0.2")
 set(PROJECT_AUTHOR "sleepyfish")
 set(PROJECT_GITHUB "https://github.com/${PROJECT_AUTHOR}-yt/${PROJECT_NAME}")
 # ======================== project variables ========================

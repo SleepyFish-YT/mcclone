@@ -29,6 +29,8 @@ protected:
 
     void run() override;
 
+    void onStop() override;
+
 private:
 
     uint8_t leftClickCounter;

@@ -52,14 +52,14 @@ void Logger::writeToFile(const std::string& txt) {
     }
 }
 
-void Logger::init(const std::filesystem::path& logFolder) {
+void Logger::init(std::filesystem::path log_dir_path) {
     if (Logger::initialized) {
         Logger::error("Logger already initialized");
         return;
     }
 
     try {
-        Logger::logFolderPath = logFolder;
+        Logger::logFolderPath = std::move(log_dir_path); // move ownership to Logger
 
         if (!std::filesystem::exists(Logger::logFolderPath)) {
             if (!std::filesystem::create_directory(Logger::logFolderPath)) {

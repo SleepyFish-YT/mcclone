@@ -35,6 +35,8 @@ private:
 
     void run() override;
 
+    void onStop() override;
+
 public:
 
     uint16_t debugFps;
@@ -53,7 +55,6 @@ public:
 
     bool init();
     void execute();
-    void shutdown();
     void toggleFullscreen();
     void toggleCaptureMouse();
     void handleKeypress(int key, int scancode, int action, int mods);

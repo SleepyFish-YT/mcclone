@@ -8,7 +8,7 @@
 
 #include <filesystem>
 #include <string>
-#include <filesystem>
+#include <vector>
 
 /**
  * @author SleepyFish
@@ -24,7 +24,7 @@ struct GameConfiguration {
         int height;
         bool fullscreen;
         bool showGlErrors;
-    } displayInformation;
+    } displayInformation{};
 
     /**
      * @author SleepyFish
@@ -33,8 +33,8 @@ struct GameConfiguration {
         std::filesystem::path mcDataDir;
         std::filesystem::path resourcePacksDir;
         std::filesystem::path assetsDir;
-        std::filesystem::path assetIndex;
-    } folderInformation;
+        std::filesystem::path assetIndexFile;
+    } folderInformation{};
 
     /**
      * @author SleepyFish
@@ -42,7 +42,7 @@ struct GameConfiguration {
     struct GameInformation {
         bool isDemo;
         std::string version;
-    } gameInformation;
+    } gameInformation{};
 
     /**
      * @author SleepyFish
@@ -50,16 +50,18 @@ struct GameConfiguration {
     struct ServerInformation {
         std::string serverName;
         uint16_t serverPort;
-    } serverInformation;
+    } serverInformation{};
 
     /**
      * @author SleepyFish
      */
     struct UserInformation {
         std::string username;
-    } userInformation;
+    } userInformation{};
 
-    bool debugMode;
+    bool debugMode{};
+
+    std::vector<std::string> arguments{};
 
 };
 

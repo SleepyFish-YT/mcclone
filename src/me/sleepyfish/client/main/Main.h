@@ -57,7 +57,7 @@ public:
      * @brief This function starts the main window and holds the main loop
      * @returns Exit code
      */
-    int main(int argc, char* argv[], std::filesystem::path executablePath);
+    int main(int argc, char* argv[], const std::filesystem::path& exec_path);
 
     std::string getVersion() const;
 

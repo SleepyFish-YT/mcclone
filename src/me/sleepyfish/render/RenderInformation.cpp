@@ -18,8 +18,8 @@ void RenderInformation::init() {
 
 void RenderInformation::print() const {
     Logger::log("OpenGL Vendor: {}", this->vendor);
-    Logger::log("OpenGL Version: {}", this->version);
     Logger::log("OpenGL Renderer: {}", this->renderer);
+    Logger::log("OpenGL Version: {}", this->version);
 }
 
 const std::string &RenderInformation::getVendor() const {

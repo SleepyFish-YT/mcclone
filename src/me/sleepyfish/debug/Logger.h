@@ -31,7 +31,7 @@ private:
 
 public:
 
-    static void init(const std::filesystem::path& logFolder);
+    static void init(std::filesystem::path log_dir_path);
 
     static void close();
 

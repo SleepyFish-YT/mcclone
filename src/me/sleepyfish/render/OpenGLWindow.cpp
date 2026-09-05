@@ -96,7 +96,7 @@ bool OpenGLWindow::init() {
 }
 
 void OpenGLWindow::run() {
-    // this is the render thread (called by runnable::start())
+    // this is the render thread (called by runnable(this->start))
     ::glfwMakeContextCurrent(this->window);
     Logger::log("Render thread started");
 
@@ -147,13 +147,10 @@ void OpenGLWindow::execute() {
 
     this->join();
     this->minecraft->join();
-
-    this->shutdown();
 }
 
-void OpenGLWindow::shutdown() {
-    this->minecraft->soundEngine->destory();
-    Logger::log("Shutting down...\n");
+void OpenGLWindow::onStop() {
+    Logger::log("Shutting down glfwWindow...\n");
     ::glfwTerminate();
 }
 

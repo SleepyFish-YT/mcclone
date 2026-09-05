@@ -27,20 +27,27 @@ Main::Main() {
     // version
     this->majorVersion = "1";
     this->minorVersion = "0";
-    this->patchVersion = "1";
+    this->patchVersion = "2";
 }
 
-int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
+int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir) {
     this->arguments = std::vector<std::string>(argv, argv + argc);
-    this->screenSize = {::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN)};
+
+#ifdef _WIN32
+    this->screenSize = { ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
+    if (this->screenSize.x <= 0 || this->screenSize.y <= 0) {
+        Logger::error("Failed to retrieve screen resolution");
+        return -1;
+    }
+#endif
 
     glm::ivec2 windowSize = {1050, 700};
 
     // clion shows this is unused but it is used. (search for this->gameConfiguration =) to find it.
-    bool showGlErrors = true;
-    bool isFullscreen = false;
-    bool isDemo = false;
-    bool isDebug = false;
+    bool args_showGlErrors = true;
+    bool args_isFullscreen = false;
+    bool args_isDemo = false;
+    bool args_isDebug = false;
 
     // check arguments
     {
@@ -55,15 +62,15 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
 
             if (arg == "--debug") {
                 Logger::log("Debug mode enabled");
-                isDebug = true;
+                args_isDebug = true;
             }
 
             if (arg == "--ignoreGlErrors") {
-                showGlErrors = false;
+                args_showGlErrors = false;
             }
 
             if (arg == "--demo") {
-                isDemo = true;
+                args_isDemo = true;
             }
 
             if (arg == "--resolution") {
@@ -75,7 +82,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
                 if (this->arguments[i + 1] == "fullscreen") {
                     windowSize.x = this->screenSize.x;
                     windowSize.y = this->screenSize.y;
-                    isFullscreen = true;
+                    args_isFullscreen = true;
                     i += 1; // skip "fullscreen"
                 } else {
                     if (i + 2 >= this->arguments.size()) {
@@ -96,7 +103,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
             }
         }
 
-        if (!isDebug) {
+        if (!args_isDebug) {
             ::ShowWindow(this->consoleWindow, SW_HIDE);
         }
     }
@@ -115,24 +122,22 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
     }
 
     try {
-        const std::filesystem::path& gameDir = executablePath; // changed from copy. better this way for memory
-
-        std::filesystem::path gameDirResourcepacks = gameDir / "ressourcepacks";
-        if (!std::filesystem::exists(gameDirResourcepacks)) {
-            std::filesystem::create_directory(gameDirResourcepacks);
+        std::filesystem::path resourcepacks_dir = gameDir_dir / "ressourcepacks";
+        if (!std::filesystem::exists(resourcepacks_dir)) {
+            std::filesystem::create_directory(resourcepacks_dir);
             Logger::log("Created ressourcepacks folder");
         }
 
-        std::filesystem::path gameDirAssets = gameDir / "assets";
-        if (!std::filesystem::exists(gameDirAssets)) {
-            std::filesystem::create_directory(gameDirAssets);
+        std::filesystem::path assets_dir = gameDir_dir / "assets";
+        if (!std::filesystem::exists(assets_dir)) {
+            std::filesystem::create_directory(assets_dir);
             Logger::log("Created assets folder");
         }
 
-        std::filesystem::path assetIndex = gameDirAssets / "asset_index.json";
+        std::filesystem::path assetIndex_file = assets_dir / "asset_index.json";
         {
-            if (!std::filesystem::exists(assetIndex)) {
-                std::ofstream file(assetIndex);
+            if (!std::filesystem::exists(assetIndex_file)) {
+                std::ofstream file(assetIndex_file);
                 {
                     file << "{}";
                 }
@@ -151,12 +156,13 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
         }
 
         this->gameConfiguration = {
-                GameConfiguration::DisplayInformation(windowSize.x, windowSize.y, isFullscreen, showGlErrors),
-                GameConfiguration::FolderInformation(gameDir, gameDirRessourcepacks, gameDirAssets, assetIndex),
-                GameConfiguration::GameInformation(isDemo, this->getVersion()),
+                GameConfiguration::DisplayInformation(windowSize.x, windowSize.y, args_isFullscreen, args_showGlErrors),
+                GameConfiguration::FolderInformation(gameDir_dir, resourcepacks_dir, assets_dir, assetIndex_file),
+                GameConfiguration::GameInformation(args_isDemo, this->getVersion()),
                 GameConfiguration::ServerInformation("testName.de", 3333),
                 GameConfiguration::UserInformation("username"),
-                isDebug
+                args_isDebug,
+                this->arguments
         };
     } catch (const std::exception& e) {
         Logger::error("Failed to create game configuration: " + std::string(e.what()));
@@ -174,6 +180,7 @@ int Main::main(int argc, char* argv[], std::filesystem::path executablePath) {
 
     glWindow.execute();
     Logger::close();
+    glWindow.stop();
 
     return 0;
 }

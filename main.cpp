@@ -17,17 +17,21 @@
  * @return Exit code
  */
 int main(int argc, char* argv[]) {
+    if (argc == 0 || argv[0] == nullptr) {
+        return -1;
+    }
+
     Main mainInstance;
 
     // get executable path without file name
-    const std::filesystem::path executablePath = std::filesystem::path(argv[0]).parent_path();
+    const std::filesystem::path executable_path = std::filesystem::path(argv[0]).parent_path();
 
-    if (executablePath.empty() || !std::filesystem::is_directory(executablePath)) {
+    if (executable_path.empty() || !std::filesystem::is_directory(executable_path)) {
         Logger::error("Failed to get executable path");
         return -1;
     }
 
-    Logger::init(executablePath / "logs");
+    Logger::init(std::filesystem::path(executable_path / "logs"));
     if (!Logger::isInitialized()) {
         Logger::error("Failed to initialize logger");
         return -1;
@@ -35,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     // pass console window handle to main instance
     mainInstance.setConsoleWindow(::GetConsoleWindow());
-    return mainInstance.main(argc, argv, executablePath);
+    return mainInstance.main(argc, argv, executable_path);
 }
 
 

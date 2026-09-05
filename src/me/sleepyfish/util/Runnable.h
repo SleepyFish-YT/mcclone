@@ -12,6 +12,7 @@
 /**
  * @author SleepyFish
  * @brief Runnable interface class for threads
+ * @version 1.1
  */
 class Runnable {
 
@@ -23,11 +24,15 @@ protected:
 
     std::atomic<bool> running;
 
-    virtual void run() = 0; // subclass implements this
+    virtual void run() = 0; // subclass must implement this
+
+    virtual void onStop() {} // subclass can implement this
 
 public:
 
-    Runnable() : running(false) {}
+    Runnable() noexcept :
+        running(false)
+    {}
 
     void start() {
         this->running = true;
@@ -36,6 +41,7 @@ public:
 
     void stop() {
         this->running = false;
+        this->onStop();
     }
 
     void join() {
@@ -44,7 +50,7 @@ public:
         }
     }
 
-    bool isRunning() const {
+    bool isRunning() const noexcept {
         return this->running;
     }
 

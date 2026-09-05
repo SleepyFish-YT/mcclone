@@ -35,18 +35,6 @@ Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEng
     this->gameSettings = new GameSettings(this->mcDataDir);
 }
 
-long long Minecraft::getSystemTime() {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-    ).count();
-}
-
-long long Minecraft::getHighResTime() {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now().time_since_epoch()
-    ).count();
-}
-
 void Minecraft::run() {
     Logger::log("Update thread started");
 
@@ -73,6 +61,23 @@ void Minecraft::run() {
     ::timeEndPeriod(1u);
 
     Logger::log("Update thread stopped");
+}
+
+void Minecraft::onStop() {
+    this->soundEngine->destory();
+    Logger::log("Shutting down...");
+}
+
+long long Minecraft::getSystemTime() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+    ).count();
+}
+
+long long Minecraft::getHighResTime() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()
+    ).count();
 }
 
 void Minecraft::runGameLoop() {
