@@ -22,18 +22,22 @@ class SoundEngine {
 
 public:
 
+    /**
+     * @author SleepyFish
+     */
     struct ActiveSound {
         ::ALuint source;
         ::ALuint buffer;
     };
 
     SoundEngine();
-    SoundEngine(const std::filesystem::path& soundDir);
+    ~SoundEngine();
+
+    // disable copy and move
+    SoundEngine(std::filesystem::path  soundDir);
     SoundEngine& operator=(const SoundEngine&) = delete;
     SoundEngine(SoundEngine&&) = delete;
     SoundEngine& operator=(SoundEngine&&) = delete;
-
-    ~SoundEngine();
 
     void playSound(const std::string& name, float volume = 1.0f, float pitch = 1.0f);
     void playSound3D(const std::string& name, float x, float y, float z, float volume = 1.0f, float pitch = 1.0f);
@@ -53,5 +57,5 @@ private:
 
 };
 
-#endif //MCCLONE_SOUNDENGINE_H
 
+#endif //MCCLONE_SOUNDENGINE_H

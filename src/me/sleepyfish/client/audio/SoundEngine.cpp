@@ -4,6 +4,9 @@
 //
 
 #include "SoundEngine.h"
+
+#include <utility>
+
 #include "../../debug/Logger.h"
 
 extern "C" {
@@ -14,17 +17,19 @@ extern "C" {
 
 }
 
-SoundEngine::SoundEngine() {
+SoundEngine::SoundEngine() :
+    soundDir("")
+{
     this->device = nullptr;
     this->context = nullptr;
-    this->soundDir = "";
     this->activeSources = {};
+
     Logger::log("Created empty sound engine");
 }
 
-SoundEngine::SoundEngine(const std::filesystem::path& sound_dir) {
-    this->soundDir = sound_dir;
-
+SoundEngine::SoundEngine(std::filesystem::path sound_dir) :
+    soundDir(std::move(sound_dir))
+{
     try {
         if (!std::filesystem::exists(this->soundDir)) {
             std::filesystem::create_directory(this->soundDir);
@@ -84,7 +89,7 @@ void SoundEngine::destory(bool msg) {
 ::ALuint SoundEngine::loadBuffer(const std::string& audio_name) {
     std::string file_name = audio_name + ".ogg";
 
-    std::filesystem::path soundPath = this->soundDir / file_name;
+    std::filesystem::path soundPath(this->soundDir / file_name);
     if (!std::filesystem::exists(soundPath)) {
         Logger::warn("Sound not found in soundDir, falling back to path: " + file_name);
         soundPath = std::filesystem::path(file_name);
@@ -193,4 +198,3 @@ void SoundEngine::cleanup() {
         }
     }
 }
-

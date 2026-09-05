@@ -5,21 +5,22 @@
 
 #include "Minecraft.h"
 
+#include "../debug/Logger.h"
 #include "../profiler/Profiler.h"
 #include "settings/GameSettings.h"
 #include "audio/SoundEngine.h"
 
-#include "../debug/Logger.h"
-#include "../command/CommandBase.h"
-#include "../command/ICommandSender.h"
-
 #ifdef _WIN32
 #include <windows.h>
 #endif //_WIN32
+
 #include <timeapi.h>
 #include <glfw/glfw3.h>
 
-Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEngine(new SoundEngine(gameConfig.folderInformation.mcDataDir / "sounds")) {
+Minecraft::Minecraft(const GameConfiguration& gameConfig) :
+    Runnable(),
+    soundEngine(new SoundEngine(std::filesystem::path(gameConfig.folderInformation.mcDataDir / "sounds")))
+{
     this->mcDataDir = gameConfig.folderInformation.mcDataDir;
 
     this->leftClickCounter = 0;
@@ -37,10 +38,6 @@ Minecraft::Minecraft(const GameConfiguration& gameConfig) : Runnable(), soundEng
 
 void Minecraft::run() {
     Logger::log("Update thread started");
-
-    CommandBase base = CommandBase();
-    Logger::log(base.getCommandAliases().at(0)); // command base test 0
-    Logger::log(base.getCommandAliases().at(1)); // command base test 1
 
     ::timeBeginPeriod(1u);
     {
@@ -65,7 +62,6 @@ void Minecraft::run() {
 
 void Minecraft::onStop() {
     this->soundEngine->destory();
-    Logger::log("Shutting down...");
 }
 
 long long Minecraft::getSystemTime() {
@@ -94,7 +90,7 @@ void Minecraft::runGameLoop() {
     }
 
     if (this->gameSettings->keyBindAttack.isPressed()) {
-        this->soundEngine->playSound("sigma", 0.8f, 0.9f);
+        this->soundEngine->playSound3D("sigma", 4.0f, 0.0f, 0.0f, 0.8f, 0.9f); // right ear: "SLEEPEEFIIIIIIII"
     }
 
     this->mcProfiler->startSection("soundEngine");

@@ -3,6 +3,8 @@
 // Project: mcclone
 //
 
+#include "../../../../../pcb.h"
+
 #include "Main.h"
 
 #include "../../debug/Logger.h"
@@ -37,9 +39,9 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
     this->screenSize = { ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
     if (this->screenSize.x <= 0 || this->screenSize.y <= 0) {
         Logger::error("Failed to retrieve screen resolution");
-        return -1;
+        return MCCLONE_ERR_RESOLUTION;
     }
-#endif
+#endif //_WIN32
 
     glm::ivec2 windowSize = {1050, 700};
 
@@ -76,7 +78,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
             if (arg == "--resolution") {
                 if (i + 1 >= this->arguments.size()) {
                     Logger::error("Missing arguments for --resolution (usage: --resolution <width> <height> or --resolution fullscreen)");
-                    return -1;
+                    return MCCLONE_ERR_ARGUMENTS;
                 }
 
                 if (this->arguments[i + 1] == "fullscreen") {
@@ -87,7 +89,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
                 } else {
                     if (i + 2 >= this->arguments.size()) {
                         Logger::error("Missing arguments for --resolution (usage: --resolution <width> <height>)");
-                        return -1;
+                        return MCCLONE_ERR_ARGUMENTS;
                     }
 
                     try {
@@ -95,7 +97,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
                         windowSize.y = std::stoi(this->arguments[i + 2]);
                     } catch (const std::exception&) {
                         Logger::error("Invalid arguments for --resolution (must be integers or 'fullscreen')");
-                        return -1;
+                        return MCCLONE_ERR_ARGUMENTS;
                     }
 
                     i += 2; // skip width and height
@@ -112,12 +114,12 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
     {
         if (windowSize.x <= 0 || windowSize.y <= 0) {
             Logger::error("Both window dimensions must be greater than 0");
-            return -1;
+            return MCCLONE_ERR_DIMENSIONS;
         }
 
         if (windowSize.x > this->screenSize.x + 8 || windowSize.y > this->screenSize.y + 8) { // + 8 to account other things
             Logger::error("Window size does not fit on screen");
-            return -1;
+            return MCCLONE_ERR_DIMENSIONS;
         }
     }
 
@@ -128,13 +130,13 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
             Logger::log("Created resourcepacks folder");
         }
 
-        std::filesystem::path assets_dir = gameDir_dir / "assets";
+        std::filesystem::path assets_dir(gameDir_dir / "assets");
         if (!std::filesystem::exists(assets_dir)) {
             std::filesystem::create_directory(assets_dir);
             Logger::log("Created assets folder");
         }
 
-        std::filesystem::path assetIndex_file = assets_dir / "asset_index.json";
+        std::filesystem::path assetIndex_file(assets_dir / "asset_index.json");
         {
             if (!std::filesystem::exists(assetIndex_file)) {
                 std::ofstream file(assetIndex_file);
@@ -166,7 +168,7 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
         };
     } catch (const std::exception& e) {
         Logger::error("Failed to create game configuration: " + std::string(e.what()));
-        return -1;
+        return MCCLONE_ERR_GAME_CONFIG;
     }
 
     Minecraft minecraft {this->gameConfiguration};
@@ -179,10 +181,9 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
     }
 
     glWindow.execute();
-    Logger::close();
     glWindow.stop();
 
-    return 0;
+    return MCCLONE_ERR_NONE;
 }
 
 std::string Main::getVersion() const {

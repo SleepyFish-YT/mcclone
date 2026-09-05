@@ -55,6 +55,9 @@ add_executable(${PROJECT_NAME}
         # main file
         main.cpp
 
+        # defines
+        pcb.h
+
         # client/main
         ${SRC_DIR}/client/main/Main.cpp
         ${SRC_DIR}/client/main/Main.h

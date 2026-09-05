@@ -131,8 +131,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
 
     if (KeyBinding::getRegisteredCount() != (this->keyBinds.size() + this->keyBindHotbar.size())) {
         Logger::error("Failed to register one or more keybinds! Expected {}, got {}",
-                      this->keyBinds.size() + this->keyBindHotbar.size(),
-                      KeyBinding::getRegisteredCount());
+                      this->keyBinds.size() + this->keyBindHotbar.size(), KeyBinding::getRegisteredCount());
     }
 
     if (std::filesystem::exists(this->settingsFilePath)) {
@@ -228,8 +227,7 @@ void GameSettings::loadSettings() {
 
     if (KeyBinding::getRegisteredCount() != (this->keyBinds.size() + this->keyBindHotbar.size())) {
         Logger::error("Failed to register one or more keybinds! Expected {}, got {}",
-                      this->keyBinds.size() + this->keyBindHotbar.size(),
-                      KeyBinding::getRegisteredCount());
+                      this->keyBinds.size() + this->keyBindHotbar.size(), KeyBinding::getRegisteredCount());
     }
 
     Logger::log("Settings loaded from {}", this->settingsFilePath.string());

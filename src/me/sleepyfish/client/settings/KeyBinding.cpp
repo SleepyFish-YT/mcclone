@@ -10,10 +10,10 @@
 #include <GLFW/glfw3.h>
 
 std::vector<KeyBinding*> KeyBinding::keybindArray {};
-std::unordered_map<int, KeyBinding*> KeyBinding::hash {};
+std::unordered_map<uint16_t, KeyBinding*> KeyBinding::hash {};
 std::unordered_set<std::string> KeyBinding::keybindSet {};
 
-KeyBinding::KeyBinding(const std::string& description, int keyCode, const std::string& category) {
+KeyBinding::KeyBinding(const std::string& description, uint16_t keyCode, const std::string& category) noexcept {
     this->keyDescription = description;
     this->keyCode = keyCode;
     this->keyCodeDefault = keyCode;
@@ -28,13 +28,13 @@ void KeyBinding::registerBinding(KeyBinding* binding) {
     KeyBinding::keybindSet.insert(binding->keyCategory);
 }
 
-void KeyBinding::unregisterAllBinds() {
+void KeyBinding::unregisterAllBinds() noexcept {
     KeyBinding::keybindArray.clear();
     KeyBinding::hash.clear();
     KeyBinding::keybindSet.clear();
 }
 
-void KeyBinding::onTick(int keyCode) {
+void KeyBinding::onTick(uint16_t keyCode) {
     if (keyCode != 0) {
         auto it = KeyBinding::hash.find(keyCode);
         if (it != KeyBinding::hash.end()) {
@@ -43,7 +43,7 @@ void KeyBinding::onTick(int keyCode) {
     }
 }
 
-void KeyBinding::setKeyBindState(int keyCode, bool pressed) {
+void KeyBinding::setKeyBindState(uint16_t keyCode, bool pressed) {
     if (keyCode != 0) {
         auto it = KeyBinding::hash.find(keyCode);
         if (it != KeyBinding::hash.end()) {
@@ -70,36 +70,37 @@ const std::unordered_set<std::string>& KeyBinding::getKeybinds() {
     return KeyBinding::keybindSet;
 }
 
-size_t KeyBinding::getRegisteredCount() {
+size_t KeyBinding::getRegisteredCount() noexcept {
     return KeyBinding::keybindArray.size();
 }
 
-bool KeyBinding::isKeyDown() const {
+bool KeyBinding::isKeyDown() const noexcept {
     return this->pressed;
 }
 
-bool KeyBinding::isPressed() {
+bool KeyBinding::isPressed() noexcept {
     if (this->pressTime == 0) {
         return false;
     }
+
     --this->pressTime;
     return true;
 }
 
-bool KeyBinding::isAny() {
+bool KeyBinding::isAny() noexcept {
     return this->pressed || this->isPressed();
 }
 
-void KeyBinding::unpressKey() {
+void KeyBinding::unpressKey() noexcept {
     this->pressTime = 0;
     this->pressed = false;
 }
 
-std::string KeyBinding::getKeyDescription() const {
+std::string KeyBinding::getKeyDescription() const noexcept {
     return this->keyDescription;
 }
 
-std::string KeyBinding::getKeyCategory() const {
+std::string KeyBinding::getKeyCategory() const noexcept {
     return this->keyCategory;
 }
 
@@ -108,15 +109,14 @@ std::string KeyBinding::getKeyName() const {
     return name ? std::string(name) : "UNKNOWN";
 }
 
-int KeyBinding::getKeyCode() const {
+uint16_t KeyBinding::getKeyCode() const noexcept {
     return this->keyCode;
 }
 
-int KeyBinding::getKeyCodeDefault() const {
+uint16_t KeyBinding::getKeyCodeDefault() const noexcept {
     return this->keyCodeDefault;
 }
 
-void KeyBinding::setKeyCode(int keyCode) {
+void KeyBinding::setKeyCode(uint16_t keyCode) noexcept {
     this->keyCode = keyCode;
 }
-

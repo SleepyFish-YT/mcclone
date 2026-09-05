@@ -20,46 +20,44 @@ class KeyBinding {
 private:
 
     static std::vector<KeyBinding*> keybindArray;
-    static std::unordered_map<int, KeyBinding*> hash;
+    static std::unordered_map<uint16_t, KeyBinding*> hash;
     static std::unordered_set<std::string> keybindSet;
 
     std::string keyDescription;
     std::string keyCategory;
-    int keyCode;
-    int keyCodeDefault;
+    uint16_t keyCode;
+    uint16_t keyCodeDefault;
     bool pressed;
     uint16_t pressTime;
 
+    void unpressKey() noexcept;
+
 public:
 
-    KeyBinding() : keyCode(0), keyCodeDefault(0), pressed(false), pressTime(0) {}
-    KeyBinding(const std::string& description, int keyCode, const std::string& category);
+    KeyBinding() noexcept : keyCode(0), keyCodeDefault(0), pressed(false), pressTime(0) {}
+    KeyBinding(const std::string& description, uint16_t keyCode, const std::string& category) noexcept;
 
     // disable const copy
     KeyBinding(const KeyBinding&) = delete;
 
     static void registerBinding(KeyBinding* binding);
-    static void unregisterAllBinds();
-    static void onTick(int keyCode);
-    static void setKeyBindState(int keyCode, bool pressed);
+    static void unregisterAllBinds() noexcept;
+    static void onTick(uint16_t keyCode);
+    static void setKeyBindState(uint16_t keyCode, bool pressed);
     static void unPressAllKeys();
     static void resetKeyBindingArrayAndHash();
     static const std::unordered_set<std::string>& getKeybinds();
-    static size_t getRegisteredCount();
+    static size_t getRegisteredCount() noexcept;
 
-    bool isKeyDown() const;
-    bool isPressed();
-    bool isAny();
-    std::string getKeyDescription() const;
-    std::string getKeyCategory() const;
+    bool isKeyDown() const noexcept;
+    bool isPressed() noexcept;
+    bool isAny() noexcept;
+    std::string getKeyDescription() const noexcept;
+    std::string getKeyCategory() const noexcept;
     std::string getKeyName() const;
-    int getKeyCode() const;
-    int getKeyCodeDefault() const;
-    void setKeyCode(int keyCode);
-
-private:
-
-    void unpressKey();
+    uint16_t getKeyCode() const noexcept;
+    uint16_t getKeyCodeDefault() const noexcept;
+    void setKeyCode(uint16_t keyCode) noexcept;
 
 };
 
