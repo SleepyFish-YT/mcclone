@@ -47,7 +47,7 @@ private:
 
     ::ALCdevice* device;
     ::ALCcontext* context;
-    std::filesystem::path soundDir;
+    const std::filesystem::path soundDir;
     std::vector<ActiveSound> activeSources;
     std::mutex mutex;
 
