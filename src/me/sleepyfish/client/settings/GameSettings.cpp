@@ -178,7 +178,8 @@ void GameSettings::loadSettings() {
     std::ifstream file(this->settingsFilePath);
     if (!file.is_open()) {
         Logger::log("No settings file found, creating defaults...");
-        this->createDefaultSettings();
+        this->settingsJson = this->createDefaultSettings();
+        this->saveSettings();
         return;
     }
 
