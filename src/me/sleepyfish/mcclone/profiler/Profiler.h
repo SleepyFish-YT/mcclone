@@ -23,7 +23,9 @@ public:
     struct Result {
 
         std::string name;
+
         double usePercentage;
+
         double totalUsePercentage;
 
         Result(const std::string& name, double usePercentage, double totalUsePercentage) {
@@ -47,7 +49,10 @@ public:
     };
 
     bool profilingEnabled;
+
     bool profilerGlobalEnabled;
+
+
 
     Profiler();
 

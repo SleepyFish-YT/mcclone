@@ -16,7 +16,7 @@
 /**
  * @author SleepyFish
  */
-template<typename T = INetHandler>
+template<typename T>
 requires std::derived_from<T, INetHandler>
 class Packet {
 

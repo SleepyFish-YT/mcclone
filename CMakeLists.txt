@@ -49,7 +49,8 @@ find_package(nlohmann_json CONFIG REQUIRED)
 # ======================== json dependency ========================
 
 # ======================== files ========================
-set(SRC_DIR "${CMAKE_SOURCE_DIR}/src/me/${PROJECT_AUTHOR}")
+set(SRC_DIR "${CMAKE_SOURCE_DIR}/src/me/${PROJECT_AUTHOR}/${PROJECT_NAME}")
+set(SVA_DIR "${CMAKE_SOURCE_DIR}/src/me/${PROJECT_AUTHOR}/sava")
 
 add_executable(${PROJECT_NAME}
         # main file
@@ -57,6 +58,9 @@ add_executable(${PROJECT_NAME}
 
         # defines
         pcb.h
+
+        # sava
+        ${SVA_DIR}/UUID.h
 
         # client/main
         ${SRC_DIR}/client/main/Main.cpp
@@ -140,8 +144,36 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/render/OpenGLWindow.h
 
         # network
+        ${SRC_DIR}/network/ThreadQuickExitException.h
+        ${SRC_DIR}/network/EnumPacketDirection.h
         ${SRC_DIR}/network/INetHandler.h
         ${SRC_DIR}/network/Packet.h
+
+        # network/handshake
+        ${SRC_DIR}/network/handshake/INetHandlerHandshakeServer.h
+
+        # network/handshake/client
+        ${SRC_DIR}/network/handshake/client/C00Handshake.h
+
+        # network/login
+        ${SRC_DIR}/network/login/INetHandlerLoginClient.h
+        ${SRC_DIR}/network/login/INetHandlerLoginServer.h
+
+        # network/play
+        ${SRC_DIR}/network/play/INetHandlerPlayClient.h
+        ${SRC_DIR}/network/play/INetHandlerPlayServer.h
+
+        # network/status
+        ${SRC_DIR}/network/status/INetHandlerStatusClient.h
+        ${SRC_DIR}/network/status/INetHandlerStatusServer.h
+
+        # network/status/server
+        ${SRC_DIR}/network/status/server/S00PacketServerInfo.h
+        ${SRC_DIR}/network/status/server/S01PacketPong.h
+
+        # network/status/client
+        ${SRC_DIR}/network/status/client/C00PacketServerQuery.h
+        ${SRC_DIR}/network/status/client/C01PacketPing.h
 
         # util
         ${SRC_DIR}/util/Runnable.h
@@ -202,6 +234,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/nbt/NBTTagInt.h
         ${SRC_DIR}/nbt/NBTTagIntArray.h
         ${SRC_DIR}/nbt/NBTTagFloat.h
+
+        # entity/ai/attributes
+        ${SRC_DIR}/entity/ai/attributes/AttributeModifier.h
 
         # entity/player
         ${SRC_DIR}/entity/player/PlayerCapabilities.h

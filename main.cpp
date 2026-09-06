@@ -8,8 +8,8 @@
 
 #include "pcb.h"
 
-#include "src/me/sleepyfish/client/main/Main.h"
-#include "src/me/sleepyfish/debug/Logger.h"
+#include "src/me/sleepyfish/mcclone/client/main/Main.h"
+#include "src/me/sleepyfish/mcclone/debug/Logger.h"
 
 #include <consoleapi3.h>
 #include <filesystem>
