@@ -134,6 +134,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/block/properties/PropertyHelper.h
         ${SRC_DIR}/block/properties/PropertyInteger.h
 
+        # block/state
+        ${SRC_DIR}/block/state/IBlockState.h
+
         # profiler
         ${SRC_DIR}/profiler/Profiler.cpp
         ${SRC_DIR}/profiler/Profiler.h
@@ -215,6 +218,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/ChatComponentTranslationFormatException.h
         ${SRC_DIR}/util/ChatAllowedCharacters.h
         ${SRC_DIR}/util/ResourceLocation.h
+        ${SRC_DIR}/util/EnumChatFormatting.h
 
         # nbt - i hate nbt...
         ${SRC_DIR}/nbt/NBTException.h
@@ -261,6 +265,7 @@ add_executable(${PROJECT_NAME}
 
         # item
         ${SRC_DIR}/item/EnumAction.h
+        ${SRC_DIR}/item/EnumRarity.h
 
         # enchantment
         ${SRC_DIR}/enchantment/EnumEnchantmentType.h

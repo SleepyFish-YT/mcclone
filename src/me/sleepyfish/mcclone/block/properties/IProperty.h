@@ -8,17 +8,32 @@
 
 #include <string>
 #include <vector>
+#include <typeindex>
+
+/**
+ * @author SleepyFish
+ * @brief Raw Block property interface
+ */
+class IPropertyBase {
+
+public:
+
+    virtual ~IPropertyBase() = default;
+
+    virtual std::string getName() const = 0;
+
+    virtual std::type_index getType() const = 0;
+
+};
 
 /**
  * @author SleepyFish
  * @brief Block property interface
  */
 template<typename T>
-class IProperty {
+class IProperty : public IPropertyBase {
 
 public:
-
-    virtual ~IProperty() = default;
 
     virtual std::string getName() const = 0;
 

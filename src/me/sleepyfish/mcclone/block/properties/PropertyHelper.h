@@ -11,6 +11,7 @@
 #include <string>
 #include <typeindex>
 #include <typeinfo>
+#include <utility>
 
 /**
  * @author SleepyFish
@@ -26,8 +27,8 @@ private:
 
 protected:
 
-    explicit PropertyHelper(const std::string& name) :
-        name(name),
+    explicit PropertyHelper(std::string name) :
+        name(std::move(name)),
         valueClass(typeid(T))
     {}
 
