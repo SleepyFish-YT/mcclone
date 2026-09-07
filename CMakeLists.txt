@@ -235,11 +235,34 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/nbt/NBTTagIntArray.h
         ${SRC_DIR}/nbt/NBTTagFloat.h
 
+        # entity
+        ${SRC_DIR}/entity/EnumCreatureAttribute.h
+        ${SRC_DIR}/entity/INpc.h
+        ${SRC_DIR}/entity/IEntityLivingData.h
+        ${SRC_DIR}/entity/IProjectile.h
+
+        # entity/passive
+        ${SRC_DIR}/entity/passive/IAnimals.h
+
         # entity/ai/attributes
+        ${SRC_DIR}/entity/ai/attributes/IAttribute.h
+        ${SRC_DIR}/entity/ai/attributes/IAttributeInstance.h
+        ${SRC_DIR}/entity/ai/attributes/BaseAttribute.h
         ${SRC_DIR}/entity/ai/attributes/AttributeModifier.h
+        ${SRC_DIR}/entity/ai/attributes/BaseAttributeMap.h
+        ${SRC_DIR}/entity/ai/attributes/ModifiableAttributeInstance.h
+        ${SRC_DIR}/entity/ai/attributes/ServersideAttributeMap.h
+        ${SRC_DIR}/entity/ai/attributes/RangedAttribute.h
 
         # entity/player
         ${SRC_DIR}/entity/player/PlayerCapabilities.h
+        ${SRC_DIR}/entity/player/EnumPlayerModelParts.h
+
+        # item
+        ${SRC_DIR}/item/EnumAction.h
+
+        # enchantment
+        ${SRC_DIR}/enchantment/EnumEnchantmentType.h
 
         # command
         ${SRC_DIR}/command/ICommandSender.h

@@ -24,28 +24,36 @@ class EnumFacing {
 public:
 
     enum class Plane {
+
         HORIZONTAL = 0,
         VERTICAL
+
     };
 
     enum class Axis {
+
         X = 0,
         Y,
         Z
+
     };
 
     enum class AxisDirection {
+
         POSITIVE = 0,
         NEGATIVE
+
     };
 
     enum Value {
+
         DOWN = 0,
         UP,
         NORTH,
         SOUTH,
         WEST,
         EAST
+
     };
 
 private:

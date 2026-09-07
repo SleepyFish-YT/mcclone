@@ -22,9 +22,11 @@ class MovingObjectPosition {
 public:
 
     enum class MovingObjectType {
+
         MISS = 0,
         BLOCK,
         ENTITY
+
     };
 
     MovingObjectType typeOfHit;

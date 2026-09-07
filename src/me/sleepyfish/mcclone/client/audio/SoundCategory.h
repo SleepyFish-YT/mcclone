@@ -17,6 +17,7 @@ namespace {
      * @author SleepyFish
      */
     enum class SoundCategory {
+
         MASTER = 0,
         MUSIC,
         RECORDS,
@@ -26,6 +27,7 @@ namespace {
         ANIMALS,
         PLAYERS,
         AMBIENT
+
     };
 
     /**

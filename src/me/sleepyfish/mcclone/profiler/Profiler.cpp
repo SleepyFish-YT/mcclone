@@ -33,7 +33,7 @@ void Profiler::startSection(const std::string& name) {
     this->profilingSection += name;
     this->sectionList.push_back(this->profilingSection);
 
-    auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
+    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
     this->timestampList.push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(now).count());
 }
 
@@ -41,7 +41,7 @@ void Profiler::endSection() {
     if (!this->profilerLocalEnabled) return;
     if (!this->profilingEnabled) return;
 
-    auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
+    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
     long long i = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count();
     long long j = this->timestampList.back();
     this->timestampList.pop_back();
@@ -83,7 +83,7 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
     std::vector<Result> list;
     std::string prefix = profilerName.empty() ? "" : profilerName + ".";
 
-    long long k = 0LL;
+    long long k = 0ll;
     for (const auto& [key, val] : this->profilingMap) {
         if (key.length() > prefix.length()
             && key.starts_with(prefix)
@@ -129,11 +129,13 @@ void Profiler::printProfilerSection(const std::string &section) {
     auto data = getProfilingData(section);
     if (data.empty() || !this->profilerLocalEnabled) return;
 
+    const int barWidth = 30;
+
     Logger::log("  " + section);
+
     for (int i = 1; i < data.size(); i++) {
         const auto& result = data[i];
 
-        int barWidth = 30;
         int filled = (int) (result.usePercentage / 100.0 * barWidth);
         filled = std::clamp(filled, 0, barWidth);
 

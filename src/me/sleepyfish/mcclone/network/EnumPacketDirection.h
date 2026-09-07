@@ -11,8 +11,10 @@
  * @brief Packet direction
  */
 enum class EnumPacketDirection {
+
     SERVERBOUND = 0,
     CLIENTBOUND
+
 };
 
 

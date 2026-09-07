@@ -21,8 +21,10 @@ class SoundList {
     public:
 
         enum class Type {
+
             FILE = 0,
             SOUND_EVENT
+
         };
 
         static const char* getTypeName(SoundEntry::Type type) {

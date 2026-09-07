@@ -16,10 +16,12 @@ namespace {
      * @brief Enum for world block layers
      */
     enum class EnumWorldBlockLayer {
+
         SOLID = 0,
         CUTOUT_MIPPED,
         CUTOUT,
         TRANSLUCENT
+
     };
 
     inline std::string_view toString(EnumWorldBlockLayer layer) {

@@ -19,30 +19,32 @@ class AttributeModifier {
 
 private:
 
-    const UUID id;
-    const std::string name;
-    const double amount;
-    const int operation;
+    UUID id;
+    std::string name;
+    double amount;
+    int operation;
     bool isSaved_;
 
 public:
 
-    AttributeModifier(const std::string& nameIn, double amountIn, int operationIn) :
+    AttributeModifier(const std::string &nameIn, double amountIn, int operationIn) :
         AttributeModifier(UUID::random(), nameIn, amountIn, operationIn)
     {}
 
-    AttributeModifier(const UUID& idIn, const std::string& nameIn, double amountIn, int operationIn) :
+    AttributeModifier(const UUID &idIn, const std::string &nameIn, double amountIn, int operationIn) :
         id(idIn),
         name(nameIn),
         amount(amountIn),
         operation(operationIn),
         isSaved_(true)
     {
-        if (nameIn.empty())
+        if (nameIn.empty()) {
             throw std::invalid_argument("Modifier name cannot be empty");
+        }
 
-        if (operationIn < 0 || operationIn > 2)
+        if (operationIn < 0 || operationIn > 2) {
             throw std::invalid_argument("Invalid operation");
+        }
     }
 
     UUID getID() const {
@@ -70,11 +72,11 @@ public:
         return *this;
     }
 
-    bool operator==(const AttributeModifier& other) const {
+    bool operator==(const AttributeModifier &other) const {
         return this->id == other.id;
     }
 
-    bool operator!=(const AttributeModifier& other) const {
+    bool operator!=(const AttributeModifier &other) const {
         return !(*this == other);
     }
 
@@ -99,7 +101,7 @@ public:
 
 template<>
 struct std::hash<AttributeModifier> {
-    std::size_t operator()(const AttributeModifier& mod) const noexcept {
+    std::size_t operator()(const AttributeModifier &mod) const noexcept {
         return mod.hashCode();
     }
 };

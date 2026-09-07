@@ -18,11 +18,13 @@ class Util {
 public:
 
     enum class EnumOS {
+
         LINUX = 0,
         SOLARIS,
         WINDOWS,
         OSX,
         UNKNOWN
+
     };
 
     static EnumOS getOSType();

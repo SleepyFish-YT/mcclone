@@ -33,16 +33,19 @@ public:
         lo(lo)
     {}
 
-    UUID(const std::string& str) {
-        if (str.size() != 36 || str[8] != '-' || str[13] != '-' || str[18] != '-' || str[23] != '-')
+    explicit UUID(const std::string &str) {
+        if (str.size() != 36 || str[8] != '-' || str[13] != '-' || str[18] != '-' || str[23] != '-') {
             throw std::invalid_argument("Invalid UUID string: " + str);
+        }
 
         std::string clean;
-        for (char c : str)
-            if (c != '-') clean += c;
+        for (char c : str) {
+            if (c != '-')
+                clean += c;
+        }
 
-        hi = std::stoull(clean.substr(0, 16),  nullptr, 16);
-        lo = std::stoull(clean.substr(16, 16), nullptr, 16);
+        this->hi = std::stoull(clean.substr(0, 16),  nullptr, 16);
+        this->lo = std::stoull(clean.substr(16, 16), nullptr, 16);
     }
 
     static UUID random() {
@@ -53,19 +56,19 @@ public:
         return uuid;
     }
 
-    static UUID fromString(const std::string& str) {
+    static UUID fromString(const std::string &str) {
         return UUID(str);
     }
 
-    bool operator==(const UUID& o) const noexcept {
-        return hi == o.hi && lo == o.lo;
+    bool operator==(const UUID &o) const noexcept {
+        return this->hi == o.hi && this->lo == o.lo;
     }
 
-    bool operator!=(const UUID& o) const noexcept {
+    bool operator!=(const UUID &o) const noexcept {
         return !(*this == o);
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const UUID& u) {
+    friend std::ostream& operator<<(std::ostream &os, const UUID &u) {
         os << std::hex << std::setfill('0')
            << std::setw(8)  << (u.hi >> 32)              << '-'
            << std::setw(4)  << ((u.hi >> 16) & 0xFFFF)   << '-'
@@ -86,7 +89,7 @@ public:
 
 template<>
 struct std::hash<UUID> {
-    std::size_t operator()(const UUID& u) const noexcept {
+    std::size_t operator()(const UUID &u) const noexcept {
         return u.hi ^ (u.lo * 2654435761ULL);
     }
 };
