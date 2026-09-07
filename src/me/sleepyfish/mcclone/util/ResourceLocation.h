@@ -6,10 +6,10 @@
 #ifndef MCCLONE_RESOURCELOCATION_H
 #define MCCLONE_RESOURCELOCATION_H
 
+#include "../../sava/SavaUtil.h"
+
 #include <string>
 #include <stdexcept>
-#include <functional>
-#include <cctype>
 
 /**
  * @author SleepyFish
@@ -23,12 +23,6 @@ protected:
 
     std::string resourcePath;
 
-    static std::string ToLowerCase(std::string str) {
-        for (char& c : str)
-            c = std::tolower(static_cast<unsigned char>(c));
-        return str;
-    }
-
 public:
 
     static std::pair<std::string, std::string> SplitObjectName(const std::string& toSplit) {
@@ -36,31 +30,34 @@ public:
         std::string path = toSplit;
 
         const size_t i = toSplit.find(':');
-
         if (i != std::string::npos) {
             path = toSplit.substr(i + 1);
-            if (i > 1)
+
+            if (i > 1) {
                 domain = toSplit.substr(0, i);
+            }
         }
 
         return { domain, path };
     }
 
     explicit ResourceLocation(const std::string& resourceName) {
-        auto [domain, path] = SplitObjectName(resourceName);
-        this->resourceDomain = domain.empty() ? "mcclone" : ToLowerCase(domain);
+        auto [domain, path] = ResourceLocation::SplitObjectName(resourceName);
+        this->resourceDomain = domain.empty() ? "mcclone" : SavaUtil::StringUtil::ToLowerCase(domain);
         this->resourcePath = path;
 
-        if (this->resourcePath.empty())
+        if (this->resourcePath.empty()) {
             throw std::invalid_argument("resourcePath must not be null/empty");
+        }
     }
 
     ResourceLocation(const std::string& resourceDomainIn, const std::string& resourcePathIn) {
-        this->resourceDomain = resourceDomainIn.empty() ? "mcclone" : ToLowerCase(resourceDomainIn);
+        this->resourceDomain = resourceDomainIn.empty() ? "mcclone" : SavaUtil::StringUtil::ToLowerCase(resourceDomainIn);
         this->resourcePath = resourcePathIn;
 
-        if (this->resourcePath.empty())
+        if (this->resourcePath.empty()) {
             throw std::invalid_argument("resourcePath must not be null/empty");
+        }
     }
 
     std::string getResourcePath() const noexcept {

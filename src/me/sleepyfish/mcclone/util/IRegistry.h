@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Registery interface
  */
 template<typename K, typename V>
 class IRegistry {

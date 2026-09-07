@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Projectile interface
  */
 class IProjectile {
 

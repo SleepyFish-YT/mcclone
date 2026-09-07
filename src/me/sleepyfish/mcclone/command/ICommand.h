@@ -38,7 +38,7 @@ public:
     virtual bool isUsernameIndex(const std::vector<std::string> &args, int index) = 0;
 
     virtual bool operator<(ICommand &other) { // comparable operator
-        return getCommandName() < other.getCommandName();
+        return this->getCommandName() < other.getCommandName();
     }
 
 };

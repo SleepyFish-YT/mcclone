@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Animals interface
  */
 class IAnimals {
 

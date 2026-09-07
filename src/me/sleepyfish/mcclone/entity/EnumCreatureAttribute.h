@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Creature attribute enum
  */
 enum class EnumCreatureAttribute {
 

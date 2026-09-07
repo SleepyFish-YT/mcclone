@@ -17,6 +17,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Simple registry base class
  */
 template<typename K, typename V, typename Hash = std::hash<K>, typename Equal = std::equal_to<K>>
 class RegistrySimple : public IRegistry<K, V> {
@@ -35,8 +36,9 @@ public:
     void putObject(const K &key, V value) override {
         /*
         // this will cause a compile error for ResourceLocation since it has no default constructor
-        if (key == K{})
+        if (key == K{}) {
             throw std::invalid_argument("key must not be null");
+        }
         */
 
         if (this->registryObjects.count(key)) {
@@ -48,8 +50,11 @@ public:
 
     std::unordered_set<K, Hash, Equal> getKeys() const {
         std::unordered_set<K, Hash, Equal> keys;
-        for (const auto &[k, v]: this->registryObjects)
+
+        for (const auto &[k, v]: this->registryObjects) {
             keys.insert(k);
+        }
+
         return keys;
     }
 

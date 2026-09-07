@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Non playable character interface
  */
 class INpc {
 

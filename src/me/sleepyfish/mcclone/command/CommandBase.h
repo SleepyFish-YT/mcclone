@@ -12,6 +12,8 @@
 #include "IAdminCommand.h"
 #include "ICommandSender.h"
 
+#include "../../sava/SavaUtil.h"
+
 // #include "BlockPos.h"
 // #include "PlayerNotFoundException.h"
 // #include "EntityNotFoundException.h"
@@ -49,7 +51,9 @@ public:
     private:
 
         double m_absolute;
+
         double m_offset;
+
         bool m_relative;
 
     public:
@@ -61,15 +65,15 @@ public:
         {}
 
         double getAbsolute() const {
-            return m_absolute;
+            return this->m_absolute;
         }
 
         double getOffset() const {
-            return m_offset;
+            return this->m_offset;
         }
 
         bool isRelative() const {
-            return m_relative;
+            return this->m_relative;
         }
 
     };
@@ -107,19 +111,22 @@ public:
         return false;
     }
 
-    bool operator<(ICommand& other) override {
-        return getCommandName() < other.getCommandName();
+    bool operator<(ICommand &other) override {
+        return this->getCommandName() < other.getCommandName();
     }
 
     int compareTo(ICommand& other) {
-        return getCommandName().compare(other.getCommandName());
+        return this->getCommandName().compare(other.getCommandName());
     }
 
     static int parseInt(const std::string& input) {
         try {
             size_t pos;
             int result = std::stoi(input, &pos);
-            if (pos != input.size()) throw std::invalid_argument("");
+            if (pos != input.size()) {
+                throw std::invalid_argument("");
+            }
+
             return result;
         } catch (...) {
             throw NumberInvalidException("commands.generic.num.invalid", { input });
@@ -127,15 +134,19 @@ public:
     }
 
     static int parseInt(const std::string& input, int min) {
-        return parseInt(input, min, std::numeric_limits<int>::max());
+        return CommandBase::parseInt(input, min, std::numeric_limits<int>::max());
     }
 
     static int parseInt(const std::string& input, int min, int max) {
-        int i = parseInt(input);
-        if (i < min)
+        int i = CommandBase::parseInt(input);
+        if (i < min) {
             throw NumberInvalidException("commands.generic.num.tooSmall", { std::to_string(i), std::to_string(min) });
-        if (i > max)
+        }
+
+        if (i > max) {
             throw NumberInvalidException("commands.generic.num.tooBig",   { std::to_string(i), std::to_string(max) });
+        }
+
         return i;
     }
 
@@ -143,7 +154,10 @@ public:
         try {
             size_t pos;
             long result = std::stol(input, &pos);
-            if (pos != input.size()) throw std::invalid_argument("");
+            if (pos != input.size()) {
+                throw std::invalid_argument("");
+            }
+
             return result;
         } catch (...) {
             throw NumberInvalidException("commands.generic.num.invalid", { input });
@@ -151,11 +165,15 @@ public:
     }
 
     static long parseLong(const std::string& input, long min, long max) {
-        long i = parseLong(input);
-        if (i < min)
+        long i = CommandBase::parseLong(input);
+        if (i < min) {
             throw NumberInvalidException("commands.generic.num.tooSmall", { std::to_string(i), std::to_string(min) });
-        if (i > max)
+        }
+
+        if (i > max) {
             throw NumberInvalidException("commands.generic.num.tooBig",   { std::to_string(i), std::to_string(max) });
+        }
+
         return i;
     }
 
@@ -163,9 +181,14 @@ public:
         try {
             size_t pos;
             double d = std::stod(input, &pos);
-            if (pos != input.size()) throw std::invalid_argument("");
-            if (!std::isfinite(d))
+            if (pos != input.size()) {
+                throw std::invalid_argument("");
+            }
+
+            if (!std::isfinite(d)) {
                 throw NumberInvalidException("commands.generic.num.invalid", { input });
+            }
+
             return d;
         } catch (const NumberInvalidException&) {
             throw;
@@ -175,77 +198,103 @@ public:
     }
 
     static double parseDouble(const std::string& input, double min) {
-        return parseDouble(input, min, std::numeric_limits<double>::max());
+        return CommandBase::parseDouble(input, min, std::numeric_limits<double>::max());
     }
 
     static double parseDouble(const std::string& input, double min, double max) {
-        double d = parseDouble(input);
-        if (d < min)
+        double d = CommandBase::parseDouble(input);
+        if (d < min) {
             throw NumberInvalidException("commands.generic.double.tooSmall", { std::to_string(d), std::to_string(min) });
-        if (d > max)
+        }
+
+        if (d > max) {
             throw NumberInvalidException("commands.generic.double.tooBig",   { std::to_string(d), std::to_string(max) });
+        }
+
         return d;
     }
 
     // Relative-coordinate overloads ("~" prefix)
     static double parseDouble(double base, const std::string& input, bool centerBlock) {
-        return parseDouble(base, input, -30000000, 30000000, centerBlock);
+        return CommandBase::parseDouble(base, input, -30000000, 30000000, centerBlock);
     }
 
     static double parseDouble(double base, std::string input, int min, int max, bool centerBlock) {
         bool relative = !input.empty() && input[0] == '~';
 
-        if (relative && std::isnan(base))
+        if (relative && std::isnan(base)) {
             throw NumberInvalidException("commands.generic.num.invalid", { std::to_string(base) });
+        }
 
         double d = relative ? base : 0.0;
 
         if (!relative || input.size() > 1) {
             bool hasDecimal = input.find('.') != std::string::npos;
-            if (relative) input = input.substr(1);
+            if (relative) {
+                input = input.substr(1);
+            }
 
             d += parseDouble(input);
 
-            if (!hasDecimal && !relative && centerBlock)
+            if (!hasDecimal && !relative && centerBlock) {
                 d += 0.5;
+            }
         }
 
         if (min != 0 || max != 0) {
-            if (d < min) throw NumberInvalidException("commands.generic.double.tooSmall", { std::to_string(d), std::to_string(min) });
-            if (d > max) throw NumberInvalidException("commands.generic.double.tooBig",   { std::to_string(d), std::to_string(max) });
+            if (d < min) {
+                throw NumberInvalidException("commands.generic.double.tooSmall", { std::to_string(d), std::to_string(min)});
+            }
+
+            if (d > max) {
+                throw NumberInvalidException("commands.generic.double.tooBig",   { std::to_string(d), std::to_string(max)});
+            }
         }
 
         return d;
     }
 
     static CoordinateArg parseCoordinate(double base, const std::string& input, bool centerBlock) {
-        return parseCoordinate(base, input, -30000000, 30000000, centerBlock);
+        return CommandBase::parseCoordinate(base, input, -30000000, 30000000, centerBlock);
     }
 
     static CoordinateArg parseCoordinate(double base, std::string input, int min, int max, bool centerBlock) {
         bool relative = !input.empty() && input[0] == '~';
 
-        if (relative && std::isnan(base))
+        if (relative && std::isnan(base)) {
             throw NumberInvalidException("commands.generic.num.invalid", { std::to_string(base) });
+        }
 
         double offset = 0.0;
 
         if (!relative || input.size() > 1) {
             bool hasDecimal = input.find('.') != std::string::npos;
-            if (relative) input = input.substr(1);
+            if (relative) {
+                input = input.substr(1);
+            }
 
             offset += parseDouble(input);
 
-            if (!hasDecimal && !relative && centerBlock)
+            if (!hasDecimal && !relative && centerBlock) {
                 offset += 0.5;
+            }
         }
 
         if (min != 0 || max != 0) {
-            if (offset < min) throw NumberInvalidException("commands.generic.double.tooSmall", { std::to_string(offset), std::to_string(min) });
-            if (offset > max) throw NumberInvalidException("commands.generic.double.tooBig",   { std::to_string(offset), std::to_string(max) });
+            if (offset < min) {
+                throw NumberInvalidException("commands.generic.double.tooSmall", { std::to_string(offset), std::to_string(min)});
+            }
+
+            if (offset > max) {
+                throw NumberInvalidException("commands.generic.double.tooBig",   { std::to_string(offset), std::to_string(max)});
+            }
         }
 
-        return CoordinateArg(offset + (relative ? base : 0.0), offset, relative);
+        return {
+            offset + (relative ? base : 0.0),
+            offset,
+            relative
+        };
     }
 
     /*
@@ -264,8 +313,14 @@ public:
     }
     */
     static bool parseBoolean(const std::string& input) {
-        if (input == "true" || input == "1") return true;
-        if (input == "false" || input == "0") return false;
+        if (input == "true" || input == "1") {
+            return true;
+        }
+
+        if (input == "false" || input == "0") {
+            return false;
+        }
+
         throw CommandException("commands.generic.boolean.invalid", { input });
     }
     /*
@@ -391,14 +446,16 @@ public:
     static std::string buildString(const std::vector<std::string>& args, int startPos) {
         std::ostringstream oss;
         for (int i = startPos; i < static_cast<int>(args.size()); ++i) {
-            if (i > startPos) oss << ' ';
+            if (i > startPos) {
+                oss << ' ';
+            }
+
             oss << args[i];
         }
         return oss.str();
     }
 
     /*
-
     static Item& getItemByText(ICommandSender& sender, const std::string& id) {
         ResourceLocation loc(id);
         Item* item = Item::itemRegistry.getObject(loc);
@@ -416,7 +473,6 @@ public:
             throw NumberInvalidException("commands.give.block.notFound", { id });
         return *block;
     }
-
     */
 
     static std::string joinNiceString(const std::vector<std::string>& elements) {
@@ -431,7 +487,7 @@ public:
     }
 
     static std::string joinNiceStringFromCollection(const std::vector<std::string>& strings) {
-        return joinNiceString(strings);
+        return CommandBase::joinNiceString(strings);
     }
 
     /*
@@ -448,23 +504,20 @@ public:
     */
 
     static bool doesStringStartWith(const std::string& original, const std::string& candidate) {
-        if (original.size() > candidate.size()) return false;
-        return std::equal(
-                original.begin(), original.end(),
-                candidate.begin(),
-                [](char a, char b) { return std::tolower(a) == std::tolower(b); }
-        );
+        return SavaUtil::StringUtil::StartsWith(original, candidate, true);
     }
 
     static std::vector<std::string> getListOfStringsMatchingLastWord(
             const std::vector<std::string>& args,
-            const std::vector<std::string>& possibilities)
-    {
+            const std::vector<std::string>& possibilities
+    ) {
         const std::string& last = args.back();
         std::vector<std::string> result;
+
         for (const auto& s : possibilities) {
-            if (doesStringStartWith(last, s))
+            if (CommandBase::doesStringStartWith(last, s)) {
                 result.push_back(s);
+            }
         }
         return result;
     }
@@ -473,13 +526,21 @@ public:
     static std::vector<std::string> getTabCompletionsXYZ(
             const std::vector<std::string>& args,
             int startIndex,
-            const BlockPos* pos)
-    {
-        if (!pos) return {};
+            const BlockPos* pos
+    ) {
+        if (!pos) {
+            return {};
+        }
+
         int i = static_cast<int>(args.size()) - 1;
-        if      (i == startIndex)     return { std::to_string(pos->x) };
-        else if (i == startIndex + 1) return { std::to_string(pos->y) };
-        else if (i == startIndex + 2) return { std::to_string(pos->z) };
+        if (i == startIndex) {
+            return { std::to_string(pos->x) };
+        } else if (i == startIndex + 1) {
+            return { std::to_string(pos->y) };
+        } else if (i == startIndex + 2) {
+            return { std::to_string(pos->z)};
+        }
+
         return {};
     }
 
@@ -487,12 +548,20 @@ public:
     static std::vector<std::string> getTabCompletionsXZ(
             const std::vector<std::string>& args,
             int startIndex,
-            const BlockPos* pos)
-    {
-        if (!pos) return {};
+            const BlockPos* pos
+    ) {
+
+        if (!pos) {
+            return {};
+        }
+
         int i = static_cast<int>(args.size()) - 1;
-        if      (i == startIndex)     return { std::to_string(pos->x) };
-        else if (i == startIndex + 1) return { std::to_string(pos->z) };
+        if (i == startIndex) {
+            return { std::to_string(pos->x) };
+        } else if (i == startIndex + 1) {
+            return { std::to_string(pos->z) };
+        }
+
         return {};
     }
 
@@ -504,8 +573,8 @@ public:
             ICommandSender& sender,
             const ICommand& command,
             const std::string& msgFormat,
-            const std::vector<std::string>& msgParams = {})
-    {
+            const std::vector<std::string>& msgParams = {}
+    ) {
         notifyOperators(sender, command, 0, msgFormat, msgParams);
     }
 
@@ -514,14 +583,15 @@ public:
             const ICommand& command,
             const int flags,
             const std::string& msgFormat,
-            const std::vector<std::string>& msgParams = {})
-    {
-        if (s_admin)
-            s_admin->notifyOperators(sender, command, flags, msgFormat, msgParams);
+            const std::vector<std::string>& msgParams = {}
+    ) {
+        if (CommandBase::s_admin) {
+            CommandBase::s_admin->notifyOperators(sender, command, flags, msgFormat, msgParams);
+        }
     }
 
     static void setAdminCommander(IAdminCommand* command) {
-        s_admin = command;
+        CommandBase::s_admin = command;
     }
 
 private:

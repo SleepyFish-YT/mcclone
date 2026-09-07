@@ -60,6 +60,7 @@ add_executable(${PROJECT_NAME}
         pcb.h
 
         # sava
+        ${SVA_DIR}/SavaUtil.h
         ${SVA_DIR}/UUID.h
 
         # client/main

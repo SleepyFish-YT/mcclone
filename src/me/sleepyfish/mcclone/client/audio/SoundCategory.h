@@ -34,10 +34,16 @@ namespace {
      * @author SleepyFish
      */
     struct SoundCategoryInfo {
+
         SoundCategory category;
+
         std::string name;
+
         int id;
+
     };
+
+
 
     inline const SoundCategoryInfo SOUND_CATEGORY_ENTRIES[] = {
             { SoundCategory::MASTER,  "master",  0 },
@@ -61,9 +67,11 @@ namespace {
                 if (NAME_CATEGORY_MAP.count(entry.name) || ID_CATEGORY_MAP.count(entry.id)) {
                     throw std::runtime_error("Clash in Sound Category ID & Name pools! Cannot insert " + entry.name);
                 }
+
                 NAME_CATEGORY_MAP[entry.name] = entry.category;
                 ID_CATEGORY_MAP[entry.id] = entry.category;
             }
+
             initialized = true;
         }
 
@@ -71,24 +79,32 @@ namespace {
     }
 
     inline std::string getSoundCategoryName(SoundCategory category) {
-        for (const auto& entry : SOUND_CATEGORY_ENTRIES)
-            if (entry.category == category)
+        for (const auto& entry : SOUND_CATEGORY_ENTRIES) {
+            if (entry.category == category) {
                 return entry.name;
+            }
+        }
+
         throw std::runtime_error("Unknown SoundCategory");
     }
 
     inline int getSoundCategoryId(SoundCategory category) {
-        for (const auto& entry : SOUND_CATEGORY_ENTRIES)
-            if (entry.category == category)
+        for (const auto& entry : SOUND_CATEGORY_ENTRIES) {
+            if (entry.category == category) {
                 return entry.id;
+            }
+        }
+
         throw std::runtime_error("Unknown SoundCategory");
     }
 
     inline SoundCategory* getSoundCategory(const std::string& name) {
         auto& map = getSoundCategoryByName();
         auto it = map.find(name);
-        if (it != map.end())
+        if (it != map.end()) {
             return const_cast<SoundCategory*>(&it->second);
+        }
+
         return nullptr;
     }
 

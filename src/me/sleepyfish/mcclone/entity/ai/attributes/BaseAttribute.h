@@ -21,37 +21,40 @@ class BaseAttribute : public IAttribute {
 private:
 
     IAttribute *field_180373_a;
+
     const std::string unlocalizedName;
+
     const double defaultValue;
+
     bool shouldWatch{};
 
 protected:
 
-    BaseAttribute(IAttribute *attribute, std::string unlocalNameIn, double defaultValIn) :
+    BaseAttribute(IAttribute *attribute, std::string unlocNameIn, double defaultValIn) :
         field_180373_a(attribute),
-        unlocalizedName(std::move(unlocalNameIn)),
+        unlocalizedName(std::move(unlocNameIn)),
         defaultValue(defaultValIn)
     {
-        if (unlocalNameIn.empty()) {
+        if (unlocNameIn.empty()) {
             throw std::invalid_argument("Name cannot be null!");
         }
     }
 
 public:
 
-    std::string getAttributeUnlocalizedName() const noexcept override {
+    virtual std::string getAttributeUnlocalizedName() const noexcept override {
         return this->unlocalizedName;
     }
 
-    double clampValue(double value) override {
-        return std::clamp(value, 0.0, 100.0);
+    virtual double clampValue(double value) override {
+        return std::clamp(value, -128.0, 128.0);
     }
 
-    double getDefaultValue() const noexcept override {
+    virtual double getDefaultValue() const noexcept override {
         return this->defaultValue;
     }
 
-    bool getShouldWatch() const noexcept override {
+    virtual bool getShouldWatch() const noexcept override {
         return this->shouldWatch;
     }
 
@@ -60,7 +63,7 @@ public:
         return *this;
     }
 
-    IAttribute* func_180372_d() const noexcept override {
+    virtual IAttribute* func_180372_d() const noexcept override {
         return this->field_180373_a;
     }
 

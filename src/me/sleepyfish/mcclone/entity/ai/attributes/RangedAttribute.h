@@ -20,25 +20,27 @@ class RangedAttribute : public BaseAttribute {
 private:
 
     double minimumValue;
+
     double maximumValue;
+
     std::string description;
 
 public:
 
-    RangedAttribute(IAttribute* parent, const std::string& unlocName, double defaultValue, double minValue, double maxValue) :
-        BaseAttribute(parent, unlocName, defaultValue),
-        minimumValue(minValue),
-        maximumValue(maxValue)
+    RangedAttribute(IAttribute* parent, const std::string& unlocName, double defaultVal, double minVal, double maxVal) :
+        BaseAttribute(parent, unlocName, defaultVal),
+        minimumValue(minVal),
+        maximumValue(maxVal)
     {
-        if (minValue > maxValue) {
+        if (minVal > maxVal) {
             throw std::invalid_argument("Minimum value cannot be bigger than maximum value!");
         }
 
-        if (defaultValue < minValue) {
+        if (defaultVal < minVal) {
             throw std::invalid_argument("Default value cannot be lower than minimum value!");
         }
 
-        if (defaultValue > maxValue) {
+        if (defaultVal > maxVal) {
             throw std::invalid_argument("Default value cannot be bigger than maximum value!");
         }
     }
@@ -52,7 +54,7 @@ public:
         return this->description;
     }
 
-    double clampValue(double value) override {
+    virtual double clampValue(double value) override {
         return std::clamp(value, this->minimumValue, this->maximumValue);
     }
 

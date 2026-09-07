@@ -10,6 +10,8 @@
 #include "IAttributeInstance.h"
 #include "AttributeModifier.h"
 
+#include "../../../../sava/SavaUtil.h"
+
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -42,12 +44,12 @@ public:
     }
 
     virtual IAttributeInstance* getAttributeInstanceByName(const std::string& attributeName) {
-        auto it = this->m_attributesByName.find(BaseAttributeMap::toLowerCase(attributeName));
+        auto it = this->m_attributesByName.find(SavaUtil::StringUtil::ToLowerCase(attributeName));
         return it != this->m_attributesByName.end() ? it->second : nullptr;
     }
 
     virtual IAttributeInstance* registerAttribute(IAttribute* attribute) {
-        const std::string key = BaseAttributeMap::toLowerCase(attribute->getAttributeUnlocalizedName());
+        const std::string key = SavaUtil::StringUtil::ToLowerCase(attribute->getAttributeUnlocalizedName());
 
         if (this->m_attributesByName.count(key)) {
             throw std::invalid_argument("Attribute is already registered!");
@@ -92,13 +94,6 @@ public:
                 instance->applyModifier(modifier);
             }
         }
-    }
-
-private:
-
-    static std::string toLowerCase(std::string s) {
-        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-        return s;
     }
 
 };

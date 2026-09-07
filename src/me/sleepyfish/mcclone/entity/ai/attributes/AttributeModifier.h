@@ -20,9 +20,13 @@ class AttributeModifier {
 private:
 
     UUID id;
+
     std::string name;
+
     double amount;
+
     int operation;
+
     bool isSaved_;
 
 public:
@@ -98,12 +102,15 @@ public:
 
 };
 
+namespace std {
 
-template<>
-struct std::hash<AttributeModifier> {
-    std::size_t operator()(const AttributeModifier &mod) const noexcept {
-        return mod.hashCode();
-    }
+    template<>
+    struct hash<AttributeModifier> {
+        size_t operator()(const AttributeModifier &mod) const noexcept {
+            return mod.hashCode();
+        }
+    };
+
 };
 
 

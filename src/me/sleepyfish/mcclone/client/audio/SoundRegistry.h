@@ -12,6 +12,7 @@
 
 /**
  * @author SleepyFish
+ * @brief A registry for sound events
  */
 class SoundRegistry : public RegistrySimple<ResourceLocation, SoundEventAccessorComposite, ResourceLocation::Hash> {
 

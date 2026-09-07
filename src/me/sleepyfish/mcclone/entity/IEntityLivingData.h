@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Living entity data interface
  */
 class IEntityLivingData {
 
