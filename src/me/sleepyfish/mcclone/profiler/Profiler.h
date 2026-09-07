@@ -82,6 +82,12 @@ private:
 
     bool profilerLocalEnabled;
 
+    mutable std::mutex mutex;
+
+    void startSection_nolock(const std::string& name);
+
+    void endSection_nolock();
+
 };
 
 
