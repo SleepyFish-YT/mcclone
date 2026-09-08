@@ -11,6 +11,7 @@
 
 /**
  * @author SleepyFish - SleepyAVA
+ * @version 1.2
  * @brief This class contains information about the graphics context
  */
 class RenderInformation {

@@ -14,7 +14,7 @@
     #include <sys/utsname.h>
 #elif __linux__
     #include <sys/utsname.h>
-#endif
+#endif //_WIN32
 
 #include <memory>
 #include <stdexcept>
@@ -31,7 +31,7 @@ Util::EnumOS Util::getOSType() {
         return std::string("solaris");
 #else
         return std::string("unknown");
-#endif // _WIN32
+#endif //_WIN32
     }();
 
     if (os == "unknown") {
@@ -46,7 +46,7 @@ Util::EnumOS Util::getOSType() {
             else if (sysname == "SunOS") os = "solaris";
             else os = "unknown";
         }
-#endif // _WIN32
+#endif //_WIN32
     }
 
     if (os == "windows") return EnumOS::WINDOWS;
@@ -91,3 +91,4 @@ V Util::runTaskPkg(std::packaged_task<V> &task) {
         return V{};
     }
 }
+

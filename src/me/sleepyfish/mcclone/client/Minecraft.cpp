@@ -67,8 +67,6 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
     this->theTimer = new Timer(20.0f);
     this->frameTimer = new FrameTimer();
 
-    this->gameReady.store(false, std::memory_order_release);
-
     this->fpsCounter = 0;
     Minecraft::debugFPS = 0;
 }
@@ -345,13 +343,9 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
 }
 
 void Minecraft::handleMouseButton(int button, int action, int mods) {
-    if (!this->gameReady.load(std::memory_order_acquire)) {
-        return;
-    }
-
     this->mcProfiler->startSection("mouse");
     {
-        int keyCode = 1000 + button;
+        const int keyCode = 1000 + button;
 
         KeyBinding::setKeyBindState(keyCode, action == GLFW_PRESS);
 
@@ -389,10 +383,6 @@ void Minecraft::handleMouseButton(int button, int action, int mods) {
 }
 
 void Minecraft::handleMouseScroll(double xOffset, double yOffset) {
-    if (!this->gameReady.load(std::memory_order_acquire)) {
-        return;
-    }
-
     if (yOffset != 0) {
         int delta = yOffset > 0 ? 1 : -1;
 
@@ -417,10 +407,6 @@ void Minecraft::handleMouseScroll(double xOffset, double yOffset) {
 }
 
 void Minecraft::handleMouseMove(double x, double y) {
-    if (!this->gameReady.load(std::memory_order_acquire)) {
-        return;
-    }
-
     // if (!this->minecraft->inGameHasFocus) return;
     // this->minecraft->entityRenderer.updateCameraAndRender(...)
 }

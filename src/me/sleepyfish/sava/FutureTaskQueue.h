@@ -15,7 +15,9 @@
 
 /**
  * @author SleepyFish - SleepyAVA
+ * @version 1.1
  * @brief Thread-safe queue of callable tasks, equivalent to Java's Queue<FutureTask<?>>
+ * @template T The return type of the task
  */
 template<typename T>
 class FutureTaskQueue {

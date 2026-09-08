@@ -58,6 +58,12 @@ public:
     /**
      * @author SleepyFish
      * @brief This function starts the main window and holds the main loop
+     * @args Accepted argument list:
+     * @args --debug
+     * @args --demo
+     * @args --ignoreGlErrors
+     * @args --resolution [width] [height]
+     * @args --resolution fullscreen
      * @returns Exit code
      */
     int main(int arg_count, char* arg_vals[], const std::filesystem::path& exec_path);

@@ -21,6 +21,7 @@ class RenderInformation;
 
 /**
  * @author SleepyFish - SleepyAVA
+ * @version 1.4
  * @brief OpenGL window class
  */
 class OpenGLWindow : public Runnable {

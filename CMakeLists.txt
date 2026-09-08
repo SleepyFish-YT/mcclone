@@ -63,8 +63,8 @@ add_executable(${PROJECT_NAME}
         ${SVA_DIR}/SavaUtil.cpp
         ${SVA_DIR}/SavaUtil.h
         ${SVA_DIR}/Runnable.h
-        ${SVA_DIR}/FutureTaskQueue.h
         ${SVA_DIR}/UUID.h
+        ${SVA_DIR}/FutureTaskQueue.h
 
         # window render
         ${SVA_DIR}/window/RenderInformation.cpp

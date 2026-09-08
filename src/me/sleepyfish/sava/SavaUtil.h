@@ -12,6 +12,7 @@
 
 /**
  * @author SleepyFish - SleepyAVA
+ * @version 1.0
  * @brief Util main class
  */
 class SavaUtil {
@@ -20,15 +21,13 @@ public:
 
     /**
      * @author SleepyFish - SleepyAVA
+     * @version 1.1
      * @brief String util class
      */
     class StringUtil {
 
     public:
 
-        /**
-         * @brief Returns a lowercase copy of the given string.
-         */
         static std::string ToLowerCase(const std::string& str) {
             std::string result;
             result.reserve(str.size());
@@ -40,9 +39,6 @@ public:
             return result;
         }
 
-        /**
-         * @brief Returns a uppercase copy of the given string.
-         */
         static std::string ToUpperCase(const std::string& str) {
             std::string result;
             result.reserve(str.size());
@@ -54,9 +50,6 @@ public:
             return result;
         }
 
-        /**
-         * @brief Checks if a string starts with a given prefix, optionally ignoring case.
-         */
         static bool StartsWith(const std::string& str, const std::string& prefix, bool ignoreCase = false) {
             if (prefix.size() > str.size()) {
                 return false;
@@ -71,9 +64,6 @@ public:
             return str.starts_with(prefix);
         }
 
-        /**
-         * @returns A random player name
-         */
         static std::string GetRandomPlayerName();
 
     };

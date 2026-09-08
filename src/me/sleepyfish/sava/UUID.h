@@ -14,6 +14,7 @@
 
 /**
  * @author SleepyFish - SleepyAVA
+ * @version 1.0
  * @brief UUID wrapper of 2 uint64_t
  */
 class UUID {

@@ -122,7 +122,6 @@ void OpenGLWindow::run() {
     Logger::log("Render thread started");
 
     this->minecraft->initializeFramebuffer();
-    this->minecraft->gameReady.store(true, std::memory_order_release);
 
     while (this->isRunning() && !glfwWindowShouldClose(this->window)) {
         this->frameCount++;
@@ -215,10 +214,6 @@ void OpenGLWindow::toggleCaptureMouse() {
 }
 
 GLFWkeyfun OpenGLWindow::handleKeypress(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (!this->minecraft->gameReady.load(std::memory_order_acquire)) {
-        return nullptr;
-    }
-
     this->minecraft->handleKeypress(key, scancode, action, mods);
 
     if (action == GLFW_PRESS) {

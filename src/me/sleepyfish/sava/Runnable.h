@@ -11,8 +11,8 @@
 
 /**
  * @author SleepyFish - SleepyAVA
- * @brief Runnable interface class for threads
  * @version 1.2
+ * @brief Runnable interface class for threads
  */
 class Runnable {
 

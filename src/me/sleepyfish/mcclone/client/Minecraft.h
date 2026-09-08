@@ -93,8 +93,6 @@ public:
 
     static ResourceLocation* locationMojangPng;
 
-    std::atomic<bool> gameReady{};
-
     std::filesystem::path mcDataDir;
 
     Profiler *mcProfiler;

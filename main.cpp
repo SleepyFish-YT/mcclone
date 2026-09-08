@@ -19,7 +19,9 @@
 
 /**
  * @author SleepyFish
- * @return Exit code
+ * @version 1.6
+ * @brief This is the main entry point of the application
+ * @returns Exit code
  */
 int main(int arg_count, char* arg_vals[]) {
     if (arg_count == 0 || arg_vals[0] == nullptr) {
