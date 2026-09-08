@@ -36,9 +36,9 @@ public:
 
     static std::string getGameTypeName(GameType type) {
         switch (type) {
-            case GameType::NOT_SET:   return "";
-            case GameType::SURVIVAL:  return "survival";
-            case GameType::CREATIVE:  return "creative";
+            case GameType::NOT_SET: return "";
+            case GameType::SURVIVAL: return "survival";
+            case GameType::CREATIVE: return "creative";
             case GameType::ADVENTURE: return "adventure";
             case GameType::SPECTATOR: return "spectator";
             default: throw std::runtime_error("Unknown GameType");
@@ -78,22 +78,22 @@ public:
 
     static void configurePlayerCapabilities(GameType type, PlayerCapabilities& capabilities) {
         if (type == GameType::CREATIVE) {
-            capabilities.allowFlying    = true;
+            capabilities.allowFlying = true;
             capabilities.isCreativeMode = true;
-            capabilities.disableDamage  = true;
-            capabilities.isFlying       = false;
+            capabilities.disableDamage = true;
+            capabilities.isFlying = false;
         } else if (type == GameType::SPECTATOR) {
-            capabilities.allowFlying    = true;
+            capabilities.allowFlying = true;
             capabilities.isCreativeMode = false;
-            capabilities.disableDamage  = true;
-            capabilities.isFlying       = true;
+            capabilities.disableDamage = true;
+            capabilities.isFlying = true;
         } else {
-            capabilities.allowFlying    = false;
+            capabilities.allowFlying = false;
             capabilities.isCreativeMode = false;
-            capabilities.disableDamage  = false;
-            capabilities.isFlying       = false;
+            capabilities.disableDamage = false;
+            capabilities.isFlying = false;
         }
-        capabilities.allowEdit = !isAdventure(type);
+        capabilities.allowEdit = !WorldSettings::isAdventure(type);
     }
 
 private:

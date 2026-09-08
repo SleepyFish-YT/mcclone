@@ -21,28 +21,25 @@ enum class EnumRarity {
 
 };
 
-namespace {
 
-    struct RarityInfo {
+struct RarityInfo {
 
-        EnumChatFormatting rarityColor;
+    EnumChatFormatting rarityColor;
 
-        std::string rarityName;
-
-    };
-
-    inline const RarityInfo& getRarityInfo(EnumRarity rarity) {
-        static const RarityInfo infos[] = {
-                {EnumChatFormatting::WHITE, "Common"},
-                {EnumChatFormatting::YELLOW, "Uncommon"},
-                {EnumChatFormatting::AQUA, "Rare"},
-                {EnumChatFormatting::LIGHT_PURPLE, "Epic"},
-        };
-
-        return infos[static_cast<int>(rarity)];
-    }
+    std::string rarityName;
 
 };
+
+inline const RarityInfo& getRarityInfo(EnumRarity rarity) {
+    static const RarityInfo infos[] = {
+            {EnumChatFormatting::WHITE, "Common"},
+            {EnumChatFormatting::YELLOW, "Uncommon"},
+            {EnumChatFormatting::AQUA, "Rare"},
+            {EnumChatFormatting::LIGHT_PURPLE, "Epic"},
+    };
+
+    return infos[static_cast<int>(rarity)];
+}
 
 
 #endif //MCCLONE_ENUMRARITY_H

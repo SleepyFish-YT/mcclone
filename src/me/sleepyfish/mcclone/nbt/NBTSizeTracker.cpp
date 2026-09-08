@@ -5,7 +5,7 @@
 
 #include "NBTSizeTracker.h"
 
-namespace {
+namespace anonymous {
 
     class InfiniteNBTSizeTracker : public NBTSizeTracker {
 
@@ -20,6 +20,6 @@ namespace {
 
     };
 
-}
+};
 
-const NBTSizeTracker NBTSizeTracker::INFINITE = InfiniteNBTSizeTracker();
+const NBTSizeTracker NBTSizeTracker::INFINITE = anonymous::InfiniteNBTSizeTracker();

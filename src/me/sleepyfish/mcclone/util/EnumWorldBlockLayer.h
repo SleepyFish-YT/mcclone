@@ -9,32 +9,28 @@
 #include <string>
 #include <string_view>
 
-namespace {
+/**
+ * @author SleepyFish
+ * @brief Enum for world block layers
+ */
+enum class EnumWorldBlockLayer {
 
-    /**
-     * @author SleepyFish
-     * @brief Enum for world block layers
-     */
-    enum class EnumWorldBlockLayer {
-
-        SOLID = 0,
-        CUTOUT_MIPPED,
-        CUTOUT,
-        TRANSLUCENT
-
-    };
-
-    inline std::string_view toString(EnumWorldBlockLayer layer) {
-        switch (layer) {
-            case EnumWorldBlockLayer::SOLID: return "Solid";
-            case EnumWorldBlockLayer::CUTOUT_MIPPED: return "Mipped Cutout";
-            case EnumWorldBlockLayer::CUTOUT: return "Cutout";
-            case EnumWorldBlockLayer::TRANSLUCENT: return "Translucent";
-            default: return "Unknown";
-        }
-    }
+    SOLID = 0,
+    CUTOUT_MIPPED,
+    CUTOUT,
+    TRANSLUCENT
 
 };
+
+inline std::string_view toString(EnumWorldBlockLayer layer) {
+    switch (layer) {
+        case EnumWorldBlockLayer::SOLID: return "Solid";
+        case EnumWorldBlockLayer::CUTOUT_MIPPED: return "Mipped Cutout";
+        case EnumWorldBlockLayer::CUTOUT: return "Cutout";
+        case EnumWorldBlockLayer::TRANSLUCENT: return "Translucent";
+        default: return "Unknown";
+    }
+}
 
 
 #endif //MCCLONE_ENUMWORLDBLOCKLAYER_H

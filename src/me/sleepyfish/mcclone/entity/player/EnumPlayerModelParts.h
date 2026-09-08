@@ -23,36 +23,30 @@ enum class EnumPlayerModelParts {
 
 };
 
-namespace {
+struct PlayerModelPartInfo {
 
-    struct PlayerModelPartInfo {
+    int partId;
 
-        int partId;
+    int partMask;
 
-        int partMask;
+    std::string partName;
 
-        std::string partName;
-
-        std::string translationKey;
-
-    };
-
-
-
-    inline PlayerModelPartInfo getPlayerModelPartInfo(EnumPlayerModelParts part) {
-        switch (part) {
-            case EnumPlayerModelParts::CAPE: return { 0, 1 << 0, "cape", "options.modelPart.cape"};
-            case EnumPlayerModelParts::JACKET: return { 1, 1 << 1, "jacket", "options.modelPart.jacket"};
-            case EnumPlayerModelParts::LEFT_SLEEVE: return { 2, 1 << 2, "left_sleeve", "options.modelPart.left_sleeve"};
-            case EnumPlayerModelParts::RIGHT_SLEEVE: return { 3, 1 << 3, "right_sleeve", "options.modelPart.right_sleeve"};
-            case EnumPlayerModelParts::LEFT_PANTS_LEG: return { 4, 1 << 4, "left_pants_leg", "options.modelPart.left_pants_leg"};
-            case EnumPlayerModelParts::RIGHT_PANTS_LEG: return { 5, 1 << 5, "right_pants_leg", "options.modelPart.right_pants_leg"};
-            case EnumPlayerModelParts::HAT: return { 6, 1 << 6, "hat", "options.modelPart.hat"};
-        }
-        return { 0, 1, "cape", "options.modelPart.cape" };
-    }
+    std::string translationKey;
 
 };
+
+inline PlayerModelPartInfo getPlayerModelPartInfo(EnumPlayerModelParts part) {
+    switch (part) {
+        case EnumPlayerModelParts::CAPE: return { 0, 1 << 0, "cape", "options.modelPart.cape"};
+        case EnumPlayerModelParts::JACKET: return { 1, 1 << 1, "jacket", "options.modelPart.jacket"};
+        case EnumPlayerModelParts::LEFT_SLEEVE: return { 2, 1 << 2, "left_sleeve", "options.modelPart.left_sleeve"};
+        case EnumPlayerModelParts::RIGHT_SLEEVE: return { 3, 1 << 3, "right_sleeve", "options.modelPart.right_sleeve"};
+        case EnumPlayerModelParts::LEFT_PANTS_LEG: return { 4, 1 << 4, "left_pants_leg", "options.modelPart.left_pants_leg"};
+        case EnumPlayerModelParts::RIGHT_PANTS_LEG: return { 5, 1 << 5, "right_pants_leg", "options.modelPart.right_pants_leg"};
+        case EnumPlayerModelParts::HAT: return { 6, 1 << 6, "hat", "options.modelPart.hat"};
+    }
+    return { 0, 1, "cape", "options.modelPart.cape" };
+}
 
 
 #endif //MCCLONE_ENUMPLAYERMODELPARTS_H

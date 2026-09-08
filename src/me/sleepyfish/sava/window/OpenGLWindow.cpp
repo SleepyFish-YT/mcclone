@@ -204,8 +204,7 @@ void OpenGLWindow::toggleFullscreen() {
         this->fullscreen = true;
     }
 
-    // inverted since the code above does toggle it
-    this->minecraft->onFullscreenChange(!this->fullscreen, width, height);
+    this->minecraft->onFullscreenChange(this->fullscreen, width, height);
 }
 
 void OpenGLWindow::toggleCaptureMouse() {

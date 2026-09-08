@@ -386,29 +386,29 @@ void Minecraft::handleMouseScroll(double xOffset, double yOffset) {
     if (yOffset != 0) {
         int delta = yOffset > 0 ? 1 : -1;
 
-        // if (this->minecraft->thePlayer.isSpectator()) {
-        //     if (this->minecraft->ingameGUI.getSpectatorGui().func_175262_a()) { // func_175262_a = this.SpectatorMenu != null
-        //         this->minecraft->ingameGUI.getSpectatorGui().func_175259_b(-delta);
+        // if (this->thePlayer.isSpectator()) {
+        //     if (this->ingameGUI.getSpectatorGui().func_175262_a()) { // func_175262_a = this.SpectatorMenu != null
+        //         this->ingameGUI.getSpectatorGui().func_175259_b(-delta);
         //     } else {
         //         float speed = std::clamp(thePlayer.capabilities.getFlySpeed() + delta * 0.005f, 0.0f, 0.2f);
         //         thePlayer.capabilities.setFlySpeed(speed);
         //     }
         // } else {
         // hotbar scroll
-        //     this->minecraft->thePlayer.inventory.changeCurrentItem(delta);
+        //     this->thePlayer.inventory.changeCurrentItem(delta);
         // }
     }
 
     if (xOffset != 0) {
         // touchpad horizontal scroll - treat same as vertical
         int delta = xOffset > 0 ? 1 : -1;
-        // this->minecraft->thePlayer.inventory.changeCurrentItem(delta);
+        // this->thePlayer.inventory.changeCurrentItem(delta);
     }
 }
 
 void Minecraft::handleMouseMove(double x, double y) {
-    // if (!this->minecraft->inGameHasFocus) return;
-    // this->minecraft->entityRenderer.updateCameraAndRender(...)
+    // if (!this-->inGameHasFocus) return;
+    // this->entityRenderer.updateCameraAndRender(...)
 }
 
 void Minecraft::onFullscreenChange(bool fullscreen_, int width, int height) {
@@ -443,8 +443,8 @@ void Minecraft::resizeWindow(int width, int height) {
 
     /*
     if (this->currentScreen != nullptr) {
-        ScaledResolution scaledresolution(this);
-        this->currentScreen->onResize(this, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
+        ScaledResolution reso(this);
+        this->currentScreen->onResize(this, reso.getScaledWidth(), reso.getScaledHeight());
     }
 
     this->loadingScreen = LoadingScreenRenderer(this);
