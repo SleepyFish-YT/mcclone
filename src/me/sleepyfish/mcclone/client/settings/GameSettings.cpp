@@ -38,6 +38,9 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->gammaSetting = 1.0f;
     this->saturation = 0.0f;
 
+    this->particleSetting = 0;
+    this->guiScale = 0.0f;
+
     // Keybinds
     {
         this->keyBindForward      = KeyBinding("key.forward", GLFW_KEY_W, "key.categories.movement");
@@ -159,7 +162,9 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"fovSetting", 70},
             {"thirdPersonView", 0},
             {"gammaSetting", 1.0f},
-            {"saturation", 0.0f}
+            {"saturation", 0.0f},
+            {"particleSetting", 0},
+            {"guiScale", 0}
     };
 
     for (auto& keybind : this->keyBinds) {
@@ -201,6 +206,8 @@ void GameSettings::loadSettings() {
     this->thirdPersonView      = this->settingsJson.value("thirdPersonView", 0);
     this->gammaSetting         = this->settingsJson.value("gammaSetting", 1.0f);
     this->saturation           = this->settingsJson.value("saturation", 0.0f);
+    this->particleSetting      = this->settingsJson.value("particleSetting", 0);
+    this->guiScale             = this->settingsJson.value("guiScale", 0);
 
     KeyBinding::resetKeyBindingArrayAndHash();
     KeyBinding::unregisterAllBinds();
@@ -252,6 +259,8 @@ void GameSettings::saveSettings() {
         this->settingsJson["thirdPersonView"]      = this->thirdPersonView;
         this->settingsJson["gammaSetting"]         = this->gammaSetting;
         this->settingsJson["saturation"]           = this->saturation;
+        this->settingsJson["particleSetting"]      = this->particleSetting;
+        this->settingsJson["guiScale"]             = this->guiScale;
     }
 
     std::ofstream file(this->settingsFilePath);

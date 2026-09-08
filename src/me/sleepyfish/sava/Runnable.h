@@ -10,9 +10,9 @@
 #include <atomic>
 
 /**
- * @author SleepyFish
+ * @author SleepyFish - SleepyAVA
  * @brief Runnable interface class for threads
- * @version 1.1
+ * @version 1.2
  */
 class Runnable {
 
@@ -20,11 +20,15 @@ private:
 
     std::thread thread;
 
-protected:
-
     std::atomic<bool> running;
 
+protected:
+
     virtual void run() = 0; // subclass must implement this
+
+    virtual void onStart() {} // subclass can implement this
+
+    virtual void onJoin() {} // subclass can implement this
 
     virtual void onStop() {} // subclass can implement this
 
@@ -35,23 +39,29 @@ public:
     {}
 
     void start() {
-        this->running = true;
+        this->setRunning(true);
+        this->onStart();
         this->thread = std::thread(&Runnable::run, this);
     }
 
     void stop() {
-        this->running = false;
         this->onStop();
+        this->setRunning(false);
     }
 
     void join() {
         if (this->thread.joinable()) {
+            this->onJoin();
             this->thread.join();
         }
     }
 
-    bool isRunning() const noexcept {
-        return this->running;
+    void setRunning(bool value, std::memory_order order = std::memory_order_release) noexcept {
+        this->running.store(value, order);
+    }
+
+    bool isRunning(std::memory_order order = std::memory_order_acquire) const noexcept {
+        return this->running.load(order);
     }
 
 };

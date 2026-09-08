@@ -13,7 +13,7 @@
 #include <iomanip>
 
 /**
- * @author SleepyFish
+ * @author SleepyFish - SleepyAVA
  * @brief UUID wrapper of 2 uint64_t
  */
 class UUID {
@@ -40,8 +40,9 @@ public:
 
         std::string clean;
         for (char c : str) {
-            if (c != '-')
+            if (c != '-') {
                 clean += c;
+            }
         }
 
         this->hi = std::stoull(clean.substr(0, 16),  nullptr, 16);
@@ -68,7 +69,7 @@ public:
         return !(*this == o);
     }
 
-    friend std::ostream& operator<<(std::ostream &os, const UUID &u) {
+    friend std::ostream &operator<<(std::ostream &os, const UUID &u) {
         os << std::hex << std::setfill('0')
            << std::setw(8)  << (u.hi >> 32)              << '-'
            << std::setw(4)  << ((u.hi >> 16) & 0xFFFF)   << '-'
@@ -86,12 +87,15 @@ public:
 
 };
 
+namespace std {
 
-template<>
-struct std::hash<UUID> {
-    std::size_t operator()(const UUID &u) const noexcept {
-        return u.hi ^ (u.lo * 2654435761ULL);
-    }
+    template<>
+    struct hash<UUID> {
+        size_t operator()(const UUID &u) const noexcept {
+            return u.hi ^ (u.lo * 2654435761ULL);
+        }
+    };
+
 };
 
 

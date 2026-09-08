@@ -46,20 +46,26 @@ public:
     static constexpr float PId2 = std::numbers::pi_v<float> / 2.0f;
 
     static float asin(float value) {
-        return ASIN_TABLE[static_cast<int>((static_cast<double>(value + 1.0f)) * 32767.5) & 65535];
+        return MathUtils::ASIN_TABLE[static_cast<int>((static_cast<double>(value + 1.0f)) * 32767.5) & 65535];
     }
 
     static float acos(float value) {
-        return PId2 - ASIN_TABLE[static_cast<int>((static_cast<double>(value + 1.0f)) * 32767.5) & 65535];
+        return MathUtils::PId2 - MathUtils::ASIN_TABLE[static_cast<int>((static_cast<double>(value + 1.0f)) * 32767.5) & 65535];
     }
 
     static int getAverage(std::span<const int> vals) {
-        if (vals.empty()) return 0;
-        return getSum(vals) / static_cast<int>(vals.size());
+        if (vals.empty()) {
+            return 0;
+        }
+
+        return MathUtils::getSum(vals) / static_cast<int>(vals.size());
     }
 
     static int getSum(std::span<const int> vals) {
-        if (vals.empty()) return 0;
+        if (vals.empty()) {
+            return 0;
+        }
+
         return std::reduce(vals.begin(), vals.end(), 0);
     }
 
@@ -75,15 +81,15 @@ public:
     }
 
     static float toDeg(float angle) noexcept {
-        return angle * 180.0f / PI;
+        return angle * 180.0f / MathUtils::PI;
     }
 
     static float toRad(float angle) noexcept {
-        return angle / 180.0f * PI;
+        return angle / 180.0f * MathUtils::PI;
     }
 
     static float roundToFloat(double d) {
-        return static_cast<float>(std::round(d * 1.0E8) / 1.0E8);
+        return static_cast<float>(std::round(d * 1.0e8) / 1.0e8);
     }
 
 };

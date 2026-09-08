@@ -23,7 +23,7 @@ enum { ERROR_CODES };
 #undef X //define X
 
 #define X(name, value) case MCCLONE_ERR_##name: return #name;
-inline const char* MCCLONE_ERR_NAME_FUNC(int code) {
+inline const char* MCCLONE_ERR_NAME_FUNC(int code) noexcept {
     switch(code) {
         ERROR_CODES
         default: return "UNKNOWN";

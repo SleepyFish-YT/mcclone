@@ -6,18 +6,20 @@
 #ifndef MCCLONE_MAIN_H
 #define MCCLONE_MAIN_H
 
-#include "../../render/RenderInformation.h"
 #include "../../debug/Logger.h"
-#include "GameConfiguration.h"
+
+#include <vector>
+#include <string>
+#include <thread>
 
 #ifdef _WIN32
 #include <windows.h>
 #endif //_WIN32
 
-#include <vector>
-#include <string>
-#include <thread>
 #include <glm/ext/vector_int2.hpp>
+
+class RenderInformation;
+class GameConfiguration;
 
 /**
  * @author SleepyFish
@@ -39,9 +41,9 @@ private:
 
     std::vector<std::string> arguments;
 
-    GameConfiguration gameConfiguration;
+    GameConfiguration* gameConfiguration;
 
-    RenderInformation renderContext;
+    RenderInformation* renderContext;
 
     std::thread updateThread;
 
@@ -58,15 +60,15 @@ public:
      * @brief This function starts the main window and holds the main loop
      * @returns Exit code
      */
-    int main(int argc, char* argv[], const std::filesystem::path& exec_path);
+    int main(int arg_count, char* arg_vals[], const std::filesystem::path& exec_path);
 
     std::string getVersion() const;
 
-    void setConsoleWindow(::HWND wnd) {
+    void setConsoleWindow(::HWND wnd) noexcept {
         this->consoleWindow = wnd;
     }
 
-    ::HWND getConsoleWindow() {
+    ::HWND getConsoleWindow() const noexcept {
         return this->consoleWindow;
     }
 

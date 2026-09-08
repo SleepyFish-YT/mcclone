@@ -11,22 +11,25 @@
 #include "src/me/sleepyfish/mcclone/client/main/Main.h"
 #include "src/me/sleepyfish/mcclone/debug/Logger.h"
 
+#ifdef _WIN32
 #include <consoleapi3.h>
+#endif //_WIN32
+
 #include <filesystem>
 
 /**
  * @author SleepyFish
  * @return Exit code
  */
-int main(int argc, char* argv[]) {
-    if (argc == 0 || argv[0] == nullptr) {
+int main(int arg_count, char* arg_vals[]) {
+    if (arg_count == 0 || arg_vals[0] == nullptr) {
         return MCCLONE_ERR_ARGUMENTS;
     }
 
-    Main mainInstance;
+    Main main_instance{};
 
     // get executable path without file name
-    const std::filesystem::path executable_path = std::filesystem::path(argv[0]).parent_path();
+    const std::filesystem::path executable_path = std::filesystem::path(arg_vals[0]).parent_path();
 
     if (executable_path.empty() || !std::filesystem::is_directory(executable_path)) {
         Logger::error("Failed to get executable path");
@@ -40,13 +43,16 @@ int main(int argc, char* argv[]) {
     }
 
     // pass console window handle to main instance
-    mainInstance.setConsoleWindow(::GetConsoleWindow());
-    const int exitCode = mainInstance.main(argc, argv, executable_path);
+#ifdef _WIN32
+    main_instance.setConsoleWindow(::GetConsoleWindow());
+#endif //_WIN32
 
-    Logger::log("Exit code: " + std::string(MCCLONE_ERR_NAME_FUNC(exitCode)));
+    const int exit_code = main_instance.main(arg_count, arg_vals, executable_path);
+
+    Logger::log("Exit code: {}", MCCLONE_ERR_NAME_FUNC(exit_code));
     Logger::close();
 
-    return exitCode;
+    return exit_code;
 }
 
 

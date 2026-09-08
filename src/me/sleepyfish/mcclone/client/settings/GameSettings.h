@@ -71,6 +71,13 @@ public:
 
 
 
+    int particleSetting;
+
+
+
+    int guiScale;
+
+
     // Movement
     KeyBinding keyBindForward {"", 0, ""};
 

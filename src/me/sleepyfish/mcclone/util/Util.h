@@ -6,6 +6,8 @@
 #ifndef MCCLONE_UTIL_H
 #define MCCLONE_UTIL_H
 
+#include "../debug/Logger.h"
+
 #include <string>
 #include <future>
 
@@ -33,7 +35,22 @@ public:
     static V runTask(std::future<V>& task);
 
     template<typename V>
-    static V runTask(std::shared_future<V>& task);
+    static V runTaskPkg(std::packaged_task<V>& task);
+
+    template<typename V>
+    static void runTaskFunc(std::packaged_task<V()>& task) {
+        try {
+            task();
+        } catch (const std::future_error& e) {
+            Logger::fatal("Error executing task", e.what());
+            throw;
+        } catch (const std::bad_alloc& e) {
+            Logger::fatal("Out of memory", e.what());
+            throw;
+        } catch (const std::exception& e) {
+            Logger::fatal("Error executing task", e.what());
+        }
+    }
 
 };
 

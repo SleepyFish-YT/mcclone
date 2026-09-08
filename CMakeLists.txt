@@ -60,8 +60,17 @@ add_executable(${PROJECT_NAME}
         pcb.h
 
         # sava
+        ${SVA_DIR}/SavaUtil.cpp
         ${SVA_DIR}/SavaUtil.h
+        ${SVA_DIR}/Runnable.h
+        ${SVA_DIR}/FutureTaskQueue.h
         ${SVA_DIR}/UUID.h
+
+        # window render
+        ${SVA_DIR}/window/RenderInformation.cpp
+        ${SVA_DIR}/window/RenderInformation.h
+        ${SVA_DIR}/window/OpenGLWindow.cpp
+        ${SVA_DIR}/window/OpenGLWindow.h
 
         # client/main
         ${SRC_DIR}/client/main/Main.cpp
@@ -75,6 +84,16 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/AnvilConverterException.h
         ${SRC_DIR}/client/ClientBrandRetriever.h
 
+        # client/shader
+        ${SRC_DIR}/client/shader/Framebuffer.cpp
+        ${SRC_DIR}/client/shader/Framebuffer.h
+
+        # client/gui
+        ${SRC_DIR}/client/gui/ScaledResolution.cpp
+        ${SRC_DIR}/client/gui/ScaledResolution.h
+        ${SRC_DIR}/client/gui/IProgressMeter.h
+        ${SRC_DIR}/client/gui/GuiYesNoCallback.h
+
         # client/settings
         ${SRC_DIR}/client/settings/KeyBinding.cpp
         ${SRC_DIR}/client/settings/KeyBinding.h
@@ -84,6 +103,7 @@ add_executable(${PROJECT_NAME}
         # client/audio - engine
         ${SRC_DIR}/client/audio/SoundEngine.cpp
         ${SRC_DIR}/client/audio/SoundEngine.h
+
         # client/audio - others
         ${SRC_DIR}/client/audio/ISound.h
         ${SRC_DIR}/client/audio/ISoundEventAccessor.h
@@ -141,12 +161,6 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/profiler/Profiler.cpp
         ${SRC_DIR}/profiler/Profiler.h
 
-        # window render
-        ${SRC_DIR}/render/RenderInformation.cpp
-        ${SRC_DIR}/render/RenderInformation.h
-        ${SRC_DIR}/render/OpenGLWindow.cpp
-        ${SRC_DIR}/render/OpenGLWindow.h
-
         # network
         ${SRC_DIR}/network/ThreadQuickExitException.h
         ${SRC_DIR}/network/EnumPacketDirection.h
@@ -180,7 +194,6 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/network/status/client/C01PacketPing.h
 
         # util
-        ${SRC_DIR}/util/Runnable.h
         ${SRC_DIR}/util/Util.cpp
         ${SRC_DIR}/util/Util.h
         ${SRC_DIR}/util/Vec4b.h

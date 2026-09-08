@@ -57,7 +57,7 @@ Util::EnumOS Util::getOSType() {
 }
 
 template<typename V>
-V Util::runTask(std::shared_future<V> &task) {
+V Util::runTask(std::future<V>& task) {
     try {
         // wait for the task to be ready
         task.wait();
@@ -75,7 +75,7 @@ V Util::runTask(std::shared_future<V> &task) {
 }
 
 template<typename V>
-V Util::runTask(std::future<V>& task) {
+V Util::runTaskPkg(std::packaged_task<V> &task) {
     try {
         // wait for the task to be ready
         task.wait();

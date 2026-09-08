@@ -6,10 +6,9 @@
 #ifndef MCCLONE_OPENGLWINDOW_H
 #define MCCLONE_OPENGLWINDOW_H
 
-#include "../render/RenderInformation.h"
-#include "../client/main/GameConfiguration.h"
-#include "../client/Minecraft.h"
-#include "../util/Runnable.h"
+#include "../Runnable.h"
+
+#include "../../mcclone/client/main/GameConfiguration.h"
 
 #include <string>
 #include <chrono>
@@ -17,8 +16,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+class Minecraft;
+class RenderInformation;
+
 /**
- * @author SleepyFish
+ * @author SleepyFish - SleepyAVA
  * @brief OpenGL window class
  */
 class OpenGLWindow : public Runnable {
@@ -37,17 +39,18 @@ private:
 
     GameConfiguration::DisplayInformation displayInfo{};
 
-    RenderInformation renderContext{};
+    RenderInformation* renderContext{};
 
 
 
+    // render thread .run();
     void run() override;
 
     void onStop() override;
 
-public:
+    void onJoin() override;
 
-    uint16_t debugFps;
+public:
 
     uint64_t frameCount;
 
@@ -59,31 +62,27 @@ public:
 
     int savedWindowHeight;
 
-    double mouseX;
-
-    double mouseY;
-
-    std::chrono::steady_clock::time_point lastFpsTime;
-
     OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept;
 
     bool init();
 
-    void execute();
+    void thread_start();
+
+    void thread_run();
 
     void toggleFullscreen();
 
     void toggleCaptureMouse();
 
-    void handleKeypress(int key, int scancode, int action, int mods);
+    GLFWkeyfun handleKeypress(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-    void handleMouseButton(int button, int action, int mods);
+    GLFWmousebuttonfun handleMouseButton(GLFWwindow* window, int button, int action, int mods);
 
-    void handleMouseMove(double x, double y);
+    GLFWcursorposfun handleMouseMove(GLFWwindow* window, double xpos, double ypos);
 
-    void handleMouseScroll(double xOffset, double yOffset);
+    GLFWscrollfun handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 
-    RenderInformation& getRenderContext() noexcept;
+    RenderInformation* getRenderContext() noexcept;
 
     ::GLFWwindow* getWindow() noexcept;
 

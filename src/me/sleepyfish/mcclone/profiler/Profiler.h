@@ -11,9 +11,11 @@
 #include <unordered_map>
 #include <algorithm>
 #include <chrono>
+#include <mutex>
 
 /**
  * @author SleepyFish
+ * @version 1.1 - thread save
  * @brief Profiler to measure performance
  */
 class Profiler {

@@ -6,18 +6,23 @@
 #ifndef MCCLONE_MINECRAFT_H
 #define MCCLONE_MINECRAFT_H
 
-#include "../util/Runnable.h"
-
-#include "main/GameConfiguration.h"
+#include "../../sava/Runnable.h"
+#include "../../sava/FutureTaskQueue.h"
 
 #include <atomic>
 #include <thread>
 #include <chrono>
 #include <filesystem>
 
+class Timer;
+class MovingObjectPosition;
 class Profiler;
 class GameSettings;
 class SoundEngine;
+class ResourceLocation;
+class GameConfiguration;
+class Framebuffer;
+class FrameTimer;
 
 /**
  * @author SleepyFish
@@ -27,9 +32,12 @@ class Minecraft : public Runnable {
 
 protected:
 
+    // minecraft tick thread .run();
     void run() override;
 
     void onStop() override;
+
+    uint16_t fpsCounter;
 
 private:
 
@@ -37,9 +45,7 @@ private:
 
     uint8_t rightClickDelayTimer;
 
-    bool gamePaused;
-
-    void runGameLoop();
+    void runGameLoop(); // throws IOException
 
     uint16_t tpsCounter;
 
@@ -47,7 +53,47 @@ private:
 
     std::chrono::steady_clock::time_point prevFrameTime;
 
+    int tempDisplayWidth;
+
+    int tempDisplayHeight;
+
+    const bool isDemo;
+
+    bool fullscreen;
+
+    bool enableGLErrorChecking;
+
+    bool hasCrashed;
+
+    bool connectedToRealms;
+
+    bool isGamePaused_;
+
+    std::filesystem::path fileResourcepacks;
+
+    std::filesystem::path fileAssets;
+
+    std::string launchedVersion;
+
+    Timer* theTimer;
+
+    void updateFramebufferSize();
+
+    static inline uint16_t debugFPS = 0;
+
+    void startGame(); // throws LWJGLException
+
+    void shutdownMinecraftApplet();
+
+    Framebuffer* framebufferMc;
+
+    FutureTaskQueue<void> scheduledTasks{};
+
 public:
+
+    static ResourceLocation* locationMojangPng;
+
+    std::atomic<bool> gameReady{};
 
     std::filesystem::path mcDataDir;
 
@@ -57,7 +103,19 @@ public:
 
     SoundEngine *soundEngine;
 
-    explicit Minecraft(const GameConfiguration& gameConfig);
+    MovingObjectPosition *objectMouseOver;
+
+    FrameTimer *frameTimer;
+
+    int displayWidth;
+
+    int displayHeight;
+
+    bool skipRenderWorld;
+
+    explicit Minecraft(GameConfiguration* gameConfig);
+
+    void initializeFramebuffer();
 
     static long long getSystemTime() noexcept;
 
@@ -77,7 +135,9 @@ public:
 
     void handleMouseMove(double x, double y);
 
-    void onFullscreenChange(bool fullscreen);
+    void onFullscreenChange(bool fullscreen_, int width, int height);
+
+    void resizeWindow(int width, int height);
 
 };
 

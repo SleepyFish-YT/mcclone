@@ -10,7 +10,7 @@
 #include <glad/glad.h>
 
 /**
- * @author SleepyFish
+ * @author SleepyFish - SleepyAVA
  * @brief This class contains information about the graphics context
  */
 class RenderInformation {
@@ -37,21 +37,21 @@ public:
 
 
 
-    const std::string& getVendor() const;
+    const std::string &getVendor() const noexcept;
 
-    const std::string& getRenderer() const;
+    const std::string &getRenderer() const noexcept;
 
-    const std::string& getVersion() const;
-
-
-
-    int getMajorVersion() const;
-
-    int getMinorVersion() const;
+    const std::string &getVersion() const noexcept;
 
 
 
-    bool isVersionAtLeast(int major, int minor) const;
+    int getMajorVersion() const noexcept;
+
+    int getMinorVersion() const noexcept;
+
+
+
+    bool isVersionAtLeast(int major, int minor) const noexcept;
 
 };
 

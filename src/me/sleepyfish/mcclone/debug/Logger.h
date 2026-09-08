@@ -6,8 +6,8 @@
 #ifndef MCCLONE_LOGGER_H
 #define MCCLONE_LOGGER_H
 
-#include <string>
 #include <filesystem>
+#include <string>
 #include <format>
 #include <fstream>
 
@@ -27,7 +27,7 @@ private:
 
     static std::string getPrefix();
 
-    static void writeToFile(const std::string& txt);
+    static void writeToFile(const std::string &txt);
 
 public:
 
@@ -35,36 +35,36 @@ public:
 
     static void close();
 
-    static void log(const std::string& txt, bool writeToFile = true);
+    static void log(const std::string &txt, bool writeToFile = true);
 
-    static void warn(const std::string& txt, bool writeToFile = true);
+    static void warn(const std::string &txt, bool writeToFile = true);
 
-    static void error(const std::string& txt, bool writeToFile = true);
+    static void error(const std::string &txt, bool writeToFile = true);
 
-    static void fatal(const std::string& txt, bool writeToFile = true);
+    static void fatal(const std::string &txt, bool writeToFile = true);
 
     /**
      * @brief This function is used to log trace information without writing to the file
      */
-    static void trace(const std::string& txt, bool writeToFile = false);
+    static void trace(const std::string &txt, bool writeToFile = false);
 
     template<typename... Args>
-    static void log(const std::string& fmt, Args&&... args) {
+    static void log(const std::string &fmt, Args&&... args) {
         Logger::log(std::vformat(fmt, std::make_format_args(args...)));
     }
 
     template<typename... Args>
-    static void warn(const std::string& fmt, Args&&... args) {
+    static void warn(const std::string &fmt, Args&&... args) {
         Logger::warn(std::vformat(fmt, std::make_format_args(args...)));
     }
 
     template<typename... Args>
-    static void error(const std::string& fmt, Args&&... args) {
+    static void error(const std::string &fmt, Args&&... args) {
         Logger::error(std::vformat(fmt, std::make_format_args(args...)));
     }
 
     template<typename... Args>
-    static void fatal(const std::string& fmt, Args&&... args) {
+    static void fatal(const std::string &fmt, Args&&... args) {
         Logger::fatal(std::vformat(fmt, std::make_format_args(args...)));
     }
 
@@ -72,11 +72,11 @@ public:
      * @brief This function is used to log trace information without writing to the file
      */
     template<typename... Args>
-    static void trace(const std::string& fmt, Args&&... args) {
+    static void trace(const std::string &fmt, Args&&... args) {
         Logger::trace(std::vformat(fmt, std::make_format_args(args...)));
     }
 
-    static bool isInitialized();
+    static bool isInitialized() noexcept;
 
 };
 

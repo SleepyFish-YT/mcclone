@@ -11,18 +11,19 @@
 #include <cctype> // std::tolower
 
 /**
- * @author SleepyFish
- * @brief SleepyAVA util main class
+ * @author SleepyFish - SleepyAVA
+ * @brief Util main class
  */
 class SavaUtil {
 
 public:
 
     /**
-     * @author SleepyFish
-     * @brief SleepAVA string util class
+     * @author SleepyFish - SleepyAVA
+     * @brief String util class
      */
     class StringUtil {
+
     public:
 
         /**
@@ -69,6 +70,11 @@ public:
 
             return str.starts_with(prefix);
         }
+
+        /**
+         * @returns A random player name
+         */
+        static std::string GetRandomPlayerName();
 
     };
 

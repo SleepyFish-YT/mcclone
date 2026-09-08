@@ -72,6 +72,13 @@ public:
         blockPos(BlockPos::ORIGIN)
     {}
 
+    MovingObjectPosition() noexcept :
+        typeOfHit(MovingObjectType::MISS),
+        sideHit(EnumFacing::NORTH),
+        hitVec(0, 0, 0),
+        blockPos(BlockPos::ORIGIN)
+    {}
+
     const BlockPos &getBlockPos() const noexcept {
         return this->blockPos;
     }

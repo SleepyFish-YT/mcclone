@@ -7,12 +7,13 @@
 
 #include "Main.h"
 
+#include "../Minecraft.h"
 #include "../../debug/Logger.h"
-#include "../../render/OpenGLWindow.h"
+#include "../../../sava/window/OpenGLWindow.h"
+#include "../../../sava/window/RenderInformation.h"
+#include "GameConfiguration.h"
 
-#ifdef _WIN32
-#include <windows.h>
-#endif //_WIN32
+#include "../../../sava/SavaUtil.h"
 
 Main::Main() {
     // misc
@@ -20,10 +21,10 @@ Main::Main() {
     this->consoleWindow = nullptr;
 
     // settings
-    this->gameConfiguration = {};
+    this->gameConfiguration = new GameConfiguration();
 
     // openGL
-    this->renderContext = {};
+    this->renderContext = new RenderInformation();
     this->screenSize = {};
 
     // version
@@ -32,8 +33,8 @@ Main::Main() {
     this->patchVersion = "2";
 }
 
-int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir) {
-    this->arguments = std::vector<std::string>(argv, argv + argc);
+int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gameDir_dir) {
+    this->arguments = std::vector<std::string>(arg_vals, arg_vals + arg_count);
 
 #ifdef _WIN32
     this->screenSize = { ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
@@ -107,7 +108,9 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
         }
 
         if (!args_isDebug) {
+#ifdef _WIN32
             ::ShowWindow(this->consoleWindow, SW_HIDE);
+#endif //_WIN32
         }
     }
 
@@ -158,31 +161,33 @@ int Main::main(int argc, char* argv[], const std::filesystem::path& gameDir_dir)
             }
         }
 
-        this->gameConfiguration = {
+        this->gameConfiguration = new GameConfiguration(
                 GameConfiguration::DisplayInformation(windowSize.x, windowSize.y, args_isFullscreen, args_showGlErrors),
                 GameConfiguration::FolderInformation(gameDir_dir, resourcepacks_dir, assets_dir, assetIndex_file),
                 GameConfiguration::GameInformation(args_isDemo, this->getVersion()),
                 GameConfiguration::ServerInformation("testName.de", 3333),
-                GameConfiguration::UserInformation("username"),
+                GameConfiguration::UserInformation(SavaUtil::StringUtil::GetRandomPlayerName()),
                 args_isDebug,
                 this->arguments
-        };
+        );
     } catch (const std::exception& e) {
         Logger::error("Failed to create game configuration: " + std::string(e.what()));
         return MCCLONE_ERR_GAME_CONFIG;
     }
 
-    Minecraft minecraft {this->gameConfiguration};
+    auto* minecraft = new Minecraft(this->gameConfiguration);
 
     // if im correct, std::move should be used here, to move it from local to OpenGLWindow, since it is not used after this.
     std::string title = "McClone [" + this->getVersion() + "] (C++20) by " + Main::AUTHOR;
-    OpenGLWindow glWindow {this->gameConfiguration.displayInformation, std::move(title), &minecraft};
+    OpenGLWindow glWindow {this->gameConfiguration->displayInformation, std::move(title), minecraft};
     if (!glWindow.init()) {
         return MCCLONE_ERR_OPENGL_INIT;
     }
 
-    glWindow.execute();
+    glWindow.thread_start();
+    glWindow.thread_run();
     glWindow.stop();
+    glWindow.join();
 
     return MCCLONE_ERR_NONE;
 }

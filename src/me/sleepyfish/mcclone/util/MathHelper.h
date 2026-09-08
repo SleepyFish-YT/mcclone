@@ -27,7 +27,7 @@ private:
 
     static inline const float radToIndex = MathUtils::roundToFloat(651.8986469044033);
 
-    static inline const double field_181163_d = std::bit_cast<double>(4805340802404319232LL);
+    static inline const double field_181163_d = std::bit_cast<double>(4805340802404319232ll);
 
     static inline const std::array<int, 32> multiplyDeBruijnBitPosition = {
             0,1,28,2,29,14,24,3,30,22,20,15,25,17,4,8,31,27,13,23,21,19,16,7,26,12,18,6,11,5,10,9
@@ -73,13 +73,13 @@ private:
 
     static int calculateLogBaseTwoDeBruijn(int value) {
         value = isPowerOfTwo(value) ? value : roundUpToPowerOfTwo(value);
-        return multiplyDeBruijnBitPosition[static_cast<int>(static_cast<long long>(value) * 125613361LL >> 27) & 31];
+        return MathHelper::multiplyDeBruijnBitPosition[static_cast<int>(static_cast<long long>(value) * 125613361ll >> 27) & 31];
     }
 
     static double func_181161_i(double value) {
         const double d0 = 0.5 * value;
         auto i = std::bit_cast<long long>(value);
-        i = 6910469410427058090LL - (i >> 1);
+        i = 6910469410427058090ll - (i >> 1);
         value = std::bit_cast<double>(i);
         value = value * (1.5 - d0 * value * value);
         return value;
@@ -99,15 +99,13 @@ public:
     static inline const float deg2Rad = MathUtils::roundToFloat(0.017453292519943295);
 
     static float sin(float value) {
-        return fastMath
-               ? SIN_TABLE_FAST[static_cast<int>(value * radToIndex) & 4095]
-               : SIN_TABLE[static_cast<int>(value * 10430.378f) & 65535];
+        return MathHelper::fastMath ? MathHelper::SIN_TABLE_FAST[static_cast<int>(value * MathHelper::radToIndex) & 4095]
+                                    : MathHelper::SIN_TABLE[static_cast<int>(value * 10430.378f) & 65535];
     }
 
     static float cos(float value) {
-        return fastMath
-               ? SIN_TABLE_FAST[static_cast<int>(value * radToIndex + 1024.0f) & 4095]
-               : SIN_TABLE[static_cast<int>(value * 10430.378f + 16384.0f) & 65535];
+        return MathHelper::fastMath ? MathHelper::SIN_TABLE_FAST[static_cast<int>(value * MathHelper::radToIndex + 1024.0f) & 4095]
+                                    : MathHelper::SIN_TABLE[static_cast<int>(value * 10430.378f + 16384.0f) & 65535];
     }
 
     static float sqrt_float(float value) {
@@ -133,8 +131,8 @@ public:
     }
 
     static long long floor_double_long(double value) noexcept {
-        const long long i = static_cast<long long>(value);
-        return value < static_cast<double>(i) ? i - 1LL : i;
+        const auto i = static_cast<long long>(value);
+        return value < static_cast<double>(i) ? i - 1ll : i;
     }
 
     static int func_154353_e(double value) noexcept {
@@ -176,8 +174,8 @@ public:
     }
 
     static double abs_max(double a, double b) noexcept {
-        if (a < 0.0) a = -a;
-        if (b < 0.0) b = -b;
+        if (a < 0.0) { a = -a; }
+        if (b < 0.0) { b = -b; }
         return a > b ? a : b;
     }
 
@@ -185,26 +183,28 @@ public:
         return a < 0 ? -((-a - 1) / b) - 1 : a / b;
     }
 
-    static int getRandomIntegerInRange(std::mt19937& rand, int min, int max) {
+    static int getRandomIntegerInRange(std::mt19937& rand, int min, int max) noexcept {
         return min >= max ? min : std::uniform_int_distribution<int>(min, max)(rand);
     }
 
-    static float randomFloatClamp(std::mt19937& rand, float min, float max) {
+    static float randomFloatClamp(std::mt19937& rand, float min, float max) noexcept {
         return min >= max ? min : std::uniform_real_distribution<float>(min, max)(rand);
     }
 
-    static double getRandomDoubleInRange(std::mt19937& rand, double min, double max) {
+    static double getRandomDoubleInRange(std::mt19937& rand, double min, double max) noexcept {
         return min >= max ? min : std::uniform_real_distribution<double>(min, max)(rand);
     }
 
     static double average(std::span<const long long> values) noexcept {
-        long long sum = 0LL;
-        for (const long long v : values) sum += v;
+        long long sum = 0ll;
+        for (const long long v : values) {
+            sum += v;
+        }
         return static_cast<double>(sum) / static_cast<double>(values.size());
     }
 
     static bool epsilonEquals(float a, float b) noexcept {
-        return abs(b - a) < 1.0E-5f;
+        return MathHelper::abs(b - a) < 1.0e-5f;
     }
 
     static int normalizeAngle(int value, int mod) noexcept {
@@ -213,15 +213,23 @@ public:
 
     static float wrapAngleTo180_float(float value) noexcept {
         value = std::fmod(value, 360.0f);
-        if (value >= 180.0f)  value -= 360.0f;
-        if (value < -180.0f) value += 360.0f;
+        if (value >= 180.0f) {
+            value -= 360.0f;
+        }
+        if (value < -180.0f) {
+            value += 360.0f;
+        }
         return value;
     }
 
     static double wrapAngleTo180_double(double value) noexcept {
         value = std::fmod(value, 360.0);
-        if (value >= 180.0)  value -= 360.0;
-        if (value < -180.0) value += 360.0;
+        if (value >= 180.0) {
+            value -= 360.0;
+        }
+        if (value < -180.0) {
+            value += 360.0;
+        }
         return value;
     }
 
@@ -231,7 +239,7 @@ public:
     }
 
     static int parseIntWithDefaultAndMax(const std::string& str, int defaultVal, int max) {
-        return std::max(max, parseIntWithDefault(str, defaultVal));
+        return std::max(max, MathHelper::parseIntWithDefault(str, defaultVal));
     }
 
     static double parseDoubleWithDefault(const std::string& str, double defaultVal) {
@@ -240,7 +248,7 @@ public:
     }
 
     static double parseDoubleWithDefaultAndMax(const std::string& str, double defaultVal, double max) {
-        return std::max(max, parseDoubleWithDefault(str, defaultVal));
+        return std::max(max, MathHelper::parseDoubleWithDefault(str, defaultVal));
     }
 
     static int roundUpToPowerOfTwo(int value) noexcept {
@@ -254,13 +262,22 @@ public:
     }
 
     static int calculateLogBaseTwo(int value) {
-        return calculateLogBaseTwoDeBruijn(value) - (isPowerOfTwo(value) ? 0 : 1);
+        return MathHelper::calculateLogBaseTwoDeBruijn(value) - (isPowerOfTwo(value) ? 0 : 1);
     }
 
     static int roundUp(int value, int step) noexcept {
-        if (step == 0) return 0;
-        if (value == 0) return step;
-        if (value < 0) step *= -1;
+        if (step == 0) {
+            return 0;
+        }
+
+        if (value == 0) {
+            return step;
+        }
+
+        if (value < 0) {
+            step *= -1;
+        }
+
         const int i = value % step;
         return i == 0 ? value : value + step - i;
     }
@@ -295,8 +312,8 @@ public:
     }
 
     static long long getCoordinateRandom(int x, int y, int z) noexcept {
-        long long i = (static_cast<long long>(x) * 3129871LL) ^ (static_cast<long long>(z) * 116129781LL) ^ static_cast<long long>(y);
-        i = i * i * 42317861LL + i * 11LL;
+        long long i = (static_cast<long long>(x) * 3129871ll) ^ (static_cast<long long>(z) * 116129781ll) ^ static_cast<long long>(y);
+        i = i * i * 42317861ll + i * 11ll;
         return i;
     }
 
@@ -306,7 +323,9 @@ public:
 
     static double atan2(double y, double x) {
         const double d0 = x * x + y * y;
-        if (std::isnan(d0)) return std::numeric_limits<double>::quiet_NaN();
+        if (std::isnan(d0)) {
+            return std::numeric_limits<double>::quiet_NaN();
+        }
 
         const bool flagY = y < 0.0; if (flagY) y = -y;
         const bool flagX = x < 0.0; if (flagX) x = -x;
@@ -317,25 +336,25 @@ public:
         x *= d9;
         y *= d9;
 
-        const double d2 = field_181163_d + y;
+        const double d2 = MathHelper::field_181163_d + y;
         const int i = static_cast<int>(std::bit_cast<long long>(d2));
-        const double d3 = field_181164_e[i];
-        const double d4 = field_181165_f[i];
-        const double d5 = d2 - field_181163_d;
+        const double d3 = MathHelper::field_181164_e[i];
+        const double d4 = MathHelper::field_181165_f[i];
+        const double d5 = d2 - MathHelper::field_181163_d;
         const double d6 = y * d4 - x * d5;
         const double d7 = (6.0 + d6 * d6) * d6 * 0.16666666666666666;
         double d8 = d3 + d7;
 
         if (flag2) d8 = (std::numbers::pi / 2.0) - d8;
-        if (flagX)  d8 = std::numbers::pi - d8;
-        if (flagY)  d8 = -d8;
+        if (flagX) d8 = std::numbers::pi - d8;
+        if (flagY) d8 = -d8;
 
         return d8;
     }
 
     static int hsvToRGB(float h, float s, float v) {
-        const int i     = static_cast<int>(h * 6.0f) % 6;
-        const float f   = h * 6.0f - static_cast<float>(i);
+        const int i = static_cast<int>(h * 6.0f) % 6;
+        const float f = h * 6.0f - static_cast<float>(i);
         const float f1  = v * (1.0f - s);
         const float f2  = v * (1.0f - f * s);
         const float f3  = v * (1.0f - (1.0f - f) * s);
@@ -351,13 +370,12 @@ public:
             default: throw std::runtime_error("Something went wrong when converting from HSV to RGB.");
         }
 
-        return clamp_int(static_cast<int>(r * 255.0f), 0, 255) << 16
-               | clamp_int(static_cast<int>(g * 255.0f), 0, 255) << 8
-               | clamp_int(static_cast<int>(b * 255.0f), 0, 255);
+        return MathHelper::clamp_int(static_cast<int>(r * 255.0f), 0, 255) << 16 |
+               MathHelper::clamp_int(static_cast<int>(g * 255.0f), 0, 255) << 8 |
+               MathHelper::clamp_int(static_cast<int>(b * 255.0f), 0, 255);
     }
 
 };
-
 
 
 #endif //MCCLONE_MATHHELPER_H

@@ -15,6 +15,7 @@ Profiler::Profiler() {
 }
 
 void Profiler::clearProfiling() {
+    std::lock_guard<std::mutex> lock(this->mutex);
     this->profilingMap.clear();
     this->profilingSection = "";
     this->sectionList.clear();
@@ -23,58 +24,29 @@ void Profiler::clearProfiling() {
 }
 
 void Profiler::startSection(const std::string& name) {
-    if (!this->profilerLocalEnabled) return;
-    if (!this->profilingEnabled) return;
-
-    if (!this->profilingSection.empty()) {
-        this->profilingSection += ".";
-    }
-
-    this->profilingSection += name;
-    this->sectionList.push_back(this->profilingSection);
-
-    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
-    this->timestampList.push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(now).count());
+    std::lock_guard<std::mutex> lock(this->mutex);
+    this->startSection_nolock(name);
 }
 
 void Profiler::endSection() {
-    if (!this->profilerLocalEnabled) return;
-    if (!this->profilingEnabled) return;
-
-    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
-    long long i = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count();
-    long long j = this->timestampList.back();
-    this->timestampList.pop_back();
-
-    long long k = i - j;
-
-    std::string currentSection = this->sectionList.back();
-    this->sectionList.pop_back();
-
-    if (this->profilingMap.count(currentSection)) {
-        this->profilingMap[currentSection] += k;
-    } else {
-        this->profilingMap[currentSection] = k;
-    }
-
-    if (k > 100000000ll) {
-        Logger::warn("Something's taking too long! '" + currentSection + "' took approx " + std::to_string((double) k / 1000000.0) + " ms");
-    }
-
-    this->profilingSection = !this->sectionList.empty() ? this->sectionList.back() : "";
+    std::lock_guard<std::mutex> lock(this->mutex);
+    this->endSection_nolock();
 }
 
 void Profiler::endStartSection(const std::string& name) {
+    std::lock_guard<std::mutex> lock(this->mutex);
     if (!this->profilerLocalEnabled) return;
-    this->endSection();
-    this->startSection(name);
+    this->endSection_nolock();
+    this->startSection_nolock(name);
 }
 
 std::string Profiler::getNameOfLastSection() const noexcept {
+    std::lock_guard<std::mutex> lock(this->mutex);
     return this->sectionList.empty() ? "[UNKNOWN]" : this->sectionList.back();
 }
 
 std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& profilerName) {
+    std::lock_guard<std::mutex> lock(this->mutex);
     if (!this->profilingEnabled) return {};
 
     long long i = this->profilingMap.count("root") ? this->profilingMap.at("root") : 0ll;
@@ -147,4 +119,46 @@ void Profiler::printProfilerSection(const std::string &section) {
 
         Logger::log(line);
     }
+}
+
+void Profiler::startSection_nolock(const std::string& name) {
+    if (!this->profilerLocalEnabled) return;
+    if (!this->profilingEnabled) return;
+
+    if (!this->profilingSection.empty()) {
+        this->profilingSection += ".";
+    }
+
+    this->profilingSection += name;
+    this->sectionList.push_back(this->profilingSection);
+
+    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
+    this->timestampList.push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(now).count());
+}
+
+void Profiler::endSection_nolock() {
+    if (!this->profilerLocalEnabled) return;
+    if (!this->profilingEnabled) return;
+
+    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch();
+    long long i = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count();
+    long long j = this->timestampList.back();
+    this->timestampList.pop_back();
+
+    long long k = i - j;
+
+    std::string currentSection = this->sectionList.back();
+    this->sectionList.pop_back();
+
+    if (this->profilingMap.count(currentSection)) {
+        this->profilingMap[currentSection] += k;
+    } else {
+        this->profilingMap[currentSection] = k;
+    }
+
+    if (k > 100000000ll) {
+        Logger::warn("Something's taking too long! '" + currentSection + "' took approx " + std::to_string((double) k / 1000000.0) + " ms");
+    }
+
+    this->profilingSection = !this->sectionList.empty() ? this->sectionList.back() : "";
 }
