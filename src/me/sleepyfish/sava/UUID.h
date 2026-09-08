@@ -21,7 +21,10 @@ class UUID {
 public:
 
     uint64_t hi; // high bits
+
     uint64_t lo; // low bits
+
+
 
     UUID() noexcept :
         hi(0),
@@ -52,8 +55,8 @@ public:
     static UUID random() {
         static std::mt19937_64 rng(std::random_device{}());
         UUID uuid(rng(), rng());
-        uuid.hi = (uuid.hi & 0xFFFFFFFFFFFF0FFFULL) | 0x0000000000004000ULL;
-        uuid.lo = (uuid.lo & 0x3FFFFFFFFFFFFFFFULL) | 0x8000000000000000ULL;
+        uuid.hi = (uuid.hi & 0xFFFFFFFFFFFF0FFFull) | 0x0000000000004000ull;
+        uuid.lo = (uuid.lo & 0x3FFFFFFFFFFFFFFFull) | 0x8000000000000000ull;
         return uuid;
     }
 
@@ -75,7 +78,7 @@ public:
            << std::setw(4)  << ((u.hi >> 16) & 0xFFFF)   << '-'
            << std::setw(4)  << (u.hi & 0xFFFF)            << '-'
            << std::setw(4)  << (u.lo >> 48)               << '-'
-           << std::setw(12) << (u.lo & 0x0000FFFFFFFFFFFFULL);
+           << std::setw(12) << (u.lo & 0x0000FFFFFFFFFFFFull);
         return os;
     }
 

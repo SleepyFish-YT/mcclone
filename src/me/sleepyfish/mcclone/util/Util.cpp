@@ -31,7 +31,7 @@ Util::EnumOS Util::getOSType() {
         return std::string("solaris");
 #else
         return std::string("unknown");
-#endif
+#endif // _WIN32
     }();
 
     if (os == "unknown") {
@@ -46,7 +46,7 @@ Util::EnumOS Util::getOSType() {
             else if (sysname == "SunOS") os = "solaris";
             else os = "unknown";
         }
-#endif
+#endif // _WIN32
     }
 
     if (os == "windows") return EnumOS::WINDOWS;

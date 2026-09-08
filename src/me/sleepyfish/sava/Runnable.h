@@ -41,6 +41,7 @@ public:
     void start() {
         this->setRunning(true);
         this->onStart();
+
         this->thread = std::thread(&Runnable::run, this);
     }
 

@@ -23,6 +23,7 @@ class FutureTaskQueue {
 private:
 
     std::queue<std::packaged_task<T()>> tasks;
+
     std::mutex mutex;
 
 public:

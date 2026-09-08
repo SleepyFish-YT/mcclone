@@ -38,11 +38,12 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
 
 #ifdef _WIN32
     this->screenSize = { ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
+#endif //_WIN32
+
     if (this->screenSize.x <= 0 || this->screenSize.y <= 0) {
         Logger::error("Failed to retrieve screen resolution");
         return MCCLONE_ERR_RESOLUTION;
     }
-#endif //_WIN32
 
     glm::ivec2 windowSize = {1050, 700};
 
