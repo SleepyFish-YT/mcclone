@@ -32,10 +32,12 @@ public:
         this->read_var += bits / 8ll;
 
         if (this->read_var > this->max) {
-            throw std::runtime_error(std::format(
-                    "Tried to read NBT tag that was too big; tried to allocate: {} bytes where max allowed: {}",
-                    this->read_var, this->max
-            ));
+            throw std::runtime_error(
+                    std::format(
+                        "Tried to read NBT tag that was too big; tried to allocate: {} bytes where max allowed: {}",
+                        this->read_var, this->max
+                    )
+            );
         }
     }
 
