@@ -142,6 +142,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/block/material/MaterialLiquid.h
 
         # world
+        ${SRC_DIR}/world/EnumDifficulty.h
         ${SRC_DIR}/world/ColorizerFoliage.h
         ${SRC_DIR}/world/WorldType.h
         ${SRC_DIR}/world/WorldSettings.h
