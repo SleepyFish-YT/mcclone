@@ -40,7 +40,7 @@ bool OpenGLWindow::init() {
     // set glfw hints - version and opengl profile
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    ::glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    ::glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // could use GLFW_OPENGL_COMPAT_PROFILE for backwards compatibility
 
     ::GLFWmonitor* monitor = nullptr;
     int width  = this->displayInfo.width;
@@ -73,7 +73,10 @@ bool OpenGLWindow::init() {
         return false;
     }
 
-    // set window size limits
+    this->displayInfo.width  = width;
+    this->displayInfo.height = height;
+
+    // set window size limits (440x260 - 8192x4320)
     ::glfwSetWindowSizeLimits(this->window, 440, 260, 8192, 4320);
 
     // make context current here just long enough to init GLAD
@@ -128,6 +131,8 @@ void OpenGLWindow::run() {
 
         ::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        this->renderGameLoop();
+
         if (this->displayInfo.showGlErrors) {
             GLenum error = ::glGetError();
             if (error != GL_NO_ERROR) {
@@ -140,6 +145,10 @@ void OpenGLWindow::run() {
 
     Logger::log("Render thread stopped");
     ::glfwMakeContextCurrent(nullptr);
+}
+
+void OpenGLWindow::renderGameLoop() {
+    this->minecraft->renderGameLoop();
 }
 
 void OpenGLWindow::thread_start() {

@@ -137,6 +137,8 @@ public:
 
     void resizeWindow(int width, int height);
 
+    void renderGameLoop();
+
 };
 
 

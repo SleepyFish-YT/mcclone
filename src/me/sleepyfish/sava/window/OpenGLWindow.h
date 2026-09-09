@@ -42,14 +42,14 @@ private:
 
     RenderInformation* renderContext{};
 
-
-
     // render thread .run();
     void run() override;
 
     void onStop() override;
 
     void onJoin() override;
+
+    void renderGameLoop();
 
 public:
 

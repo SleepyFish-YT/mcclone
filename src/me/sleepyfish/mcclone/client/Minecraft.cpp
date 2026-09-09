@@ -177,6 +177,10 @@ void Minecraft::runGameLoop() {
     this->mcProfiler->endSection();
 }
 
+void Minecraft::renderGameLoop() {
+
+}
+
 bool Minecraft::isGamePaused() const noexcept {
     return this->isGamePaused_;
 }
