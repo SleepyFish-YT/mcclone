@@ -8,6 +8,7 @@
 
 #include "ClippingHelper.h"
 #include "../GLAllocation.h"
+#include "../GlStateManager.h"
 
 #include <cmath>
 #include <vector>
@@ -50,8 +51,8 @@ public:
     }
 
     void init() {
-        ::glGetFloatv(GL_PROJECTION_MATRIX, this->projectionMatrixBuffer.data());
-        ::glGetFloatv(GL_MODELVIEW_MATRIX,  this->modelviewMatrixBuffer.data());
+        GlStateManager::getFloat_(GL_PROJECTION_MATRIX, this->projectionMatrixBuffer.data());
+        GlStateManager::getFloat_(GL_MODELVIEW_MATRIX,  this->modelviewMatrixBuffer.data());
 
         const float* p = this->projectionMatrixBuffer.data();
         const float* m = this->modelviewMatrixBuffer.data();
@@ -74,42 +75,42 @@ public:
         c[14] = m[12] * p[2]  + m[13] * p[6]  + m[14] * p[10] + m[15] * p[14];
         c[15] = m[12] * p[3]  + m[13] * p[7]  + m[14] * p[11] + m[15] * p[15];
 
-        // Right
+        // right
         this->frustum[0][0] = c[3]  - c[0];
         this->frustum[0][1] = c[7]  - c[4];
         this->frustum[0][2] = c[11] - c[8];
         this->frustum[0][3] = c[15] - c[12];
         this->normalize(this->frustum[0]);
 
-        // Left
+        // left
         this->frustum[1][0] = c[3]  + c[0];
         this->frustum[1][1] = c[7]  + c[4];
         this->frustum[1][2] = c[11] + c[8];
         this->frustum[1][3] = c[15] + c[12];
         this->normalize(this->frustum[1]);
 
-        // Bottom
+        // bottom
         this->frustum[2][0] = c[3]  + c[1];
         this->frustum[2][1] = c[7]  + c[5];
         this->frustum[2][2] = c[11] + c[9];
         this->frustum[2][3] = c[15] + c[13];
         this->normalize(this->frustum[2]);
 
-        // Top
+        // top
         this->frustum[3][0] = c[3]  - c[1];
         this->frustum[3][1] = c[7]  - c[5];
         this->frustum[3][2] = c[11] - c[9];
         this->frustum[3][3] = c[15] - c[13];
         this->normalize(this->frustum[3]);
 
-        // Far
+        // far
         this->frustum[4][0] = c[3]  - c[2];
         this->frustum[4][1] = c[7]  - c[6];
         this->frustum[4][2] = c[11] - c[10];
         this->frustum[4][3] = c[15] - c[14];
         this->normalize(this->frustum[4]);
 
-        // Near
+        // near
         this->frustum[5][0] = c[3]  + c[2];
         this->frustum[5][1] = c[7]  + c[6];
         this->frustum[5][2] = c[11] + c[10];

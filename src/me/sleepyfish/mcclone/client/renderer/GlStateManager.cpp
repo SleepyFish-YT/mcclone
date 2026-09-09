@@ -357,6 +357,10 @@ void GlStateManager::glEndList_() {
 
 int GlStateManager::glGetError_() { return ::glGetError(); }
 
+void GlStateManager::drainGlErrors() {
+    while (::GlStateManager::glGetError_() != GL_NO_ERROR) {}
+}
+
 void GlStateManager::glTexImage2D_(int target, int level, int internalFormat, int width, int height, int border, int format, int type, const int* pixels) {
     ::glTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);
 }
@@ -386,6 +390,3 @@ void GlStateManager::glMultiDrawArrays_(int mode, const int* first, const int* c
     ::glMultiDrawArrays(mode, first, count, drawCount);
 }
 
-void GlStateManager::drainGlErrors() {
-    while (::GlStateManager::glGetError_() != GL_NO_ERROR) {}
-}

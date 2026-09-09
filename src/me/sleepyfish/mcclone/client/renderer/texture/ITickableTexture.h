@@ -1,5 +1,5 @@
 //
-// Created by SleepyFish on 03.09.2026.
+// Created by SleepyFish on 09.09.2026.
 // Project: mcclone
 //
 
@@ -10,15 +10,14 @@
  * @author SleepyFish
  * @brief Tickable interface
  */
-class ITickable {
+class ITickableTexture {
 
 public:
 
-    virtual ~ITickable() = default;
+    virtual ~ITickableTexture() = default;
 
-    virtual void update() = 0;
+    virtual void tick() = 0;
 
 };
-
 
 #endif //MCCLONE_ITICKABLE_H

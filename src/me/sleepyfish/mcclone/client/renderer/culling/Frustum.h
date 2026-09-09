@@ -13,6 +13,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Frustum class
  */
 class Frustum : public ICamera {
 

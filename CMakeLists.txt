@@ -138,6 +138,7 @@ add_executable(${PROJECT_NAME}
         # client/renderer/texture
         ${SRC_DIR}/client/renderer/texture/TextureUtil.cpp
         ${SRC_DIR}/client/renderer/texture/TextureUtil.h
+        ${SRC_DIR}/client/renderer/texture/ITickableTexture.h
 
         # client/renderer/culling
         ${SRC_DIR}/client/renderer/culling/ICamera.h

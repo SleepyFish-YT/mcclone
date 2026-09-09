@@ -20,121 +20,166 @@ public:
     enum class TexGen { S, T, R, Q };
 
     struct BooleanState {
-        int  capability;
+
+        const int capability;
         bool currentState = false;
 
-        explicit BooleanState(int cap) : capability(cap) {}
+        explicit BooleanState(int cap) :
+            capability(cap)
+        {}
 
-        void setEnabled()  { setState(true);  }
-        void setDisabled() { setState(false); }
+        void setEnabled() noexcept { this->setState(true);  }
+        void setDisabled() noexcept { this->setState(false); }
         void setState(bool state);
+
     };
 
     struct Color {
+
         float red   = 1.0f;
         float green = 1.0f;
         float blue  = 1.0f;
         float alpha = 1.0f;
 
         Color() = default;
-        Color(float r, float g, float b, float a) : red(r), green(g), blue(b), alpha(a) {}
+
+        Color(float r, float g, float b, float a) :
+            red(r),
+            green(g),
+            blue(b),
+            alpha(a)
+        {}
+
     };
 
     struct AlphaState {
+
         BooleanState alphaTest { 3008 };
         int   func = 519;
         float ref  = -1.0f;
+
     };
 
     struct BlendState {
+
         BooleanState blend { 3042 };
         int srcFactor      = 1;
         int dstFactor      = 0;
         int srcFactorAlpha = 1;
         int dstFactorAlpha = 0;
+
     };
 
     struct DepthState {
+
         BooleanState depthTest { 2929 };
         bool maskEnabled = true;
         int  depthFunc   = 513;
+
     };
 
     struct FogState {
+
         BooleanState fog { 2912 };
         int   mode    = 2048;
         float density = 1.0f;
         float start   = 0.0f;
         float end     = 1.0f;
+
     };
 
     struct CullState {
+
         BooleanState cullFace { 2884 };
         int mode = 1029;
+
     };
 
     struct ColorMaterialState {
+
         BooleanState colorMaterial { 2903 };
         int face = 1032;
         int mode = 5634;
+
     };
 
     struct ColorLogicState {
+
         BooleanState colorLogicOp { 3058 };
         int opcode = 5379;
+
     };
 
     struct PolygonOffsetState {
+
         BooleanState polygonOffsetFill { 32823 };
         BooleanState polygonOffsetLine { 10754 };
         float factor = 0.0f;
         float units  = 0.0f;
+
     };
 
     struct StencilFunc {
+
         int func = 519;
         int ref  = 0;
         int mask = -1;
+
     };
 
     struct StencilState {
+
         StencilFunc  func;
         int writeMask  = -1;
         int failOp     = 7680;
         int zFailOp    = 7680;
         int zPassOp    = 7680;
+
     };
 
     struct TexGenCoord {
+
         BooleanState textureGen;
         int coord;
         int param = -1;
 
-        TexGenCoord(int coordIn, int capIn) : textureGen(capIn), coord(coordIn) {}
+        TexGenCoord(int coordIn, int capIn) :
+            textureGen(capIn),
+            coord(coordIn)
+        {}
+
     };
 
     struct TexGenState {
+
         TexGenCoord s { 8192, 3168 };
         TexGenCoord t { 8193, 3169 };
         TexGenCoord r { 8194, 3170 };
         TexGenCoord q { 8195, 3171 };
+
     };
 
     struct TextureState {
+
         BooleanState texture2DState { 3553 };
-        int          textureName = 0;
+        int textureName = 0;
+
     };
 
     struct ColorMask {
+
         bool red   = true;
         bool green = true;
         bool blue  = true;
         bool alpha = true;
+
     };
 
     struct ClearState {
+
         double depth = 1.0;
         Color  color { 0.0f, 0.0f, 0.0f, 0.0f };
+
     };
 
     static bool clearEnabled;
@@ -282,6 +327,7 @@ public:
     static void glEndList_();
 
     static int glGetError_();
+    static void drainGlErrors();
 
     static void glTexImage2D_(int target, int level, int internalFormat, int width, int height, int border, int format, int type, const int* pixels);
     static void glTexSubImage2D_(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, const int* pixels);
@@ -292,8 +338,6 @@ public:
     static int  glGetTexLevelParameteri_(int target, int level, int pname);
 
     static void glMultiDrawArrays_(int mode, const int* first, const int* count, int drawCount);
-
-    static void drainGlErrors();
 
 };
 
