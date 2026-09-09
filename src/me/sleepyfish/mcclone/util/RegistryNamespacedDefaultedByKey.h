@@ -10,7 +10,6 @@
 
 #include <stdexcept>
 
-
 /**
  * @author SleepyFish
  * @brief Namespaced registry with a default value fallback for unknown keys/ids
