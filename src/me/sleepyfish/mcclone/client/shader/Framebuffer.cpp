@@ -57,10 +57,10 @@ void Framebuffer::setFramebufferFilter_(int filter) {
     if (!OpenGlHelper::isFramebufferEnabled_()) return;
     this->m_framebufferFilter = filter;
     GlStateManager::bindTexture_(this->m_framebufferTexture);
-    ::glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (float) filter);
-    ::glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (float) filter);
-    ::glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, 10496.0f);
-    ::glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, 10496.0f);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     GlStateManager::bindTexture_(0);
 }
 
