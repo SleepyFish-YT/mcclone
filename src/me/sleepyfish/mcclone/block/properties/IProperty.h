@@ -7,8 +7,8 @@
 #define MCCLONE_IPROPERTY_H
 
 #include <string>
-#include <vector>
 #include <typeindex>
+#include <vector>
 
 /**
  * @author SleepyFish
@@ -34,8 +34,6 @@ template<typename T>
 class IProperty : public IPropertyBase {
 
 public:
-
-    virtual std::string getName() const = 0;
 
     virtual std::vector<T> getAllowedValues() const = 0;
 

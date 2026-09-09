@@ -24,16 +24,16 @@ class RegistrySimple : public IRegistry<K, V> {
 
 protected:
 
-    std::unordered_map<K, V, Hash, Equal> registryObjects;
+    std::unordered_map<K, V *, Hash, Equal> registryObjects;
 
 public:
 
-    V *getObject(const K &name) override {
+    virtual V *getObject(const K &name) override {
         auto it = this->registryObjects.find(name);
-        return it != this->registryObjects.end() ? &it->second : nullptr;
+        return it != this->registryObjects.end() ? it->second : nullptr;
     }
 
-    void putObject(const K &key, V value) override {
+    void putObject(const K &key, V *value) override {
         /*
         // this will cause a compile error for ResourceLocation since it has no default constructor
         if (key == K{}) {
@@ -45,20 +45,20 @@ public:
             Logger::warn("Adding duplicate key to registry");
         }
 
-        this->registryObjects.insert_or_assign(key, std::move(value));
+        this->registryObjects[key] = value;
     }
 
     std::unordered_set<K, Hash, Equal> getKeys() const {
         std::unordered_set<K, Hash, Equal> keys;
 
-        for (const auto &[k, v]: this->registryObjects) {
+        for (const auto& [k, _] : this->registryObjects) {
             keys.insert(k);
         }
 
         return keys;
     }
 
-    bool containsKey(const K &key) const {
+    virtual bool containsKey(const K &key) const {
         return this->registryObjects.count(key) > 0;
     }
 

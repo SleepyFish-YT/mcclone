@@ -17,9 +17,11 @@ class ClippingHelper {
 public:
 
     float frustum[6][4]{};
+
     float projectionMatrix[16]{};
     float modelviewMatrix[16]{};
     float clippingMatrix[16]{};
+
     bool disabled = false;
 
     virtual ~ClippingHelper() = default;
@@ -29,79 +31,49 @@ public:
             return true;
         }
 
-        auto f = static_cast<float>(minX);
-        auto f1 = static_cast<float>(minY);
-        auto f2 = static_cast<float>(minZ);
-        auto f3 = static_cast<float>(maxX);
-        auto f4 = static_cast<float>(maxY);
-        auto f5 = static_cast<float>(maxZ);
+        const auto minXf = static_cast<float>(minX);
+        const auto minYf = static_cast<float>(minY);
+        const auto minZf = static_cast<float>(minZ);
+        const auto maxXf = static_cast<float>(maxX);
+        const auto maxYf = static_cast<float>(maxY);
+        const auto maxZf = static_cast<float>(maxZ);
 
-        const auto isOutside = [&](const float* plane) {
-            const float f6 = plane[0], f7 = plane[1], f8 = plane[2], f9 = plane[3];
+        // check negative vertex (closest to plane). if outside, the whole box is outside.
+        const auto isOutside = [&](const auto& plane) {
+            const float a = plane[0], b = plane[1], c = plane[2], d = plane[3];
 
-            return (f6 * f  + f7 * f1 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f1 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f  + f7 * f4 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f4 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f  + f7 * f1 + f8 * f5 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f1 + f8 * f5 + f9 <= 0.0f &&
-                    f6 * f  + f7 * f4 + f8 * f5 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f4 + f8 * f5 + f9 <= 0.0f);
+            const float px = (a >= 0.0f) ? maxXf : minXf;
+            const float py = (b >= 0.0f) ? maxYf : minYf;
+            const float pz = (c >= 0.0f) ? maxZf : minZf;
+
+            return (a * px + b * py + c * pz + d <= 0.0f);
         };
 
         return !std::ranges::any_of(this->frustum, isOutside);
     }
 
     bool isBoxInFrustumFully(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) noexcept {
-        if (this->disabled) {
-            return true;
-        }
+        if (this->disabled) return true;
 
-        auto f = (float) minX;
-        auto f1 = (float) minY;
-        auto f2 = (float) minZ;
-        auto f3 = (float) maxX;
-        auto f4 = (float) maxY;
-        auto f5 = (float) maxZ;
+        const auto minXf = static_cast<float>(minX);
+        const auto minYf = static_cast<float>(minY);
+        const auto minZf = static_cast<float>(minZ);
+        const auto maxXf = static_cast<float>(maxX);
+        const auto maxYf = static_cast<float>(maxY);
+        const auto maxZf = static_cast<float>(maxZ);
 
-        for (int i = 0; i < 6; ++i) {
-            const float* p = frustum[i];
-            float f6 = p[0], f7 = p[1], f8 = p[2], f9 = p[3];
+        // check negative vertex (furthest from plane). if outside, the box is partially outside.
+        const auto isPartiallyOutside = [&](const auto& plane) {
+            const float a = plane[0], b = plane[1], c = plane[2], d = plane[3];
 
-            if (i < 4) {
-                if (f6 * f  + f7 * f1 + f8 * f2 + f9 <= 0.0f ||
-                    f6 * f3 + f7 * f1 + f8 * f2 + f9 <= 0.0f ||
-                    f6 * f  + f7 * f4 + f8 * f2 + f9 <= 0.0f ||
-                    f6 * f3 + f7 * f4 + f8 * f2 + f9 <= 0.0f ||
-                    f6 * f  + f7 * f1 + f8 * f5 + f9 <= 0.0f ||
-                    f6 * f3 + f7 * f1 + f8 * f5 + f9 <= 0.0f ||
-                    f6 * f  + f7 * f4 + f8 * f5 + f9 <= 0.0f ||
-                    f6 * f3 + f7 * f4 + f8 * f5 + f9 <= 0.0f)
-                {
-                    return false;
-                }
-            } else {
-                if (f6 * f  + f7 * f1 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f1 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f  + f7 * f4 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f4 + f8 * f2 + f9 <= 0.0f &&
-                    f6 * f  + f7 * f1 + f8 * f5 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f1 + f8 * f5 + f9 <= 0.0f &&
-                    f6 * f  + f7 * f4 + f8 * f5 + f9 <= 0.0f &&
-                    f6 * f3 + f7 * f4 + f8 * f5 + f9 <= 0.0f)
-                {
-                    return false;
-                }
-            }
-        }
+            const float nx = (a >= 0.0f) ? minXf : maxXf;
+            const float ny = (b >= 0.0f) ? minYf : maxYf;
+            const float nz = (c >= 0.0f) ? minZf : maxZf;
 
-        return true;
-    }
+            return (a * nx + b * ny + c * nz + d < 0.0f);
+        };
 
-private:
-
-    float dot(const float* plane, float x, float y, float z) noexcept {
-        return plane[0] * x + plane[1] * y + plane[2] * z + plane[3];
+        return !std::ranges::any_of(this->frustum, isPartiallyOutside);
     }
 
 };

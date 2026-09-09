@@ -3,12 +3,12 @@
 // Project: mcclone
 //
 
-#ifndef MCCLONE_ITICKABLE_H
-#define MCCLONE_ITICKABLE_H
+#ifndef MCCLONE_ITICKABLETEXTURE_H
+#define MCCLONE_ITICKABLETEXTURE_H
 
 /**
  * @author SleepyFish
- * @brief Tickable interface
+ * @brief Tickable texture interface
  */
 class ITickableTexture {
 
@@ -20,4 +20,5 @@ public:
 
 };
 
-#endif //MCCLONE_ITICKABLE_H
+
+#endif //MCCLONE_ITICKABLETEXTURE_H

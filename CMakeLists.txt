@@ -282,6 +282,10 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/ResourceLocation.h
         ${SRC_DIR}/util/EnumChatFormatting.h
         ${SRC_DIR}/util/EnumParticleTypes.h
+        ${SRC_DIR}/util/IObjectIntIterable.h
+        ${SRC_DIR}/util/RegistryNamespaced.h
+        ${SRC_DIR}/util/ObjectIntIdentityMap.h
+        ${SRC_DIR}/util/RegistryNamespacedDefaultedByKey.h
 
         # nbt - i hate nbt...
         ${SRC_DIR}/nbt/NBTException.h
