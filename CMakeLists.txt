@@ -126,6 +126,18 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/renderer/IImageBuffer.h
         ${SRC_DIR}/client/renderer/GlStateManager.cpp
         ${SRC_DIR}/client/renderer/GlStateManager.h
+        ${SRC_DIR}/client/renderer/OpenGlHelper.cpp
+        ${SRC_DIR}/client/renderer/OpenGlHelper.h
+
+        # client/renderer/vertex
+        ${SRC_DIR}/client/renderer/vertex/VertexFormatElement.cpp
+        ${SRC_DIR}/client/renderer/vertex/VertexFormatElement.h
+        ${SRC_DIR}/client/renderer/vertex/VertexFormat.cpp
+        ${SRC_DIR}/client/renderer/vertex/VertexFormat.h
+
+        # client/renderer/texture
+        ${SRC_DIR}/client/renderer/texture/TextureUtil.cpp
+        ${SRC_DIR}/client/renderer/texture/TextureUtil.h
 
         # client/renderer/culling
         ${SRC_DIR}/client/renderer/culling/ICamera.h

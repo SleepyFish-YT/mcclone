@@ -8,6 +8,7 @@
 #include "../window/RenderInformation.h"
 
 #include "../../mcclone/debug/Logger.h"
+#include "../../mcclone/client/renderer/GlStateManager.h"
 
 #include "../../mcclone/client/Minecraft.h"
 #include "../../mcclone/client/settings/GameSettings.h"
@@ -91,8 +92,8 @@ bool OpenGLWindow::init() {
         this->renderContext->init();
         this->renderContext->print();
 
-        ::glViewport(0, 0, this->displayInfo.width, this->displayInfo.height);
-        ::glClearColor(0.53f, 0.41f, 0.72f, 1.0f);
+        GlStateManager::viewport_(0, 0, this->displayInfo.width, this->displayInfo.height);
+        GlStateManager::clearColor_(0.53f, 0.41f, 0.72f, 1.0f);
 
         ::glfwSetWindowUserPointer(this->window, this);
 
@@ -129,12 +130,12 @@ void OpenGLWindow::run() {
     while (this->isRunning() && !glfwWindowShouldClose(this->window)) {
         this->frameCount++;
 
-        ::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GlStateManager::clear_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         this->renderGameLoop();
 
         if (this->displayInfo.showGlErrors) {
-            GLenum error = ::glGetError();
+            GLenum error = GlStateManager::glGetError_();
             if (error != GL_NO_ERROR) {
                 Logger::error("OpenGL error: " + std::to_string(error));
             }

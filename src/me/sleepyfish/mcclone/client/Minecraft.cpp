@@ -8,6 +8,7 @@
 #include "main/GameConfiguration.h"
 #include "settings/GameSettings.h"
 #include "audio/SoundEngine.h"
+#include "renderer/GlStateManager.h"
 
 #include "../debug/Logger.h"
 #include "../profiler/Profiler.h"
@@ -125,7 +126,7 @@ void Minecraft::onStop() {
 
 void Minecraft::initializeFramebuffer() {
     this->framebufferMc = new Framebuffer(this->displayWidth, this->displayHeight, true);
-    this->framebufferMc->setFramebufferColor(0.0f, 0.0f, 0.0f, 0.0f);
+    this->framebufferMc->setFramebufferColor_(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 long long Minecraft::getSystemTime() noexcept {
@@ -178,7 +179,7 @@ void Minecraft::runGameLoop() {
 }
 
 void Minecraft::renderGameLoop() {
-
+    this->framebufferMc->bindFramebuffer_(true);
 }
 
 bool Minecraft::isGamePaused() const noexcept {
