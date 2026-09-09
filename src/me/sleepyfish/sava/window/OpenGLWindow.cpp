@@ -41,7 +41,7 @@ bool OpenGLWindow::init() {
     // set glfw hints - version and opengl profile
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    ::glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // could use GLFW_OPENGL_COMPAT_PROFILE for backwards compatibility
+    ::glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); // for backwards compatibility
 
     ::GLFWmonitor* monitor = nullptr;
     int width  = this->displayInfo.width;
@@ -113,6 +113,10 @@ bool OpenGLWindow::init() {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseScroll(window, xOffset, yOffset);
         });
+        ::glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow* window, int width, int height) {
+            auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
+            self->handleFramebufferResize(window, width, height);
+        });
     }
     ::glfwMakeContextCurrent(nullptr);
     // release context so render thread can claim it
@@ -123,6 +127,7 @@ bool OpenGLWindow::init() {
 // this is the render thread (called by runnable(this->start))
 void OpenGLWindow::run() {
     ::glfwMakeContextCurrent(this->window);
+
     Logger::log("Render thread started");
 
     this->minecraft->initializeFramebuffer();
@@ -130,14 +135,12 @@ void OpenGLWindow::run() {
     while (this->isRunning() && !glfwWindowShouldClose(this->window)) {
         this->frameCount++;
 
-        GlStateManager::clear_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         this->renderGameLoop();
 
         if (this->displayInfo.showGlErrors) {
-            GLenum error = GlStateManager::glGetError_();
-            if (error != GL_NO_ERROR) {
-                Logger::error("OpenGL error: " + std::to_string(error));
+            GLenum error;
+            while ((error = GlStateManager::glGetError_()) != GL_NO_ERROR) {
+                Logger::error("OpenGL error [frame {}]: {}", this->frameCount, error);
             }
         }
 
@@ -166,11 +169,11 @@ void OpenGLWindow::thread_run() {
 
 void OpenGLWindow::onStop() {
     this->minecraft->stop();
-    ::glfwTerminate();
 }
 
 void OpenGLWindow::onJoin() {
     this->minecraft->join();
+    ::glfwTerminate();
 }
 
 void OpenGLWindow::toggleFullscreen() {
@@ -252,6 +255,12 @@ GLFWcursorposfun OpenGLWindow::handleMouseMove(GLFWwindow* window, double xpos, 
 
 GLFWscrollfun OpenGLWindow::handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
     this->minecraft->handleMouseScroll(xoffset, yoffset);
+
+    return nullptr;
+}
+
+GLFWframebuffersizefun OpenGLWindow::handleFramebufferResize(GLFWwindow* window, int width, int height) {
+    this->minecraft->resizeWindow(width, height);
 
     return nullptr;
 }

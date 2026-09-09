@@ -27,10 +27,10 @@ public:
 
     static int generateDisplayLists(int range) {
         std::lock_guard<std::mutex> lock(GLAllocation::mutex);
-        int id = glGenLists(range);
+        int id = ::glGenLists(range);
 
         if (id == 0) {
-            int err = glGetError();
+            int err = ::glGetError();
             throw std::runtime_error(
                     "glGenLists returned an ID of 0 for a count of " +
                     std::to_string(range) +
@@ -43,7 +43,7 @@ public:
 
     static void deleteDisplayLists(int list, int range) {
         std::lock_guard<std::mutex> lock(GLAllocation::mutex);
-        glDeleteLists(list, range);
+        ::glDeleteLists(list, range);
     }
 
     static void deleteDisplayLists(int list) {

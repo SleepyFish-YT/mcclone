@@ -293,6 +293,8 @@ public:
 
     static void glMultiDrawArrays_(int mode, const int* first, const int* count, int drawCount);
 
+    static void drainGlErrors();
+
 };
 
 

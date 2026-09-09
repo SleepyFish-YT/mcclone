@@ -17,8 +17,9 @@ void Framebuffer::createBindFramebuffer_(int width, int height) {
         this->m_framebufferHeight = height;
     } else {
         GlStateManager::enableDepth_();
-        if (this->m_framebufferObject >= 0)
+        if (this->m_framebufferObject >= 0) {
             this->deleteFramebuffer_();
+        }
         this->createFramebuffer_(width, height);
         this->checkFramebufferComplete_();
         OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
@@ -35,20 +36,25 @@ void Framebuffer::createFramebuffer_(int width, int height) {
         this->framebufferClear_();
         return;
     }
+
     this->m_framebufferObject  = OpenGlHelper::glGenFramebuffers_();
     this->m_framebufferTexture = TextureUtil::glGenTextures_();
+
     if (this->m_useDepth)
         this->m_depthBuffer = OpenGlHelper::glGenRenderbuffers_();
-    this->setFramebufferFilter_(9728);
+
+    this->setFramebufferFilter_(GL_NEAREST);
     GlStateManager::bindTexture_(this->m_framebufferTexture);
-    ::glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->m_framebufferTextureWidth, this->m_framebufferTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    GlStateManager::glTexImage2D_(GL_TEXTURE_2D, 0, GL_RGBA8, this->m_framebufferTextureWidth, this->m_framebufferTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, this->m_framebufferObject);
-    OpenGlHelper::glFramebufferTexture2D_(OpenGlHelper::GL_FRAMEBUFFER_, OpenGlHelper::GL_COLOR_ATTACHMENT0_, 3553, this->m_framebufferTexture, 0);
+    OpenGlHelper::glFramebufferTexture2D_(OpenGlHelper::GL_FRAMEBUFFER_, OpenGlHelper::GL_COLOR_ATTACHMENT0_, GL_TEXTURE_2D, this->m_framebufferTexture, 0);
+
     if (this->m_useDepth) {
         OpenGlHelper::glBindRenderbuffer_(OpenGlHelper::GL_RENDERBUFFER_, this->m_depthBuffer);
-        OpenGlHelper::glRenderbufferStorage_(OpenGlHelper::GL_RENDERBUFFER_, 33190, this->m_framebufferTextureWidth, this->m_framebufferTextureHeight);
+        OpenGlHelper::glRenderbufferStorage_(OpenGlHelper::GL_RENDERBUFFER_, GL_DEPTH_COMPONENT24, this->m_framebufferTextureWidth, this->m_framebufferTextureHeight);
         OpenGlHelper::glFramebufferRenderbuffer_(OpenGlHelper::GL_FRAMEBUFFER_, OpenGlHelper::GL_DEPTH_ATTACHMENT_, OpenGlHelper::GL_RENDERBUFFER_, this->m_depthBuffer);
     }
+
     this->framebufferClear_();
     this->unbindFramebufferTexture_();
 }
@@ -57,13 +63,13 @@ void Framebuffer::setFramebufferFilter_(int filter) {
     if (!OpenGlHelper::isFramebufferEnabled_()) return;
     this->m_framebufferFilter = filter;
     GlStateManager::bindTexture_(this->m_framebufferTexture);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // allow anisotropic filtering
+    GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     GlStateManager::bindTexture_(0);
 }
-
 
 void Framebuffer::deleteFramebuffer_() {
     if (!OpenGlHelper::isFramebufferEnabled_()) return;
@@ -125,10 +131,10 @@ void Framebuffer::framebufferRenderExt_(int width, int height, bool disableBlend
     GlStateManager::colorMask_(true, true, true, false);
     GlStateManager::disableDepth_();
     GlStateManager::depthMask_(false);
-    GlStateManager::matrixMode_(5889);
+    GlStateManager::matrixMode_(GL_PROJECTION);
     GlStateManager::loadIdentity_();
     GlStateManager::ortho_(0.0, width, height, 0.0, 1000.0, 3000.0);
-    GlStateManager::matrixMode_(5888);
+    GlStateManager::matrixMode_(GL_MODELVIEW);
     GlStateManager::loadIdentity_();
     GlStateManager::translate_(0.0f, 0.0f, -2000.0f);
     GlStateManager::viewport_(0, 0, width, height);

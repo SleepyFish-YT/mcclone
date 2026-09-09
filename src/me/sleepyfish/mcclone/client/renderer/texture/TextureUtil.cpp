@@ -37,11 +37,13 @@ void TextureUtil::init() {
     int magentaRow[8] = { MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA };
     int blackRow[8]   = { BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK   };
 
-    for (int l = 0; l < 16; ++l) {
-        const int* first  = l < HALF ? magentaRow : blackRow;
-        const int* second = l < HALF ? blackRow   : magentaRow;
-        std::memcpy(missingTextureData + 16 * l,         first,  HALF * sizeof(int));
-        std::memcpy(missingTextureData + 16 * l + HALF,  second, HALF * sizeof(int));
+    if (missingTextureData != nullptr) {
+        for (int l = 0; l < 16; ++l) {
+            const int* first  = l < HALF ? magentaRow : blackRow;
+            const int* second = l < HALF ? blackRow   : magentaRow;
+            std::memcpy(missingTextureData + 16 * l,         first,  HALF * sizeof(int));
+            std::memcpy(missingTextureData + 16 * l + HALF,  second, HALF * sizeof(int));
+        }
     }
 
     // missingTexture.updateDynamicTexture();

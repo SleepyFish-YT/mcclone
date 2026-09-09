@@ -9,6 +9,8 @@
 #include "settings/GameSettings.h"
 #include "audio/SoundEngine.h"
 #include "renderer/GlStateManager.h"
+#include "renderer/OpenGlHelper.h"
+#include "renderer/texture/TextureUtil.h"
 
 #include "../debug/Logger.h"
 #include "../profiler/Profiler.h"
@@ -125,8 +127,34 @@ void Minecraft::onStop() {
 }
 
 void Minecraft::initializeFramebuffer() {
+    OpenGlHelper::initializeTextures();
+    TextureUtil::init();
+
     this->framebufferMc = new Framebuffer(this->displayWidth, this->displayHeight, true);
-    this->framebufferMc->setFramebufferColor_(0.0f, 0.0f, 0.0f, 0.0f);
+    this->framebufferMc->setFramebufferColor_(0.53f, 0.41f, 0.72f, 1.0f);
+}
+
+void Minecraft::updateFramebufferSize() {
+    this->framebufferMc->createBindFramebuffer_(this->displayWidth, this->displayHeight);
+
+    // if (this->entityRenderer != nullptr) {
+    //     this->entityRenderer.updateShaderGroupSize(this->displayWidth, this->displayHeight);
+    // }
+}
+
+void Minecraft::resizeWindow(int width, int height) {
+    this->pendingResizeW.store(width,  std::memory_order_relaxed);
+    this->pendingResizeH.store(height, std::memory_order_relaxed);
+    this->pendingResize.store(true,    std::memory_order_release);
+
+    /*
+    if (this->currentScreen != nullptr) {
+        ScaledResolution reso(this);
+        this->currentScreen->onResize(this, reso.getScaledWidth(), reso.getScaledHeight());
+    }
+
+    this->loadingScreen = LoadingScreenRenderer(this);
+    */
 }
 
 long long Minecraft::getSystemTime() noexcept {
@@ -154,23 +182,23 @@ void Minecraft::runGameLoop() {
             this->theTimer->updateTimer();
         }
 
-        this->mcProfiler->startSection("scheduledExecutables");
-        {
-            if (!this->scheduledTasks.empty()) {
+        if (!this->scheduledTasks.empty()) {
+            this->mcProfiler->startSection("scheduledExecutables");
+            {
                 this->scheduledTasks.runAll();
             }
+            this->mcProfiler->endSection();
         }
-        this->mcProfiler->endSection();
 
         if (std::chrono::duration_cast<std::chrono::milliseconds>(now - this->prevFrameTime).count() >= 1000) {
             Minecraft::debugFPS = this->fpsCounter;
-
-            Logger::log("TPS: {}", this->tpsCounter);
 
             this->prevFrameTime = now;
             this->tpsCounter = this->tickCounter;
             this->tickCounter = 0;
             this->fpsCounter = 0;
+
+            Logger::log("TPS: {}", this->theTimer->ticksPerSecond);
         }
 
         this->soundEngine->cleanup();
@@ -179,7 +207,31 @@ void Minecraft::runGameLoop() {
 }
 
 void Minecraft::renderGameLoop() {
+    if (this->pendingResize.load(std::memory_order_acquire)) {
+        this->pendingResize.store(false, std::memory_order_relaxed);
+        this->displayWidth  = MathHelper::abs_max(1, this->pendingResizeW.load());
+        this->displayHeight = MathHelper::abs_max(1, this->pendingResizeH.load());
+        this->updateFramebufferSize();
+    }
+
     this->framebufferMc->bindFramebuffer_(true);
+    {
+        GlStateManager::clearColor_(0.53f, 0.41f, 0.72f, 1.0f);
+        GlStateManager::clear_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // actual render here...
+        {
+            GlStateManager::glBegin_(GL_QUADS);
+            {
+                ::glVertex2f(-1.0f, -1.0f);
+                ::glVertex2f(1.0f, -1.0f);
+                ::glVertex2f(1.0f, 1.0f);
+                ::glVertex2f(-1.0f, 1.0f);
+            }
+            GlStateManager::glEnd_();
+        }
+    }
+    this->framebufferMc->framebufferRender_(this->displayWidth, this->displayHeight);
 }
 
 bool Minecraft::isGamePaused() const noexcept {
@@ -368,12 +420,10 @@ void Minecraft::handleMouseButton(int button, int action, int mods) {
 
             if (keyCode == this->gameSettings->keyBindAttack.getKeyCode()) {
                 // this->leftClickMouse();
-                Logger::log("Left click mouse");
             }
 
             if (keyCode == this->gameSettings->keyBindUseItem.getKeyCode()) {
                 // this->rightClickMouse();
-                Logger::log("Right click mouse");
             }
         }
 
@@ -437,24 +487,4 @@ void Minecraft::onFullscreenChange(bool fullscreen_, int width, int height) {
 
     this->fullscreen = fullscreen_;
 }
-
-void Minecraft::updateFramebufferSize() {
-
-}
-
-void Minecraft::resizeWindow(int width, int height) {
-    this->displayWidth = MathHelper::abs_max(1, width);
-    this->displayHeight = MathHelper::abs_max(1, height);
-
-    /*
-    if (this->currentScreen != nullptr) {
-        ScaledResolution reso(this);
-        this->currentScreen->onResize(this, reso.getScaledWidth(), reso.getScaledHeight());
-    }
-
-    this->loadingScreen = LoadingScreenRenderer(this);
-    this->updateFramebufferSize();
-    */
-}
-
 

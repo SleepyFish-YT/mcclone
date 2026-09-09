@@ -320,7 +320,6 @@ void GlStateManager::resetColor_() {
     colorState.red = colorState.green = colorState.blue = colorState.alpha = -1.0f;
 }
 
-
 void GlStateManager::glNormalPointer_(int type, int stride, const void* ptr)                    { ::glNormalPointer(type, stride, ptr);           }
 void GlStateManager::glTexCoordPointer_(int size, int type, int stride, int offset)             { ::glTexCoordPointer(size, type, stride, (void*)(intptr_t)offset); }
 void GlStateManager::glTexCoordPointer_(int size, int type, int stride, const void* ptr)        { ::glTexCoordPointer(size, type, stride, ptr);   }
@@ -358,7 +357,6 @@ void GlStateManager::glEndList_() {
 
 int GlStateManager::glGetError_() { return ::glGetError(); }
 
-
 void GlStateManager::glTexImage2D_(int target, int level, int internalFormat, int width, int height, int border, int format, int type, const int* pixels) {
     ::glTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);
 }
@@ -384,7 +382,10 @@ int GlStateManager::glGetTexLevelParameteri_(int target, int level, int pname) {
     return result;
 }
 
-
 void GlStateManager::glMultiDrawArrays_(int mode, const int* first, const int* count, int drawCount) {
     ::glMultiDrawArrays(mode, first, count, drawCount);
+}
+
+void GlStateManager::drainGlErrors() {
+    while (::GlStateManager::glGetError_() != GL_NO_ERROR) {}
 }

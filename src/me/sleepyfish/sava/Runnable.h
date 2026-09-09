@@ -11,7 +11,7 @@
 
 /**
  * @author SleepyFish - SleepyAVA
- * @version 1.2
+ * @version 1.3
  * @brief Runnable interface class for threads
  */
 class Runnable {
@@ -46,8 +46,8 @@ public:
     }
 
     void stop() {
-        this->onStop();
         this->setRunning(false);
+        this->onStop();
     }
 
     void join() {

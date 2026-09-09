@@ -83,6 +83,8 @@ public:
 
     GLFWscrollfun handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 
+    GLFWframebuffersizefun handleFramebufferResize(GLFWwindow* window, int width, int height);
+
     RenderInformation* getRenderContext() noexcept;
 
     ::GLFWwindow* getWindow() noexcept;
