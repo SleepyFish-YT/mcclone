@@ -65,6 +65,7 @@ add_executable(${PROJECT_NAME}
         ${SVA_DIR}/Runnable.h
         ${SVA_DIR}/UUID.h
         ${SVA_DIR}/FutureTaskQueue.h
+        ${SVA_DIR}/BufferedImage.h
 
         # window render
         ${SVA_DIR}/window/RenderInformation.cpp
@@ -119,10 +120,23 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/audio/SoundList.h
 
         # client/renderer
+        ${SRC_DIR}/client/renderer/GLAllocation.h
+        ${SRC_DIR}/client/renderer/ActiveRenderInfo.h
         ${SRC_DIR}/client/renderer/StitcherException.h
+        ${SRC_DIR}/client/renderer/IImageBuffer.h
 
         # client/renderer/culling
         ${SRC_DIR}/client/renderer/culling/ICamera.h
+        ${SRC_DIR}/client/renderer/culling/ClippingHelper.h
+        ${SRC_DIR}/client/renderer/culling/ClippingHelperImpl.h
+        ${SRC_DIR}/client/renderer/culling/Frustum.h
+
+        # client/resources/data
+        ${SRC_DIR}/client/resources/data/IMetadataSection.h
+        ${SRC_DIR}/client/resources/data/TextureMetadataSection.h
+        ${SRC_DIR}/client/resources/data/AnimationFrame.h
+        ${SRC_DIR}/client/resources/data/AnimationMetadataSection.h
+        ${SRC_DIR}/client/resources/data/FontMetadataSection.h
 
         # debug
         ${SRC_DIR}/debug/Logger.cpp
@@ -141,11 +155,30 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/block/material/MaterialLogic.h
         ${SRC_DIR}/block/material/MaterialLiquid.h
 
+        # stats
+        ${SRC_DIR}/stats/IStatStringFormat.h
+        ${SRC_DIR}/stats/IStatType.h
+
         # world
+        ${SRC_DIR}/world/McCloneException.h
         ${SRC_DIR}/world/EnumDifficulty.h
         ${SRC_DIR}/world/ColorizerFoliage.h
         ${SRC_DIR}/world/WorldType.h
         ${SRC_DIR}/world/WorldSettings.h
+        ${SRC_DIR}/world/LockCode.h
+        ${SRC_DIR}/world/ChunkCoordIntPair.h
+
+        # world/border
+        ${SRC_DIR}/world/border/EnumBorderStatus.h
+
+        # world/gen
+        ${SRC_DIR}/world/gen/INoiseGenerator.h
+
+        # world/gen/layer
+        ${SRC_DIR}/world/gen/layer/IntCache.h
+
+        # world/storage
+        ${SRC_DIR}/world/storage/IThreadedFileIO.h
 
         # block/properties
         ${SRC_DIR}/block/properties/IProperty.h
@@ -233,6 +266,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/ChatAllowedCharacters.h
         ${SRC_DIR}/util/ResourceLocation.h
         ${SRC_DIR}/util/EnumChatFormatting.h
+        ${SRC_DIR}/util/EnumParticleTypes.h
 
         # nbt - i hate nbt...
         ${SRC_DIR}/nbt/NBTException.h

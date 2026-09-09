@@ -17,15 +17,10 @@ class ScaledResolution {
 private:
 
     double scaledWidthD;
-
     double scaledHeightD;
 
-
-
     int scaledWidth;
-
     int scaledHeight;
-
     int scaleFactor;
 
 public:

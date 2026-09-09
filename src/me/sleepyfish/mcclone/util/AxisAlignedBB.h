@@ -22,44 +22,44 @@
  */
 class AxisAlignedBB {
 
+public:
+
     const double minX;
-
     const double minY;
-
     const double minZ;
 
     const double maxX;
-
     const double maxY;
-
     const double maxZ;
 
-    AxisAlignedBB(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2) :
+    AxisAlignedBB(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2) noexcept :
         minX(std::min(x1, x2)),
         minY(std::min(y1, y2)),
         minZ(std::min(z1, z2)),
+
         maxX(std::max(x1, x2)),
         maxY(std::max(y1, y2)),
         maxZ(std::max(z1, z2))
     {}
 
-    AxisAlignedBB(const BlockPos& pos1, const BlockPos& pos2) :
+    AxisAlignedBB(const BlockPos& pos1, const BlockPos& pos2) noexcept :
         minX(pos1.x),
         minY(pos1.y),
         minZ(pos1.z),
+
         maxX(pos2.x),
         maxY(pos2.y),
         maxZ(pos2.z)
     {}
 
-    static AxisAlignedBB fromBounds(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2) {
+    static AxisAlignedBB fromBounds(const double x1, const double y1, const double z1, const double x2, const double y2, const double z2) noexcept {
         return {
             std::min(x1, x2), std::min(y1, y2), std::min(z1, z2),
             std::max(x1, x2), std::max(y1, y2), std::max(z1, z2)
         };
     }
 
-    AxisAlignedBB addCoord(const double x, const double y, const double z) const {
+    AxisAlignedBB addCoord(const double x, const double y, const double z) const noexcept {
         double d0 = this->minX, d1 = this->minY, d2 = this->minZ;
         double d3 = this->maxX, d4 = this->maxY, d5 = this->maxZ;
 
@@ -73,35 +73,35 @@ class AxisAlignedBB {
         };
     }
 
-    AxisAlignedBB expand(const double x, const double y, const double z) const {
+    AxisAlignedBB expand(const double x, const double y, const double z) const noexcept {
         return {
             this->minX - x, this->minY - y, this->minZ - z,
             this->maxX + x, this->maxY + y, this->maxZ + z
         };
     }
 
-    AxisAlignedBB contract(const double x, const double y, const double z) const {
+    AxisAlignedBB contract(const double x, const double y, const double z) const noexcept {
         return {
             this->minX + x, this->minY + y, this->minZ + z,
             this->maxX - x, this->maxY - y, this->maxZ - z
         };
     }
 
-    AxisAlignedBB offset(const double x, const double y, const double z) const {
+    AxisAlignedBB offset(const double x, const double y, const double z) const noexcept {
         return {
             this->minX + x, this->minY + y, this->minZ + z,
             this->maxX + x, this->maxY + y, this->maxZ + z
         };
     }
 
-    AxisAlignedBB union_(const AxisAlignedBB& other) const {
+    AxisAlignedBB union_(const AxisAlignedBB& other) const noexcept {
         return {
             std::min(this->minX, other.minX), std::min(this->minY, other.minY), std::min(this->minZ, other.minZ),
             std::max(this->maxX, other.maxX), std::max(this->maxY, other.maxY), std::max(this->maxZ, other.maxZ)
         };
     }
 
-    double calculateXOffset(const AxisAlignedBB& other, double offsetX) const {
+    double calculateXOffset(const AxisAlignedBB& other, double offsetX) const noexcept {
         if (other.maxY > this->minY && other.minY < this->maxY && other.maxZ > this->minZ && other.minZ < this->maxZ) {
             if (offsetX > 0.0 && other.maxX <= this->minX) {
                 const double d1 = this->minX - other.maxX;
@@ -115,7 +115,7 @@ class AxisAlignedBB {
         return offsetX;
     }
 
-    double calculateYOffset(const AxisAlignedBB& other, double offsetY) const {
+    double calculateYOffset(const AxisAlignedBB& other, double offsetY) const noexcept {
         if (other.maxX > this->minX && other.minX < this->maxX && other.maxZ > this->minZ && other.minZ < this->maxZ) {
             if (offsetY > 0.0 && other.maxY <= this->minY) {
                 const double d1 = this->minY - other.maxY;
@@ -129,7 +129,7 @@ class AxisAlignedBB {
         return offsetY;
     }
 
-    double calculateZOffset(const AxisAlignedBB& other, double offsetZ) const {
+    double calculateZOffset(const AxisAlignedBB& other, double offsetZ) const noexcept {
         if (other.maxX > this->minX && other.minX < this->maxX && other.maxY > this->minY && other.minY < this->maxY) {
             if (offsetZ > 0.0 && other.maxZ <= this->minZ) {
                 const double d1 = this->minZ - other.maxZ;
@@ -149,30 +149,30 @@ class AxisAlignedBB {
                other.maxZ > this->minZ && other.minZ < this->maxZ;
     }
 
-    bool isVecInside(const Vec3& vec) const {
+    bool isVecInside(const Vec3& vec) const noexcept {
         return vec.xCoord > this->minX && vec.xCoord < this->maxX &&
                vec.yCoord > this->minY && vec.yCoord < this->maxY &&
                vec.zCoord > this->minZ && vec.zCoord < this->maxZ;
     }
 
-    double getAverageEdgeLength() const {
+    double getAverageEdgeLength() const noexcept {
         return ((this->maxX - this->minX) + (this->maxY - this->minY) + (this->maxZ - this->minZ)) / 3.0;
     }
 
     std::optional<MovingObjectPosition> calculateIntercept(const Vec3& vecA, const Vec3& vecB) const {
         auto getIfInYZ = [&](std::optional<Vec3> v) -> std::optional<Vec3> {
             if (!v) return std::nullopt;
-            return isVecInYZ(*v) ? v : std::nullopt;
+            return this->isVecInYZ(*v) ? v : std::nullopt;
         };
 
         auto getIfInXZ = [&](std::optional<Vec3> v) -> std::optional<Vec3> {
             if (!v) return std::nullopt;
-            return isVecInXZ(*v) ? v : std::nullopt;
+            return this->isVecInXZ(*v) ? v : std::nullopt;
         };
 
         auto getIfInXY = [&](std::optional<Vec3> v) -> std::optional<Vec3> {
             if (!v) return std::nullopt;
-            return isVecInXY(*v) ? v : std::nullopt;
+            return this->isVecInXY(*v) ? v : std::nullopt;
         };
 
         const std::optional<Vec3> vec3  = getIfInYZ(vecA.getIntermediateWithXValue(vecB, this->minX));
@@ -221,17 +221,17 @@ class AxisAlignedBB {
 
 private:
 
-    bool isVecInYZ(const Vec3& vec) const {
+    bool isVecInYZ(const Vec3& vec) const noexcept {
         return vec.yCoord >= this->minY && vec.yCoord <= this->maxY &&
                vec.zCoord >= this->minZ && vec.zCoord <= this->maxZ;
     }
 
-    bool isVecInXZ(const Vec3& vec) const {
+    bool isVecInXZ(const Vec3& vec) const noexcept {
         return vec.xCoord >= this->minX && vec.xCoord <= this->maxX &&
                vec.zCoord >= this->minZ && vec.zCoord <= this->maxZ;
     }
 
-    bool isVecInXY(const Vec3& vec) const {
+    bool isVecInXY(const Vec3& vec) const noexcept {
         return vec.xCoord >= this->minX && vec.xCoord <= this->maxX &&
                vec.yCoord >= this->minY && vec.yCoord <= this->maxY;
     }

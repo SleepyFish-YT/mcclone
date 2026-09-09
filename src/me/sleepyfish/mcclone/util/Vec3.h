@@ -34,11 +34,11 @@ public:
         Vec3(vec.x, vec.y, vec.z)
     {}
 
-    Vec3& operator=(const Vec3& other) {
+    Vec3& operator=(const Vec3& other) noexcept {
         if (this != &other) {
-            const_cast<double&>(xCoord) = other.xCoord;
-            const_cast<double&>(yCoord) = other.yCoord;
-            const_cast<double&>(zCoord) = other.zCoord;
+            const_cast<double&>(this->xCoord) = other.xCoord;
+            const_cast<double&>(this->yCoord) = other.yCoord;
+            const_cast<double&>(this->zCoord) = other.zCoord;
         }
         return *this;
     }
@@ -47,7 +47,7 @@ public:
         return {
             vec.xCoord - this->xCoord,
             vec.yCoord - this->yCoord,
-            vec.zCoord - zCoord
+            vec.zCoord - this->zCoord
         };
     }
 
@@ -62,7 +62,7 @@ public:
         return this->xCoord * vec.xCoord + this->yCoord * vec.yCoord + this->zCoord * vec.zCoord;
     }
 
-    Vec3 crossProduct(const Vec3 &vec) const  noexcept {
+    Vec3 crossProduct(const Vec3 &vec) const noexcept {
         return {
             this->yCoord * vec.zCoord - this->zCoord * vec.yCoord,
             this->zCoord * vec.xCoord - this->xCoord * vec.zCoord,

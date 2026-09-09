@@ -18,7 +18,7 @@ public:
 
     virtual ~ICamera() = default;
 
-    virtual bool isBoundingBoxInFrustum(AxisAlignedBB axisAlignedBB) = 0;
+    virtual bool isBoundingBoxInFrustum(const AxisAlignedBB& axisAlignedBB) = 0;
 
     virtual void setPosition(double x, double y, double z) = 0;
 

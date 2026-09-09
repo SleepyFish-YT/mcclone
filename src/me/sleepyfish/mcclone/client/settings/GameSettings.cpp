@@ -41,6 +41,13 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->particleSetting = 0;
     this->guiScale = 0.0f;
 
+    this->viewBobbing = false;
+    this->anaglyph = false;
+    this->fancyGraphics = true;
+    this->ambientOcclusion = 2;
+    this->reducedDebugInfo = false;
+
+
     // Keybinds
     {
         this->keyBindForward      = KeyBinding("key.forward", GLFW_KEY_W, "key.categories.movement");
@@ -164,7 +171,12 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"gammaSetting", 1.0f},
             {"saturation", 0.0f},
             {"particleSetting", 0},
-            {"guiScale", 0}
+            {"guiScale", 0},
+            {"viewBobbing", false},
+            {"anaglyph", false},
+            {"fancyGraphics", true},
+            {"ambientOcclusion", 2},
+            {"reducedDebugInfo", false},
     };
 
     for (auto& keybind : this->keyBinds) {
@@ -208,6 +220,11 @@ void GameSettings::loadSettings() {
     this->saturation           = this->settingsJson.value("saturation", 0.0f);
     this->particleSetting      = this->settingsJson.value("particleSetting", 0);
     this->guiScale             = this->settingsJson.value("guiScale", 0);
+    this->viewBobbing          = this->settingsJson.value("viewBobbing", false);
+    this->anaglyph             = this->settingsJson.value("anaglyph", false);
+    this->fancyGraphics        = this->settingsJson.value("fancyGraphics", true);
+    this->ambientOcclusion     = this->settingsJson.value("ambientOcclusion", 2);
+    this->reducedDebugInfo     = this->settingsJson.value("reducedDebugInfo", false);
 
     KeyBinding::resetKeyBindingArrayAndHash();
     KeyBinding::unregisterAllBinds();
@@ -261,6 +278,11 @@ void GameSettings::saveSettings() {
         this->settingsJson["saturation"]           = this->saturation;
         this->settingsJson["particleSetting"]      = this->particleSetting;
         this->settingsJson["guiScale"]             = this->guiScale;
+        this->settingsJson["viewBobbing"]          = this->viewBobbing;
+        this->settingsJson["anaglyph"]             = this->anaglyph;
+        this->settingsJson["fancyGraphics"]        = this->fancyGraphics;
+        this->settingsJson["ambientOcclusion"]     = this->ambientOcclusion;
+        this->settingsJson["reducedDebugInfo"]     = this->reducedDebugInfo;
     }
 
     std::ofstream file(this->settingsFilePath);
