@@ -35,7 +35,7 @@ void MovementInputFromOptions::updatePlayerMoveState() {
     this->sneak = this->gameSettings->keyBindSprint.isKeyDown();
 
     if (this->sneak) {
-        this->moveStrafe = (float) ((double) this->moveStrafe * 0.3);
-        this->moveForward = (float) ((double) this->moveForward * 0.3);
+        this->moveStrafe *= 0.3f;
+        this->moveForward *= 0.3f;
     }
 }
