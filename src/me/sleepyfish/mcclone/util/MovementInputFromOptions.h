@@ -22,7 +22,7 @@ private:
 
 public:
 
-    MovementInputFromOptions(GameSettings *gameSettings) noexcept;
+    explicit MovementInputFromOptions(GameSettings *gameSettings) noexcept;
 
     void updatePlayerMoveState() override;
 
