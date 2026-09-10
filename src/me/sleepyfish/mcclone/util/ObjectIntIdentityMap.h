@@ -20,6 +20,7 @@ class ObjectIntIdentityMap {
 private:
 
     std::unordered_map<T*, int> identityMap;
+
     std::vector<T*> objectList;
 
 public:
@@ -48,7 +49,7 @@ public:
     }
 
     // -------------------------------------------------------------------------
-    // Iterator — skips nulls, equivalent to Iterators.filter(notNull())
+    // iterator — skips nulls, equivalent to Iterators.filter(notNull())
     // -------------------------------------------------------------------------
 
     struct iterator {
