@@ -372,7 +372,7 @@ target_link_libraries(${PROJECT_NAME}
 
 # ======================== include the header only libraries ========================
 target_include_directories(${PROJECT_NAME} PRIVATE
-        ${stb_INCLUDE_DIRS}
+        ${Stb_INCLUDE_DIRS}
 )
 # ======================== include the header only libraries ========================
 
