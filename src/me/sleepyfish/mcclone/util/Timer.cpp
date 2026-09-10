@@ -7,8 +7,6 @@
 
 #include "../client/Minecraft.h"
 
-#include <chrono>
-
 // member initializer list instead of body assignments is not really needed, since Timer will only be created once
 Timer::Timer(float tps) noexcept :
     ticksPerSecond(tps)
