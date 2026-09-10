@@ -7,6 +7,7 @@
 #define MCCLONE_CONFIG_H
 
 #include <string>
+
 #include <glad/glad.h>
 
 /**
@@ -16,7 +17,7 @@ class Config {
 
 public:
 
-    static std::string getGlErrorString(int error) {
+    static std::string getGlErrorString(GLenum error) {
         std::string result;
 
         switch (error) {

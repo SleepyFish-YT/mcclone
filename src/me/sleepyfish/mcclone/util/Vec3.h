@@ -20,9 +20,11 @@ class Vec3 {
 
 public:
 
-    const double xCoord;
-    const double yCoord;
-    const double zCoord;
+    double xCoord{};
+    double yCoord{};
+    double zCoord{};
+
+    Vec3() = default;
 
     Vec3(double x, double y, double z) noexcept :
         xCoord(x == -0.0 ? 0.0 : x),
@@ -36,9 +38,9 @@ public:
 
     Vec3& operator=(const Vec3& other) noexcept {
         if (this != &other) {
-            const_cast<double&>(this->xCoord) = other.xCoord;
-            const_cast<double&>(this->yCoord) = other.yCoord;
-            const_cast<double&>(this->zCoord) = other.zCoord;
+            this->xCoord = other.xCoord;
+            this->yCoord = other.yCoord;
+            this->zCoord = other.zCoord;
         }
         return *this;
     }
@@ -52,10 +54,10 @@ public:
     }
 
     Vec3 normalize() const {
-        const double d0 = std::sqrt(
+        const double squared = std::sqrt(
                 this->xCoord * this->xCoord + this->yCoord * this->yCoord + this->zCoord * this->zCoord
         );
-        return d0 < 1.0E-4 ? Vec3(0.0, 0.0, 0.0) : Vec3(this->xCoord / d0, this->yCoord / d0, this->zCoord / d0);
+        return squared < 1.0E-4 ? Vec3(0.0, 0.0, 0.0) : Vec3(this->xCoord / squared, this->yCoord / squared, this->zCoord / squared);
     }
 
     double dotProduct(const Vec3 &vec) const noexcept {
@@ -84,24 +86,19 @@ public:
 
     Vec3 addVector(double x, double y, double z) const {
         return {
-            this->xCoord + x,
-            this->yCoord + y,
-            this->zCoord + z
+            this->xCoord + x, this->yCoord + y, this->zCoord + z
         };
     }
 
     double distanceTo(const Vec3 &vec) const {
-        const double d0 = vec.xCoord - this->xCoord;
-        const double d1 = vec.yCoord - this->yCoord;
-        const double d2 = vec.zCoord - this->zCoord;
-        return std::sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+        return std::sqrt(this->squareDistanceTo(vec));
     }
 
     double squareDistanceTo(const Vec3 &vec) const noexcept {
-        const double d0 = vec.xCoord - this->xCoord;
-        const double d1 = vec.yCoord - this->yCoord;
-        const double d2 = vec.zCoord - this->zCoord;
-        return d0 * d0 + d1 * d1 + d2 * d2;
+        const double xDist = vec.xCoord - this->xCoord;
+        const double yDist = vec.yCoord - this->yCoord;
+        const double zDist = vec.zCoord - this->zCoord;
+        return xDist * xDist + yDist * yDist + zDist * zDist;
     }
 
     double lengthVector() const {
@@ -157,24 +154,24 @@ public:
     }
 
     Vec3 rotatePitch(float pitch) const {
-        const float f = std::cos(pitch);
+        const float f0 = std::cos(pitch);
         const float f1 = std::sin(pitch);
 
         return {
             this->xCoord,
-            this->yCoord * f + this->zCoord * f1,
-            this->zCoord * f - this->yCoord * f1
+            this->yCoord * f0 + this->zCoord * f1,
+            this->zCoord * f0 - this->yCoord * f1
         };
     }
 
     Vec3 rotateYaw(float yaw) const {
-        const float f = std::cos(yaw);
+        const float f0 = std::cos(yaw);
         const float f1 = std::sin(yaw);
 
         return {
-            this->xCoord * f + this->zCoord * f1,
+            this->xCoord * f0 + this->zCoord * f1,
             this->yCoord,
-            this->zCoord * f - this->xCoord * f1
+            this->zCoord * f0 - this->xCoord * f1
         };
     }
 
@@ -182,7 +179,7 @@ public:
         return std::format("({}, {}, {})", this->xCoord, this->yCoord, this->zCoord);
     }
 
-
 };
+
 
 #endif //MCCLONE_VEC3_H

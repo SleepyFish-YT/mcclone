@@ -8,7 +8,7 @@
 
 /**
  * @author SleepyFish
- * @brief Tuple class
+ * @brief Tuple class - equal to std::pair
  */
 template<typename A, typename B>
 class Tuple {
@@ -24,5 +24,6 @@ public:
     {}
 
 };
+
 
 #endif //MCCLONE_TUPLE_H

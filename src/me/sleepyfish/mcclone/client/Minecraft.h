@@ -89,9 +89,9 @@ private:
 
     FutureTaskQueue<void> scheduledTasks{};
 
-    std::atomic<bool>  pendingResize{false};
-    std::atomic<int>   pendingResizeW{0};
-    std::atomic<int>   pendingResizeH{0};
+    std::atomic<bool> pendingResize{false};
+    std::atomic<int> pendingResizeW{0};
+    std::atomic<int> pendingResizeH{0};
 
 public:
 

@@ -8,6 +8,7 @@
 
 /**
  * @author SleepyFish
+ * @brief Movement input base struct
  */
 struct MovementInput {
 

@@ -6,6 +6,8 @@
 #ifndef MCCLONE_PCB_H
 #define MCCLONE_PCB_H
 
+#define MCCLONE_DEBUG true
+
 #define ERROR_CODES \
     X(NONE, 0) \
     X(ARGUMENTS, -1) \

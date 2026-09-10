@@ -13,6 +13,7 @@
 #include "../../mcclone/client/Minecraft.h"
 #include "../../mcclone/client/settings/GameSettings.h"
 #include "../../mcclone/client/audio/SoundEngine.h"
+#include "../../mcclone/config/Config.h"
 
 #include <utility>
 
@@ -140,7 +141,7 @@ void OpenGLWindow::run() {
         if (this->displayInfo.showGlErrors) {
             GLenum error;
             while ((error = GlStateManager::glGetError_()) != GL_NO_ERROR) {
-                Logger::error("OpenGL error [frame {}]: {}", this->frameCount, error);
+                Logger::error("OpenGL error [frame {}]: {}", this->frameCount, Config::getGlErrorString(error));
             }
         }
 

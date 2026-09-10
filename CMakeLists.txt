@@ -67,6 +67,7 @@ add_executable(${PROJECT_NAME}
         ${SVA_DIR}/SavaUtil.cpp
         ${SVA_DIR}/SavaUtil.h
         ${SVA_DIR}/Runnable.h
+        ${SVA_DIR}/Tuple.h
         ${SVA_DIR}/UUID.h
         ${SVA_DIR}/FutureTaskQueue.h
         ${SVA_DIR}/BufferedImage.h
@@ -82,6 +83,15 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/main/Main.h
         ${SRC_DIR}/client/main/GameConfiguration.cpp
         ${SRC_DIR}/client/main/GameConfiguration.h
+
+        # client/model
+        ${SRC_DIR}/client/model/PositionTextureVertex.h
+        ${SRC_DIR}/client/model/TexturedQuad.h
+        ${SRC_DIR}/client/model/ModelBox.h
+        ${SRC_DIR}/client/model/TextureOffset.h
+        ${SRC_DIR}/client/model/ModelBase.h
+        ${SRC_DIR}/client/model/ModelRenderer.cpp
+        ${SRC_DIR}/client/model/ModelRenderer.h
 
         # client/
         ${SRC_DIR}/client/Minecraft.cpp
@@ -259,7 +269,6 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/MovingObjectPosition.h
         ${SRC_DIR}/util/BlockPos.h
         ${SRC_DIR}/util/AxisAlignedBB.h
-        ${SRC_DIR}/util/Tuple.h
         ${SRC_DIR}/util/Timer.cpp
         ${SRC_DIR}/util/Timer.h
         ${SRC_DIR}/util/StringUtils.h

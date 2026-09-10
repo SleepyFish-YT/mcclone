@@ -40,8 +40,9 @@ void Framebuffer::createFramebuffer_(int width, int height) {
     this->m_framebufferObject  = OpenGlHelper::glGenFramebuffers_();
     this->m_framebufferTexture = TextureUtil::glGenTextures_();
 
-    if (this->m_useDepth)
+    if (this->m_useDepth) {
         this->m_depthBuffer = OpenGlHelper::glGenRenderbuffers_();
+    }
 
     this->setFramebufferFilter_(GL_NEAREST);
     GlStateManager::bindTexture_(this->m_framebufferTexture);
@@ -60,9 +61,13 @@ void Framebuffer::createFramebuffer_(int width, int height) {
 }
 
 void Framebuffer::setFramebufferFilter_(int filter) {
-    if (!OpenGlHelper::isFramebufferEnabled_()) return;
+    if (!OpenGlHelper::isFramebufferEnabled_()) {
+        return;
+    }
+
     this->m_framebufferFilter = filter;
     GlStateManager::bindTexture_(this->m_framebufferTexture);
+
     // allow anisotropic filtering
     GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
@@ -72,9 +77,13 @@ void Framebuffer::setFramebufferFilter_(int filter) {
 }
 
 void Framebuffer::deleteFramebuffer_() {
-    if (!OpenGlHelper::isFramebufferEnabled_()) return;
+    if (!OpenGlHelper::isFramebufferEnabled_()) {
+        return;
+    }
+
     this->unbindFramebufferTexture_();
     this->unbindFramebuffer_();
+
     if (this->m_depthBuffer > -1) {
         OpenGlHelper::glDeleteRenderbuffers_(this->m_depthBuffer);
         this->m_depthBuffer = -1;
@@ -105,29 +114,39 @@ void Framebuffer::checkFramebufferComplete_() {
 }
 
 void Framebuffer::bindFramebufferTexture_() {
-    if (OpenGlHelper::isFramebufferEnabled_())
+    if (OpenGlHelper::isFramebufferEnabled_()) {
         GlStateManager::bindTexture_(this->m_framebufferTexture);
+    }
 }
 
 void Framebuffer::unbindFramebufferTexture_() {
-    if (OpenGlHelper::isFramebufferEnabled_())
+    if (OpenGlHelper::isFramebufferEnabled_()) {
         GlStateManager::bindTexture_(0);
+    }
 }
 
 void Framebuffer::bindFramebuffer_(bool setViewport) {
-    if (!OpenGlHelper::isFramebufferEnabled_()) return;
+    if (!OpenGlHelper::isFramebufferEnabled_()) {
+        return;
+    }
+
     OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, this->m_framebufferObject);
-    if (setViewport)
+    if (setViewport) {
         GlStateManager::viewport_(0, 0, this->m_framebufferWidth, this->m_framebufferHeight);
+    }
 }
 
 void Framebuffer::unbindFramebuffer_() {
-    if (OpenGlHelper::isFramebufferEnabled_())
+    if (OpenGlHelper::isFramebufferEnabled_()) {
         OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
+    }
 }
 
 void Framebuffer::framebufferRenderExt_(int width, int height, bool disableBlend) {
-    if (!OpenGlHelper::isFramebufferEnabled_()) return;
+    if (!OpenGlHelper::isFramebufferEnabled_()) {
+        return;
+    }
+
     GlStateManager::colorMask_(true, true, true, false);
     GlStateManager::disableDepth_();
     GlStateManager::depthMask_(false);
@@ -167,11 +186,13 @@ void Framebuffer::framebufferRenderExt_(int width, int height, bool disableBlend
 void Framebuffer::framebufferClear_() {
     this->bindFramebuffer_(true);
     GlStateManager::clearColor_(this->m_framebufferColor[0], this->m_framebufferColor[1], this->m_framebufferColor[2], this->m_framebufferColor[3]);
+
     int mask = GL_COLOR_BUFFER_BIT;
     if (this->m_useDepth) {
         GlStateManager::clearDepth_(1.0);
         mask |= GL_DEPTH_BUFFER_BIT;
     }
+
     GlStateManager::clear_(mask);
     this->unbindFramebuffer_();
 }

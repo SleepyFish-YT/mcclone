@@ -198,10 +198,20 @@ void Minecraft::runGameLoop() {
             this->tickCounter = 0;
             this->fpsCounter = 0;
 
+#if MCCLONE_DEBUG
             Logger::log("TPS: {}", this->theTimer->ticksPerSecond);
+
+            this->mcProfiler->printProfilerSection("root");
+#endif //MCCLONE_DEBUG
+
+
         }
 
-        this->soundEngine->cleanup();
+        this->mcProfiler->startSection("soundEngine");
+        {
+            this->soundEngine->cleanup();
+        }
+        this->mcProfiler->endSection();
     }
     this->mcProfiler->endSection();
 }
@@ -264,6 +274,8 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
         if (action == GLFW_PRESS) {
             if (key == settings.keyBindScreenshot.getKeyCode()) {
                 // ScreenshotHelper::saveScreenshot(...)
+                Logger::log("base: {}", (void*) this);
+                Logger::log("loc: {}", (void*) Minecraft::locationMojangPng);
             }
 
             if (key == settings.keyBindPerspective.getKeyCode()) {

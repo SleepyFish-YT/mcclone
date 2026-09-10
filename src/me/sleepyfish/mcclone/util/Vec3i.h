@@ -18,9 +18,11 @@ class Vec3i {
 
 public:
 
-    const int x;
-    const int y;
-    const int z;
+    const int x{};
+    const int y{};
+    const int z{};
+
+    Vec3i() = default;
 
     Vec3i(int xIn, int yIn, int zIn) noexcept :
         x(xIn),
@@ -44,24 +46,21 @@ public:
 
     Vec3i crossProduct(const Vec3i& vec) const noexcept {
         return {
-                this->y * vec.z - this->z * vec.y,
-                this->z * vec.x - this->x * vec.z,
-                this->x * vec.y - this->y * vec.x
+            this->y * vec.z - this->z * vec.y,
+            this->z * vec.x - this->x * vec.z,
+            this->x * vec.y - this->y * vec.x
         };
     }
 
-    double distanceSq(double toX, double toY, double toZ) const noexcept {
-        double d0 = static_cast<double>(this->x) - toX;
-        double d1 = static_cast<double>(this->y) - toY;
-        double d2 = static_cast<double>(this->z) - toZ;
+    double distanceSq(double toX, double toY, double toZ, double offset = 0.0) const noexcept {
+        double d0 = static_cast<double>(this->x) + offset - toX;
+        double d1 = static_cast<double>(this->y) + offset - toY;
+        double d2 = static_cast<double>(this->z) + offset - toZ;
         return d0 * d0 + d1 * d1 + d2 * d2;
     }
 
     double distanceSqToCenter(double xIn, double yIn, double zIn) const noexcept {
-        double d0 = static_cast<double>(this->x) + 0.5 - xIn;
-        double d1 = static_cast<double>(this->y) + 0.5 - yIn;
-        double d2 = static_cast<double>(this->z) + 0.5 - zIn;
-        return d0 * d0 + d1 * d1 + d2 * d2;
+        return this->distanceSq(xIn, yIn, zIn, 0.5);
     }
 
     double distanceSq(const Vec3i& to) const noexcept {
@@ -73,5 +72,6 @@ public:
     }
 
 };
+
 
 #endif //MCCLONE_VEC3I_H

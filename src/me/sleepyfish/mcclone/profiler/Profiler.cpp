@@ -52,27 +52,27 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
     long long i = this->profilingMap.count("root") ? this->profilingMap.at("root") : 0ll;
     long long j = this->profilingMap.count(profilerName) ? this->profilingMap.at(profilerName) : -1ll;
 
-    std::vector<Result> list;
+    std::vector<Profiler::Result> list;
     std::string prefix = profilerName.empty() ? "" : profilerName + ".";
 
     long long k = 0ll;
     for (const auto& [key, val] : this->profilingMap) {
-        if (key.length() > prefix.length()
-            && key.starts_with(prefix)
-            && key.find('.', prefix.length() + 1) == std::string::npos) {
+        if (key.length() > prefix.length() && key.starts_with(prefix) && key.find('.', prefix.length() + 1) == std::string::npos) {
             k += val;
         }
     }
 
-    auto f = (float) k;
-    if (k < j) k = j;
-    if (i < k) i = k;
+    long long originalK = k;
+    if (k < j) {
+        k = j;
+    }
+
+    if (i < k) {
+        i = k;
+    }
 
     for (const auto& [key, val] : this->profilingMap) {
-        if (key.length() > prefix.length()
-            && key.starts_with(prefix)
-            && key.find('.', prefix.length() + 1) == std::string::npos
-        ) {
+        if (key.length() > prefix.length() && key.starts_with(prefix) && key.find('.', prefix.length() + 1) == std::string::npos) {
             double d0 = (double) val * 100.0 / (double) k;
             double d1 = (double) val * 100.0 / (double) i;
             std::string sectionName = key.substr(prefix.length());
@@ -85,20 +85,20 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
         val = val * 950ll / 1000ll;
     }
 
-    if ((float) k > f) {
-        double unspecifiedUse = (double) ((float) k - f) * 100.0 / (double) k;
-        double unspecifiedTotal = (double) ((float) k - f) * 100.0 / (double) i;
+    if (k > originalK) {
+        double unspecifiedUse = (double) (k - originalK) * 100.0 / (double) k;
+        double unspecifiedTotal = (double) (k - originalK) * 100.0 / (double) i;
         list.emplace_back("unspecified", unspecifiedUse, unspecifiedTotal);
     }
 
     std::sort(list.begin(), list.end());
-    list.insert(list.begin(), Result(profilerName, 100.0, (double) k * 100.0 / (double) i));
+    list.insert(list.begin(), Profiler::Result(profilerName, 100.0, (double) k * 100.0 / (double) i));
 
     return list;
 }
 
 void Profiler::printProfilerSection(const std::string &section) {
-    auto data = getProfilingData(section);
+    auto data = Profiler::getProfilingData(section);
     if (data.empty() || !this->profilerLocalEnabled) return;
 
     const int barWidth = 30;

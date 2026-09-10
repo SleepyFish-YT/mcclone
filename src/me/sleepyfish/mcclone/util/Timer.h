@@ -32,7 +32,7 @@ public:
 
     float renderPartialTicks;
 
-    float timerSpeed;
+    const float timerSpeed;
 
     float elapsedPartialTicks;
 
