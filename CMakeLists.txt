@@ -44,7 +44,7 @@ find_package(OpenAL CONFIG REQUIRED)
 
 # ======================== stb dependency ========================
 # used for image loading
-find_package(stb REQUIRED)
+find_package(Stb REQUIRED)
 # ======================== stb dependency ========================
 
 # ======================== json dependency ========================
