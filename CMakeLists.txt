@@ -25,6 +25,10 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 # ======================== c standard ========================
 
+# ======================== export commands ========================
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# ======================== export commands ========================
+
 # ======================== render dependencies ========================
 # used for rendering
 find_package(OpenGL REQUIRED)
