@@ -91,7 +91,7 @@ void TextureUtil::uploadTextureImageSubImpl_(const int* pixels, int imgWidth, in
         int rowCount   = std::min(rowsPerBatch, imgHeight - row);
         int pixelCount = imgWidth * rowCount;
         copyToBuffer_(pixels + offset, pixelCount);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset + row, imgWidth, rowCount, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dataBuffer_.data());
+        GlStateManager::glTexSubImage2D_(GL_TEXTURE_2D, 0, xOffset, yOffset + row, imgWidth, rowCount, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dataBuffer_.data());
     }
 }
 
@@ -105,7 +105,7 @@ void TextureUtil::uploadTextureSub_(int level, const int* pixels, int width, int
         int rowCount = std::min(rowsPerBatch, height - row);
         int count    = width * rowCount;
         copyToBufferPos_(pixels, offset, count);
-        glTexSubImage2D(GL_TEXTURE_2D, level, xOffset, yOffset + row, width, rowCount, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dataBuffer_.data());
+        GlStateManager::glTexSubImage2D_(GL_TEXTURE_2D, level, xOffset, yOffset + row, width, rowCount, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dataBuffer_.data());
     }
 }
 
@@ -138,14 +138,14 @@ void TextureUtil::allocateTextureImpl_(int textureId, int mipmapLevels, int widt
     bindTexture_(textureId);
 
     if (mipmapLevels >= 0) {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapLevels);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD,  0.0f);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD,  static_cast<float>(mipmapLevels));
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0.0f);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapLevels);
+        GlStateManager::glTexParameterf_(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD,  0.0f);
+        GlStateManager::glTexParameterf_(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD,  static_cast<float>(mipmapLevels));
+        GlStateManager::glTexParameterf_(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0.0f);
     }
 
     for (int i = 0; i <= mipmapLevels; ++i) {
-        glTexImage2D(GL_TEXTURE_2D, i, GL_RGBA, width >> i, height >> i, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
+        GlStateManager::glTexImage2D_(GL_TEXTURE_2D, i, GL_RGBA, width >> i, height >> i, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
     }
 }
 
@@ -221,11 +221,11 @@ int TextureUtil::blendColorComponent_(int a, int b, int c, int d, int shift) {
 
 void TextureUtil::setTextureClamped_(bool clamp) {
     if (clamp) {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     } else {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 }
 
@@ -235,11 +235,11 @@ void TextureUtil::setTextureBlurred_(bool blur) {
 
 void TextureUtil::setTextureBlurMipmap_(bool blur, bool mipmap) {
     if (blur) {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     } else {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
+        GlStateManager::glTexParameteri_(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 }
 

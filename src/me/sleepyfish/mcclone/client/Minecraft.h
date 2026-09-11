@@ -93,6 +93,8 @@ private:
     std::atomic<int> pendingResizeW{0};
     std::atomic<int> pendingResizeH{0};
 
+    static Minecraft* instance;
+
 public:
 
     static ResourceLocation* locationMojangPng;
@@ -116,6 +118,8 @@ public:
     bool skipRenderWorld;
 
     explicit Minecraft(GameConfiguration* gameConfig);
+
+    static Minecraft *getMinecraft() noexcept;
 
     void initializeFramebuffer();
 

@@ -92,6 +92,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/model/ModelBase.h
         ${SRC_DIR}/client/model/ModelRenderer.cpp
         ${SRC_DIR}/client/model/ModelRenderer.h
+        ${SRC_DIR}/client/model/ModelSprite.cpp
+        ${SRC_DIR}/client/model/ModelSprite.h
 
         # client/
         ${SRC_DIR}/client/Minecraft.cpp
@@ -142,17 +144,31 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/renderer/GlStateManager.h
         ${SRC_DIR}/client/renderer/OpenGlHelper.cpp
         ${SRC_DIR}/client/renderer/OpenGlHelper.h
+        ${SRC_DIR}/client/renderer/Tessellator.cpp
+        ${SRC_DIR}/client/renderer/Tessellator.h
+        ${SRC_DIR}/client/renderer/WorldVertexBufferUploader.cpp
+        ${SRC_DIR}/client/renderer/WorldVertexBufferUploader.h
+        ${SRC_DIR}/client/renderer/WorldRenderer.cpp
+        ${SRC_DIR}/client/renderer/WorldRenderer.h
 
         # client/renderer/vertex
+        ${SRC_DIR}/client/renderer/vertex/DefaultVertexFormats.cpp
+        ${SRC_DIR}/client/renderer/vertex/DefaultVertexFormats.h
         ${SRC_DIR}/client/renderer/vertex/VertexFormatElement.cpp
         ${SRC_DIR}/client/renderer/vertex/VertexFormatElement.h
         ${SRC_DIR}/client/renderer/vertex/VertexFormat.cpp
         ${SRC_DIR}/client/renderer/vertex/VertexFormat.h
 
         # client/renderer/texture
+        ${SRC_DIR}/client/renderer/texture/TextureAtlasSprite.cpp
+        ${SRC_DIR}/client/renderer/texture/TextureAtlasSprite.h
         ${SRC_DIR}/client/renderer/texture/TextureUtil.cpp
         ${SRC_DIR}/client/renderer/texture/TextureUtil.h
         ${SRC_DIR}/client/renderer/texture/ITickableTexture.h
+        ${SRC_DIR}/client/renderer/texture/TextureClock.cpp
+        ${SRC_DIR}/client/renderer/texture/TextureClock.h
+        ${SRC_DIR}/client/renderer/texture/TextureCompass.cpp
+        ${SRC_DIR}/client/renderer/texture/TextureCompass.h
 
         # client/renderer/culling
         ${SRC_DIR}/client/renderer/culling/ICamera.h

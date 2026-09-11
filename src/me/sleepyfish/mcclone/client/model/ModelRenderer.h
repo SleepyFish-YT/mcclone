@@ -147,8 +147,13 @@ public:
 
     std::string toString() const;
 
-    int getTextureOffsetX() const { return textureOffsetX; }
-    int getTextureOffsetY() const { return textureOffsetY; }
+    int getTextureOffsetX() const {
+        return this->textureOffsetX;
+    }
+
+    int getTextureOffsetY() const {
+        return this->textureOffsetY;
+    }
 
 };
 

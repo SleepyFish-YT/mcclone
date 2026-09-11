@@ -36,7 +36,7 @@ private:
     static std::array<float, 65536> buildSinTable() {
         std::array<float, 65536> table{};
         for (int i = 0; i < 65536; ++i) {
-            table[i] = static_cast<float>(std::sin(static_cast<double>(i) * std::numbers::pi * 2.0 / 65536.0));
+            table[i] = static_cast<float>(std::sin(static_cast<double>(i) * PId * 2.0 / 65536.0));
         }
         return table;
     }
@@ -44,7 +44,7 @@ private:
     static std::array<float, 4096> buildSinTableFast() {
         std::array<float, 4096> table{};
         for (int i = 0; i < 4096; ++i) {
-            table[i] = MathUtils::roundToFloat(std::sin(static_cast<double>(i) * std::numbers::pi * 2.0 / 4096.0));
+            table[i] = MathUtils::roundToFloat(std::sin(static_cast<double>(i) * PId * 2.0 / 4096.0));
         }
         return table;
     }
@@ -94,8 +94,9 @@ public:
 
     static inline bool fastMath = false;
 
-    static inline const float PI = MathUtils::roundToFloat(std::numbers::pi);
-    static inline const float PId2 = MathUtils::roundToFloat(std::numbers::pi / 2.0);
+    static inline const float PId = std::numbers::pi;
+    static inline const float PI = MathUtils::roundToFloat(PId);
+    static inline const float PId2 = MathUtils::roundToFloat(PId / 2.0);
     static inline const float deg2Rad = MathUtils::roundToFloat(0.017453292519943295);
 
     static float sin(float value) {
@@ -181,6 +182,12 @@ public:
 
     static int bucketInt(int a, int b) noexcept {
         return a < 0 ? -((-a - 1) / b) - 1 : a / b;
+    }
+
+    static double getRandomDouble() noexcept {
+        static thread_local std::mt19937 generator(std::random_device{}());
+        static thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
+        return dist(generator);
     }
 
     static int getRandomIntegerInRange(std::mt19937& rand, int min, int max) noexcept {
@@ -345,8 +352,8 @@ public:
         const double d7 = (6.0 + d6 * d6) * d6 * 0.16666666666666666;
         double d8 = d3 + d7;
 
-        if (flag2) d8 = (std::numbers::pi / 2.0) - d8;
-        if (flagX) d8 = std::numbers::pi - d8;
+        if (flag2) d8 = (MathHelper::PId / 2.0) - d8;
+        if (flagX) d8 = MathHelper::PId - d8;
         if (flagY) d8 = -d8;
 
         return d8;

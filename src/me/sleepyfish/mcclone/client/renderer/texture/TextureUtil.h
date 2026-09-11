@@ -12,9 +12,11 @@
 #include <string>
 #include <vector>
 
+class TextureAtlasSprite;
+
 /**
  * @author SleepyFish
- * @brief Texture utility — upload, allocate, mipmap generation
+ * @brief Texture utility - upload, allocate, mipmap generation
  */
 class TextureUtil {
 

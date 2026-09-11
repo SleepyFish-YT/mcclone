@@ -56,6 +56,14 @@ public:
         return infos[static_cast<int>(type)];
     }
 
+    static const int getTypeSize(EnumType type) {
+        return getTypeInfo(type).size;
+    }
+
+    static const int getTypeGLConstant(EnumType type) {
+        return getTypeInfo(type).glConstant;
+    }
+
     // -------------------------------------------------------------------------
     // EnumUsage
     // -------------------------------------------------------------------------

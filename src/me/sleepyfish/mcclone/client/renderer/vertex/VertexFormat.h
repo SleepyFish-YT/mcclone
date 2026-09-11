@@ -21,11 +21,11 @@ class VertexFormat {
 private:
 
     std::vector<VertexFormatElement> elements;
-    std::vector<int>                 offsets;
-    int                              nextOffset;
-    int                              colorElementOffset;
-    std::vector<int>                 uvOffsetsById;
-    int                              normalElementOffset;
+    std::vector<int> offsets;
+    int              nextOffset;
+    int              colorElementOffset;
+    std::vector<int> uvOffsetsById;
+    int              normalElementOffset;
 
     bool hasPosition() const {
         for (const auto& e : this->elements) {

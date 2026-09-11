@@ -3,17 +3,19 @@
 // Project: mcclone
 //
 
+// not FULLY implemented yet.
+
 #include "ModelRenderer.h"
 
 #include "ModelBase.h"
 #include "../../util/ResourceLocation.h"
 #include "ModelSprite.h"
-#include "ModelUpdater.h"
+// #include "ModelUpdater.h"
 #include "../renderer/GlStateManager.h"
 #include "../renderer/GLAllocation.h"
-#include "Tessellator.h"
-#include "WorldRenderer.h"
-#include "Shaders.h" // countResetDisplayLists
+// #include "Tessellator.h"
+// #include "WorldRenderer.h"
+// #include "Shaders.h" // countResetDisplayLists
 #include "../../util/MathUtils.h"
 
 #include <cmath>
@@ -62,13 +64,13 @@ ModelRenderer& ModelRenderer::addBox(const std::string& partName, float offX, fl
 }
 
 ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth) {
-    this->cubeList.push_back(std::make_unique<ModelBox>(
+    /*this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
             offX, offY, offZ,
             width, height, depth,
             0.0f)
-        );
+        );*/
     return *this;
 }
 
@@ -85,8 +87,8 @@ ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int wid
     return *this;
 }
 
-void ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor)
-{
+void ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor) {
+    /*
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
@@ -94,10 +96,11 @@ void ModelRenderer::addBox(float offX, float offY, float offZ, int width, int he
             width, height, depth,
             scaleFactor)
     );
+    */
 }
 
-void ModelRenderer::addBox(const int boxCoords[6][4], float b, float c, float d, float e, float f, float g, float h)
-{
+void ModelRenderer::addBox(const int boxCoords[6][4], float b, float c, float d, float e, float f, float g, float h) {
+    /*
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             boxCoords,
@@ -105,6 +108,7 @@ void ModelRenderer::addBox(const int boxCoords[6][4], float b, float c, float d,
             e, f, g, h,
             this->mirror)
     );
+    */
 }
 
 void ModelRenderer::render(float scale) {
@@ -127,7 +131,7 @@ void ModelRenderer::render(float scale) {
     }
 
     if (this->modelUpdater != nullptr) {
-        this->modelUpdater->update();
+        // this->modelUpdater->update();
     }
 
     const bool flag = this->scaleX != 1.0f || this->scaleY != 1.0f || this->scaleZ != 1.0f;
@@ -221,7 +225,7 @@ void ModelRenderer::renderWithRotation(float scale) {
     }
 
     if (this->modelUpdater != nullptr) {
-        this->modelUpdater->update();
+        // this->modelUpdater->update();
     }
 
     const bool flag = this->scaleX != 1.0f || this->scaleY != 1.0f || this->scaleZ != 1.0f;
@@ -294,22 +298,21 @@ void ModelRenderer::compileDisplayList(float scale) {
     }
 
     GlStateManager::glNewList_(this->displayList, GL_COMPILE);
-    WorldRenderer& renderer = Tessellator::getInstance().getWorldRenderer();
+    // WorldRenderer& renderer = Tessellator::getInstance().getWorldRenderer();
 
     for (auto& box : this->cubeList) {
-        box->render(renderer, scale);
+        // box->render(renderer, scale);
     }
 
     for (auto& sprite : this->spriteList) {
-        sprite->render(Tessellator::getInstance(), scale);
+        // sprite->render(Tessellator::getInstance(), scale);
     }
 
     GlStateManager::glEndList_();
     this->compiled = true;
 }
 
-void ModelRenderer::addSprite(float a, float b, float c, int d, int e, int f, float g)
-{
+void ModelRenderer::addSprite(float a, float b, float c, int d, int e, int f, float g) {
     this->spriteList.push_back(std::make_unique<ModelSprite>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
@@ -319,10 +322,12 @@ void ModelRenderer::addSprite(float a, float b, float c, int d, int e, int f, fl
 }
 
 void ModelRenderer::checkResetDisplayList() {
+    /*
     if (this->countResetDisplayList != Shaders::countResetDisplayLists) {
         this->compiled = false;
         this->countResetDisplayList = Shaders::countResetDisplayLists;
     }
+    */
 }
 
 ModelRenderer* ModelRenderer::getChild(const std::string& childName) {

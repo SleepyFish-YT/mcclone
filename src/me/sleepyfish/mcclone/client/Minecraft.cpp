@@ -20,6 +20,7 @@
 #include "../util/MovingObjectPosition.h"
 #include "../util/McCloneError.h"
 #include "shader/Framebuffer.h"
+#include "renderer/vertex/DefaultVertexFormats.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -28,6 +29,7 @@
 #include <timeapi.h>
 #include <glfw/glfw3.h>
 
+Minecraft* Minecraft::instance = nullptr;
 ResourceLocation* Minecraft::locationMojangPng = new ResourceLocation("textures/gui/title/mojang.png");
 
 Minecraft::Minecraft(GameConfiguration* gameConfig) :
@@ -72,6 +74,12 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
 
     this->fpsCounter = 0;
     Minecraft::debugFPS = 0;
+
+    Minecraft::instance = this;
+}
+
+Minecraft *Minecraft::getMinecraft() noexcept {
+    return Minecraft::instance;
 }
 
 void Minecraft::startGame() {
@@ -90,6 +98,7 @@ void Minecraft::run() {
     Logger::log("Update thread started");
 
     try {
+        DefaultVertexFormats::staticInit();
         this->startGame();
     } catch (const std::exception& e) {
         Logger::fatal("startGame failed: {}", e.what());
