@@ -38,6 +38,8 @@ private:
 
     bool mouseCaptured{};
 
+    bool focused{};
+
     GameConfiguration::DisplayInformation displayInfo{};
 
     RenderInformation* renderContext{};
@@ -54,6 +56,8 @@ private:
 public:
 
     uint64_t frameCount;
+
+    std::chrono::steady_clock::time_point lastSecond;
 
     int savedWindowPosX;
 
@@ -84,6 +88,8 @@ public:
     GLFWscrollfun handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 
     GLFWframebuffersizefun handleFramebufferResize(GLFWwindow* window, int width, int height);
+
+    GLFWwindowfocusfun handleWindowFocus(GLFWwindow* window, int focused);
 
     RenderInformation* getRenderContext() noexcept;
 

@@ -143,7 +143,30 @@ void WorldRenderer::finishDrawing() {
 }
 
 WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
+    int bytesNeeded = (vertexCount + 1) * m_vertexFormat.getNextOffset();
+    if (bytesNeeded > static_cast<int>(m_byteBuffer.size())) {
+        int oldBytes = static_cast<int>(m_byteBuffer.size());
+        int newBytes = std::max(bytesNeeded, oldBytes * 2);
+        m_byteBuffer.resize(newBytes, 0);
+        rawIntBuffer.resize(newBytes / 4, 0);
+    }
+
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
+
+#ifdef MCCLONE_DEBUG
+    if (i < 0 || i + 4 >= static_cast<int>(m_byteBuffer.size())) {
+        fprintf(stderr, "tex() out of bounds: i=%d bufsize=%zu vertexCount=%d nextOffset=%d formatOffset=%d formatIndex=%d\n",
+                i,
+                m_byteBuffer.size(),
+                vertexCount,
+                m_vertexFormat.getNextOffset(),
+                m_vertexFormat.getOffset(m_vertexFormatIndex),
+                m_vertexFormatIndex
+        );
+        fflush(stderr);
+        __debugbreak();
+    }
+#endif //MCCLONE_DEBUG
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
@@ -259,6 +282,19 @@ WorldRenderer& WorldRenderer::tex(double u, double v) {
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
+
+    if (i < 0 || i + 4 >= static_cast<int>(m_byteBuffer.size())) {
+        fprintf(stderr, "tex() out of bounds: i=%d bufsize=%zu vertexCount=%d nextOffset=%d formatOffset=%d formatIndex=%d\n",
+                i,
+                m_byteBuffer.size(),
+                vertexCount,
+                m_vertexFormat.getNextOffset(),
+                m_vertexFormat.getOffset(m_vertexFormatIndex),
+                m_vertexFormatIndex
+        );
+        fflush(stderr);
+        __debugbreak();
+    }
 
     switch (type) {
         case T::FLOAT: {

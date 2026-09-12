@@ -6,6 +6,7 @@
 #include "TextureUtil.h"
 
 #include "../GlStateManager.h"
+#include "DynamicTexture.h"
 
 #include <glad/glad.h>
 
@@ -24,8 +25,6 @@
 std::vector<int> TextureUtil::dataBuffer_        = std::vector<int>(4194304);
 std::vector<int> TextureUtil::dataArray_         = std::vector<int>(4194304);
 int              TextureUtil::mipmapBuffer_[4]   = {};
-// DynamicTexture   TextureUtil::missingTexture     = DynamicTexture(16, 16);
-int*             TextureUtil::missingTextureData = nullptr;
 
 void TextureUtil::init() {
     // missingTextureData = missingTexture.getTextureData();
@@ -37,16 +36,20 @@ void TextureUtil::init() {
     int magentaRow[8] = { MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA };
     int blackRow[8]   = { BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK   };
 
-    if (missingTextureData != nullptr) {
-        for (int l = 0; l < 16; ++l) {
-            const int* first  = l < HALF ? magentaRow : blackRow;
-            const int* second = l < HALF ? blackRow   : magentaRow;
-            std::memcpy(missingTextureData + 16 * l,         first,  HALF * sizeof(int));
-            std::memcpy(missingTextureData + 16 * l + HALF,  second, HALF * sizeof(int));
+    TextureUtil::missingTexture = new DynamicTexture(16, 16);
+
+    std::vector<int>& texData = TextureUtil::missingTexture->getTextureData();
+    texData.resize(16 * 16, 0);
+
+    for (int l = 0; l < 16; ++l) {
+        for (int col = 0; col < 16; ++col) {
+            bool leftHalf = col < 8;
+            bool topHalf  = l < 8;
+            texData[l * 16 + col] = (topHalf == leftHalf) ? MAGENTA : BLACK;
         }
     }
 
-    // missingTexture.updateDynamicTexture();
+    TextureUtil::missingTexture->updateDynamicTexture();
 }
 
 // -------------------------------------------------------------------------

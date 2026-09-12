@@ -28,9 +28,9 @@ Main::Main() {
     this->screenSize = {};
 
     // version
-    this->majorVersion = "1";
-    this->minorVersion = "0";
-    this->patchVersion = "3";
+    this->majorVersion = std::to_string(MCCLONE_VERSION_MAJOR);
+    this->minorVersion = std::to_string(MCCLONE_VERSION_MINOR);
+    this->patchVersion = std::to_string(MCCLONE_VERSION_PATCH);
 }
 
 int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gameDir_dir) {

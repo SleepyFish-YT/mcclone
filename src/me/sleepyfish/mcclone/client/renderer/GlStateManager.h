@@ -28,9 +28,9 @@ public:
             capability(cap)
         {}
 
+        void setState(bool state);
         void setEnabled() noexcept { this->setState(true);  }
         void setDisabled() noexcept { this->setState(false); }
-        void setState(bool state);
 
     };
 

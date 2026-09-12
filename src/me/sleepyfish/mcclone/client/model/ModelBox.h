@@ -25,9 +25,9 @@ class ModelBox {
 
 private:
 
-    std::array<PositionTextureVertex, 8> vertexPositions;
+    std::array<PositionTextureVertex, 8> vertexPositions{};
 
-    std::array<std::optional<TexturedQuad>, 6> quadList;
+    std::array<std::optional<TexturedQuad>, 6> quadList{};
 
     void buildVertices(float x1, float y1, float z1, float x2, float y2, float z2) noexcept {
         this->vertexPositions[0] = PositionTextureVertex(x1, y1, z1, 0.0f, 0.0f);

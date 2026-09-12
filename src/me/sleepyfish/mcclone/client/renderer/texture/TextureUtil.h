@@ -7,11 +7,11 @@
 #define MCCLONE_TEXTUREUTIL_H
 
 // not FULLY implemented yet.
-// #include "DynamicTexture.h"
 
 #include <string>
 #include <vector>
 
+class DynamicTexture;
 class TextureAtlasSprite;
 
 /**
@@ -54,8 +54,8 @@ private:
 
 public:
 
-    // static DynamicTexture missingTexture;
-    static int* missingTextureData;
+    static inline DynamicTexture* missingTexture;
+    static inline int* missingTextureData;
 
     static void init();
 

@@ -12,7 +12,6 @@
 
 /**
  * @author SleepyFish
- * @note i hate opengl
  * @brief OpenGL helper - capability detection and wrapper for framebuffer/shader/VBO calls
  */
 class OpenGlHelper {

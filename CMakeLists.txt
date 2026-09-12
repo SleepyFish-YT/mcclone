@@ -6,8 +6,11 @@ cmake_minimum_required(VERSION 3.31)
 
 # ======================== project variables ========================
 set(PROJECT_NAME "mcclone")
-set(PROJECT_VERSION "1.0.3")
-set(PROJECT_AUTHOR "sleepyfish")
+set(PROJECT_VERSION_MAJOR "1")
+set(PROJECT_VERSION_MINOR "0")
+set(PROJECT_VERSION_PATCH "3")
+set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+set(PROJECT_AUTHOR "SleepyFish")
 set(PROJECT_GITHUB "https://github.com/${PROJECT_AUTHOR}-yt/${PROJECT_NAME}")
 # ======================== project variables ========================
 
@@ -57,6 +60,7 @@ set(SRC_DIR "${CMAKE_SOURCE_DIR}/src/me/${PROJECT_AUTHOR}/${PROJECT_NAME}")
 set(SVA_DIR "${CMAKE_SOURCE_DIR}/src/me/${PROJECT_AUTHOR}/sava")
 
 add_executable(${PROJECT_NAME}
+
         # main file
         main.cpp
 
@@ -86,7 +90,9 @@ add_executable(${PROJECT_NAME}
 
         # client/model
         ${SRC_DIR}/client/model/PositionTextureVertex.h
+        ${SRC_DIR}/client/model/TexturedQuad.cpp
         ${SRC_DIR}/client/model/TexturedQuad.h
+        ${SRC_DIR}/client/model/ModelBox.cpp
         ${SRC_DIR}/client/model/ModelBox.h
         ${SRC_DIR}/client/model/TextureOffset.h
         ${SRC_DIR}/client/model/ModelBase.h
@@ -164,17 +170,30 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/renderer/texture/TextureAtlasSprite.h
         ${SRC_DIR}/client/renderer/texture/TextureUtil.cpp
         ${SRC_DIR}/client/renderer/texture/TextureUtil.h
+        ${SRC_DIR}/client/renderer/texture/ITextureObject.h
         ${SRC_DIR}/client/renderer/texture/ITickableTexture.h
+        ${SRC_DIR}/client/renderer/texture/ITickableTextureObject.h
         ${SRC_DIR}/client/renderer/texture/TextureClock.cpp
         ${SRC_DIR}/client/renderer/texture/TextureClock.h
         ${SRC_DIR}/client/renderer/texture/TextureCompass.cpp
         ${SRC_DIR}/client/renderer/texture/TextureCompass.h
+        ${SRC_DIR}/client/renderer/texture/AbstractTexture.cpp
+        ${SRC_DIR}/client/renderer/texture/AbstractTexture.h
+        ${SRC_DIR}/client/renderer/texture/DynamicTexture.cpp
+        ${SRC_DIR}/client/renderer/texture/DynamicTexture.h
 
         # client/renderer/culling
         ${SRC_DIR}/client/renderer/culling/ICamera.h
         ${SRC_DIR}/client/renderer/culling/ClippingHelper.h
         ${SRC_DIR}/client/renderer/culling/ClippingHelperImpl.h
         ${SRC_DIR}/client/renderer/culling/Frustum.h
+
+        # client/resources
+        ${SRC_DIR}/client/resources/IResourceManager.h
+        ${SRC_DIR}/client/resources/IResource.h
+        ${SRC_DIR}/client/resources/IResourcePack.h
+        ${SRC_DIR}/client/resources/IReloadableResourceManager.h
+        ${SRC_DIR}/client/resources/IResourceManagerReloadListener.h
 
         # client/resources/data
         ${SRC_DIR}/client/resources/data/IMetadataSection.h
@@ -308,6 +327,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/EnchantmentNameParts.h
         ${SRC_DIR}/util/ChatComponentTranslationFormatException.h
         ${SRC_DIR}/util/ChatAllowedCharacters.h
+        ${SRC_DIR}/util/ResourceLocation.cpp
         ${SRC_DIR}/util/ResourceLocation.h
         ${SRC_DIR}/util/EnumChatFormatting.h
         ${SRC_DIR}/util/EnumParticleTypes.h
@@ -316,7 +336,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/ObjectIntIdentityMap.h
         ${SRC_DIR}/util/RegistryNamespacedDefaultedByKey.h
 
-        # nbt - i hate nbt...
+        # nbt
         ${SRC_DIR}/nbt/NBTException.h
         ${SRC_DIR}/nbt/NBTBase.cpp
         ${SRC_DIR}/nbt/NBTBase.h
@@ -382,6 +402,21 @@ add_executable(${PROJECT_NAME}
 
 )
 # ======================== files ========================
+
+# ======================== add inlined definitions ========================
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG)
+endif()
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        MCCLONE_NAME="${PROJECT_NAME}"
+        MCCLONE_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+        MCCLONE_VERSION_MINOR=${PROJECT_VERSION_MINOR}
+        MCCLONE_VERSION_PATCH=${PROJECT_VERSION_PATCH}
+        MCCLONE_VERSION="${PROJECT_VERSION}"
+        MCCLONE_AUTHOR="${PROJECT_AUTHOR}"
+)
+# ======================== add inlined definitions ========================
 
 # ======================== linking libraries ========================
 target_link_libraries(${PROJECT_NAME}

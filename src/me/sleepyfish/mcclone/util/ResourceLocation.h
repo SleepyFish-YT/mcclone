@@ -6,8 +6,6 @@
 #ifndef MCCLONE_RESOURCELOCATION_H
 #define MCCLONE_RESOURCELOCATION_H
 
-#include "../../sava/SavaUtil.h"
-
 #include <string>
 #include <stdexcept>
 
@@ -41,24 +39,9 @@ public:
         return { domain, path };
     }
 
-    explicit ResourceLocation(const std::string& resourceName) {
-        auto [domain, path] = ResourceLocation::SplitObjectName(resourceName);
-        this->resourceDomain = domain.empty() ? "mcclone" : SavaUtil::StringUtil::ToLowerCase(domain);
-        this->resourcePath = path;
+    explicit ResourceLocation(const std::string& resourceName);
 
-        if (this->resourcePath.empty()) {
-            throw std::invalid_argument("resourcePath must not be null/empty");
-        }
-    }
-
-    ResourceLocation(const std::string& resourceDomainIn, const std::string& resourcePathIn) {
-        this->resourceDomain = resourceDomainIn.empty() ? "mcclone" : SavaUtil::StringUtil::ToLowerCase(resourceDomainIn);
-        this->resourcePath = resourcePathIn;
-
-        if (this->resourcePath.empty()) {
-            throw std::invalid_argument("resourcePath must not be null/empty");
-        }
-    }
+    ResourceLocation(const std::string& resourceDomainIn, const std::string& resourcePathIn);
 
     std::string getResourcePath() const noexcept {
         return this->resourcePath;
@@ -89,5 +72,6 @@ public:
     };
 
 };
+
 
 #endif //MCCLONE_RESOURCELOCATION_H

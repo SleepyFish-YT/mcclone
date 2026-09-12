@@ -66,3 +66,14 @@ void Timer::updateTimer() {
 
     this->renderPartialTicks = this->elapsedPartialTicks;
 }
+
+void Timer::sleepToNextTick() const {
+    const long long tickMs = static_cast<long long>(1000.0f / this->ticksPerSecond);
+    const long long now    = Minecraft::getSystemTime();
+    const long long next   = this->lastSyncSysClock + tickMs;
+    const long long sleep  = next - now;
+
+    if (sleep > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+    }
+}

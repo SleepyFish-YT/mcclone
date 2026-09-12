@@ -17,6 +17,11 @@
 
 #include <utility>
 
+#ifdef _WIN32
+#include <windows.h>
+#pragma comment(lib, "winmm.lib")
+#endif //_WIN32
+
 OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept {
     this->minecraft = minecraft;
     this->window = nullptr;
@@ -27,6 +32,7 @@ OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, st
     this->renderContext = new RenderInformation();
     this->setRunning(false);
     this->frameCount = 0;
+    this->lastSecond = std::chrono::steady_clock::now();
     this->savedWindowPosX = 0;
     this->savedWindowPosY = 0;
     this->savedWindowWidth = 0;
@@ -118,6 +124,10 @@ bool OpenGLWindow::init() {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleFramebufferResize(window, width, height);
         });
+        ::glfwSetWindowFocusCallback(this->window, [](GLFWwindow* window, int focused) {
+            auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
+            self->handleWindowFocus(window, focused);
+        });
     }
     ::glfwMakeContextCurrent(nullptr);
     // release context so render thread can claim it
@@ -127,14 +137,34 @@ bool OpenGLWindow::init() {
 
 // this is the render thread (called by runnable(this->start))
 void OpenGLWindow::run() {
+#ifdef _WIN32
+    ::timeBeginPeriod(1);
+#endif //_WIN32
+
     ::glfwMakeContextCurrent(this->window);
 
     Logger::log("Render thread started");
 
     this->minecraft->initializeFramebuffer();
 
-    while (this->isRunning() && !glfwWindowShouldClose(this->window)) {
+    while (this->isRunning() && !::glfwWindowShouldClose(this->window)) {
+        auto frameStart = std::chrono::steady_clock::now();
+
+        int targetFps = this->minecraft->getLimitFramerate();
+        if (!this->focused) {
+            targetFps /= 2;
+        }
+
+        const auto frameTime = std::chrono::duration<double>(1.0 / targetFps);
+
         this->frameCount++;
+
+        auto now = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - this->lastSecond).count() >= 1000) {
+            this->lastSecond = now;
+            Logger::log("fps: {}", this->frameCount);
+            this->frameCount = 0;
+        }
 
         this->renderGameLoop();
 
@@ -146,10 +176,19 @@ void OpenGLWindow::run() {
         }
 
         ::glfwSwapBuffers(this->window);
+
+        auto sleepUntil = frameStart + frameTime;
+        auto spinStart = sleepUntil - std::chrono::milliseconds(2);
+        std::this_thread::sleep_until(spinStart);
+
+        while (std::chrono::steady_clock::now() < sleepUntil) {} // spin
     }
 
     Logger::log("Render thread stopped");
     ::glfwMakeContextCurrent(nullptr);
+#ifdef _WIN32
+    ::timeEndPeriod(1);
+#endif //_WIN32
 }
 
 void OpenGLWindow::renderGameLoop() {
@@ -262,6 +301,12 @@ GLFWscrollfun OpenGLWindow::handleMouseScroll(GLFWwindow* window, double xoffset
 
 GLFWframebuffersizefun OpenGLWindow::handleFramebufferResize(GLFWwindow* window, int width, int height) {
     this->minecraft->resizeWindow(width, height);
+
+    return nullptr;
+}
+
+GLFWwindowfocusfun OpenGLWindow::handleWindowFocus(GLFWwindow* window, int focused) {
+    this->focused = (focused == GLFW_TRUE);
 
     return nullptr;
 }

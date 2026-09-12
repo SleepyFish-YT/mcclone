@@ -23,7 +23,7 @@ class ClippingHelperImpl : public ClippingHelper {
 
 private:
 
-    static ClippingHelperImpl instance;
+    bool initialized = false;
 
     std::vector<float> projectionMatrixBuffer;
     std::vector<float> modelviewMatrixBuffer;
@@ -43,14 +43,24 @@ private:
         plane[3] /= f;
     }
 
+    static ClippingHelperImpl& getInstance_() {
+        static ClippingHelperImpl instance{};
+        return instance;
+    }
+
 public:
 
     static ClippingHelper* getInstance() {
-        ClippingHelperImpl::instance.init();
-        return &ClippingHelperImpl::instance;
+        ClippingHelperImpl& inst = ClippingHelperImpl::getInstance_();
+        inst.init();
+        return &inst;
     }
 
     void init() {
+        if (initialized) {
+            return;
+        }
+
         GlStateManager::getFloat_(GL_PROJECTION_MATRIX, this->projectionMatrixBuffer.data());
         GlStateManager::getFloat_(GL_MODELVIEW_MATRIX,  this->modelviewMatrixBuffer.data());
 
@@ -116,11 +126,11 @@ public:
         this->frustum[5][2] = c[11] + c[10];
         this->frustum[5][3] = c[15] + c[14];
         this->normalize(this->frustum[5]);
+
+        initialized = true;
     }
 
 };
-
-inline ClippingHelperImpl ClippingHelperImpl::instance;
 
 
 #endif //MCCLONE_CLIPPINGHELPERIMPL_H

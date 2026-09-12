@@ -48,7 +48,7 @@ void GlStateManager::BooleanState::setState(bool state) {
     }
 }
 
-void GlStateManager::pushAttrib_() { ::glPushAttrib(8256); }
+void GlStateManager::pushAttrib_() { ::glPushAttrib(GL_TEXTURE_BIT | GL_LIGHTING_BIT); }
 void GlStateManager::popAttrib_()  { ::glPopAttrib();      }
 
 void GlStateManager::enableAlpha_()  { alphaState.alphaTest.setEnabled();  }

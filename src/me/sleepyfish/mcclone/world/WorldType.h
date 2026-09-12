@@ -57,9 +57,7 @@ private:
 
 public:
 
-    static std::array<WorldType*, 8> worldTypes;
-
-
+    static std::array<WorldType*, 9> worldTypes;
 
     static WorldType DEFAULT;
 
@@ -127,9 +125,7 @@ public:
 };
 
 
-inline std::array<WorldType*, 8> WorldType::worldTypes = {};
-
-
+inline std::array<WorldType*, 9> WorldType::worldTypes = {};
 
 inline WorldType WorldType::DEFAULT      = WorldType(0, "default", 1).setVersioned();
 

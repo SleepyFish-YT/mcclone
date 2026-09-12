@@ -53,7 +53,7 @@ public:
 
     Main();
 
-    static inline const std::string AUTHOR = "SleepyFish";
+    static inline const std::string AUTHOR = MCCLONE_AUTHOR;
 
     /**
      * @author SleepyFish

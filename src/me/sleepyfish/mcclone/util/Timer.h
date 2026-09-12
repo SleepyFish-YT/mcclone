@@ -40,6 +40,8 @@ public:
 
     void updateTimer();
 
+    void sleepToNextTick() const;
+
 };
 
 

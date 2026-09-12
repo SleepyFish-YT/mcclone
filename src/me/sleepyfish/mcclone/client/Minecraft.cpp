@@ -162,11 +162,11 @@ void Minecraft::resizeWindow(int width, int height) {
 
     /*
     if (this->currentScreen != nullptr) {
-        ScaledResolution reso(this);
+        ScaledResolution reso(*this);
         this->currentScreen->onResize(this, reso.getScaledWidth(), reso.getScaledHeight());
     }
 
-    this->loadingScreen = LoadingScreenRenderer(this);
+    this->loadingScreen = LoadingScreenRenderer(*this);
     */
 }
 
@@ -183,11 +183,9 @@ long long Minecraft::getHighResTime() noexcept {
 }
 
 void Minecraft::runGameLoop() {
-    auto now = std::chrono::steady_clock::now();
-
     this->mcProfiler->startSection("root");
     {
-        if (this->isGamePaused_ /* && this->theWorld != nullptr */) {
+        if (this->isGamePaused_) {
             const float delta_ticks = this->theTimer->renderPartialTicks;
             this->theTimer->updateTimer();
             this->theTimer->renderPartialTicks = delta_ticks;
@@ -203,21 +201,6 @@ void Minecraft::runGameLoop() {
             this->mcProfiler->endSection();
         }
 
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - this->prevFrameTime).count() >= 1000) {
-            Minecraft::debugFPS = this->fpsCounter;
-
-            this->prevFrameTime = now;
-            this->tpsCounter = this->tickCounter;
-            this->tickCounter = 0;
-            this->fpsCounter = 0;
-
-#if MCCLONE_DEBUG
-            Logger::log("TPS: {}", this->theTimer->ticksPerSecond);
-
-            this->mcProfiler->printProfilerSection("root");
-#endif //MCCLONE_DEBUG
-        }
-
         this->mcProfiler->startSection("soundEngine");
         {
             this->soundEngine->cleanup();
@@ -225,6 +208,8 @@ void Minecraft::runGameLoop() {
         this->mcProfiler->endSection();
     }
     this->mcProfiler->endSection();
+
+    this->theTimer->sleepToNextTick();
 }
 
 void Minecraft::renderGameLoop() {

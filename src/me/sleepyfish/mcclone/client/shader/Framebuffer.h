@@ -11,23 +11,22 @@
 
 /**
  * @author SleepyFish
- * @note i hate opengl
  * @brief shader framebuffer class
  */
 class Framebuffer {
 
 public:
 
-    int m_framebufferTextureWidth;
-    int m_framebufferTextureHeight;
-    int m_framebufferWidth;
-    int m_framebufferHeight;
+    int m_framebufferTextureWidth{};
+    int m_framebufferTextureHeight{};
+    int m_framebufferWidth{};
+    int m_framebufferHeight{};
     bool m_useDepth;
     int m_framebufferObject;
     int m_framebufferTexture;
     int m_depthBuffer;
-    float m_framebufferColor[4];
-    int m_framebufferFilter;
+    float m_framebufferColor[4]{};
+    int m_framebufferFilter{};
 
     Framebuffer(int widthIn, int heightIn, bool useDepthIn) {
         this->m_useDepth = useDepthIn;
