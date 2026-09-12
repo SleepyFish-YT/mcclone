@@ -9,8 +9,6 @@
 #include <stdexcept>
 #include <string>
 
-// not FULLY implemented yet.
-
 /**
  * @author SleepyFish
  * @note i hate opengl

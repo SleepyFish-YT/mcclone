@@ -3,8 +3,6 @@
 // Project: mcclone
 //
 
-// not FULLY implemented yet.
-
 #include "ModelSprite.h"
 
 #include "ModelRenderer.h"
@@ -14,7 +12,6 @@
 #include "../renderer/Tessellator.h"
 #include "../renderer/WorldRenderer.h"
 
-#include <algorithm>
 #include <cmath>
 #include <glad/glad.h>
 

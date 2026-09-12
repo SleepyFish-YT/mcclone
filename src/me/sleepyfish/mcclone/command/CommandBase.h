@@ -6,6 +6,8 @@
 #ifndef MCCLONE_COMMANDBASE_H
 #define MCCLONE_COMMANDBASE_H
 
+// not FULLY implemented yet.
+
 #include "ICommand.h"
 #include "NumberInvalidException.h"
 #include "CommandException.h"
@@ -36,8 +38,6 @@
 #include <sstream>
 #include <cmath>
 #include <limits>
-
-// not FULLY implemented yet.
 
 /**
  * @author SleepyFish

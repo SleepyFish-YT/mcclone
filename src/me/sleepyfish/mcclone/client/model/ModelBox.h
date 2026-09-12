@@ -46,10 +46,12 @@ private:
 
 public:
 
-    float posX1, posY1, posZ1;
-    float posX2, posY2, posZ2;
+    float posX1{}, posY1{}, posZ1{};
+    float posX2{}, posY2{}, posZ2{};
 
-    std::string boxName;
+    std::string boxName{};
+
+    ModelBox() = default;
 
     ModelBox(ModelRenderer& renderer, const std::array<std::array<int, 4>, 6>& faceUV, float x, float y, float z, float dx, float dy, float dz, float inflate, bool mirror);
 

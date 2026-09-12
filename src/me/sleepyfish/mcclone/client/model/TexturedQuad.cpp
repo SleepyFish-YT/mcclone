@@ -5,9 +5,11 @@
 
 #include "TexturedQuad.h"
 
-// #include "../client/renderer/WorldRenderer.h"
+#include "../renderer/WorldRenderer.h"
+#include "../renderer/Tessellator.h"
+#include "../renderer/vertex/DefaultVertexFormats.h"
 
-// not FULLY implemented yet.
+// not shader implemented yet.
 
 void TexturedQuad::draw(WorldRenderer& renderer, float scale) const {
     const Vec3 vec30 = this->vertexPositions[1].vector3D.subtractReverse(this->vertexPositions[0].vector3D);
@@ -26,15 +28,14 @@ void TexturedQuad::draw(WorldRenderer& renderer, float scale) const {
 /*
     if (Config::isShaders()) {
         renderer.begin(7, SVertexFormat::defVertexFormatTextured);
-    } else {
+    } else */{
         renderer.begin(7, DefaultVertexFormats::OLDMODEL_POSITION_TEX_NORMAL);
     }
 
     for (int i = 0; i < 4; ++i) {
         const PositionTextureVertex& v = this->vertexPositions[i];
 
-        renderer.pos
-        (
+        renderer.pos(
                 v.vector3D.xCoord * static_cast<double>(scale),
                 v.vector3D.yCoord * static_cast<double>(scale),
                 v.vector3D.zCoord * static_cast<double>(scale)
@@ -45,5 +46,4 @@ void TexturedQuad::draw(WorldRenderer& renderer, float scale) const {
     }
 
     Tessellator::getInstance().draw();
-    */
 }

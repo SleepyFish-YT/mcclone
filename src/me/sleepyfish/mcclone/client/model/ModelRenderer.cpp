@@ -13,8 +13,8 @@
 // #include "ModelUpdater.h"
 #include "../renderer/GlStateManager.h"
 #include "../renderer/GLAllocation.h"
-// #include "Tessellator.h"
-// #include "WorldRenderer.h"
+#include "../renderer/Tessellator.h"
+#include "../renderer/WorldRenderer.h"
 // #include "Shaders.h" // countResetDisplayLists
 #include "../../util/MathUtils.h"
 
@@ -43,12 +43,11 @@ ModelRenderer::ModelRenderer(ModelBase& model, int texOffX, int texOffY) :
 }
 
 ModelRenderer& ModelRenderer::addBox(const std::string& partName, float offX, float offY, float offZ, int width, int height, int depth) {
-    /*
     const std::string fullName = this->boxName + "." + partName;
     const TextureOffset textureoffset_ = this->baseModel.getTextureOffset(fullName);
 
     this->setTextureOffset(textureoffset_.offsetX, textureoffset_.offsetY);
-
+/*
     auto box = std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
@@ -59,23 +58,24 @@ ModelRenderer& ModelRenderer::addBox(const std::string& partName, float offX, fl
 
     box->setBoxName(fullName);
     this->cubeList.push_back(std::move(box));
-     */
+*/
     return *this;
 }
 
 ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth) {
-    /*this->cubeList.push_back(std::make_unique<ModelBox>(
+/*
+    this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
             offX, offY, offZ,
             width, height, depth,
             0.0f)
-        );*/
+    );
+*/
     return *this;
 }
 
 ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth, bool idk) {
-    /*
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
@@ -83,12 +83,11 @@ ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int wid
             width, height, depth,
             0.0f, idk)
     );
-    */
     return *this;
 }
 
 void ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor) {
-    /*
+/*
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
@@ -96,11 +95,11 @@ void ModelRenderer::addBox(float offX, float offY, float offZ, int width, int he
             width, height, depth,
             scaleFactor)
     );
-    */
+*/
 }
 
 void ModelRenderer::addBox(const int boxCoords[6][4], float b, float c, float d, float e, float f, float g, float h) {
-    /*
+/*
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             boxCoords,
@@ -108,7 +107,7 @@ void ModelRenderer::addBox(const int boxCoords[6][4], float b, float c, float d,
             e, f, g, h,
             this->mirror)
     );
-    */
+*/
 }
 
 void ModelRenderer::render(float scale) {
@@ -271,7 +270,7 @@ void ModelRenderer::postRender(float scale) {
         this->compileDisplayList(scale);
     }
 
-    constexpr float RAD2DEG = 180.0f / 3.14159265358979323846f;
+    constexpr float RAD2DEG = 180.0f / MathUtils::PId;
 
     if (this->rotateAngleX == 0.0f && this->rotateAngleY == 0.0f && this->rotateAngleZ == 0.0f) {
         if (this->rotationPointX != 0.0f || this->rotationPointY != 0.0f || this->rotationPointZ != 0.0f) {
@@ -298,14 +297,14 @@ void ModelRenderer::compileDisplayList(float scale) {
     }
 
     GlStateManager::glNewList_(this->displayList, GL_COMPILE);
-    // WorldRenderer& renderer = Tessellator::getInstance().getWorldRenderer();
+    WorldRenderer& renderer = Tessellator::getInstance().getWorldRenderer();
 
     for (auto& box : this->cubeList) {
-        // box->render(renderer, scale);
+        box->render(renderer, scale);
     }
 
     for (auto& sprite : this->spriteList) {
-        // sprite->render(Tessellator::getInstance(), scale);
+        sprite->render(Tessellator::getInstance(), scale);
     }
 
     GlStateManager::glEndList_();

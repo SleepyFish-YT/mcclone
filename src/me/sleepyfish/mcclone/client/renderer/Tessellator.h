@@ -11,7 +11,7 @@ class WorldVertexBufferUploader;
 
 /**
  * @author SleepyFish
- * @brief Tessellator
+ * @brief Render tessellator
  */
 class Tessellator {
 

@@ -5,7 +5,7 @@
 
 #include "ModelBox.h"
 
-// not FULLY implemented yet.
+#include "ModelRenderer.h"
 
 ModelBox::ModelBox(ModelRenderer &renderer, const std::array<std::array<int, 4>, 6> &faceUV, float x, float y, float z, float dx, float dy, float dz, float inflate, bool mirror) {
     this->posX1 = x;
@@ -71,8 +71,8 @@ void ModelBox::buildQuadsFromTable(const std::array<std::array<int, 4>, 6>& face
         const int u1 = (*uv)[0], v1 = (*uv)[1];
         const int u2 = (*uv)[2], v2 = (*uv)[3];
 
-        const int tw = 64; // renderer.textureWidth;
-        const int th = 64; // renderer.textureHeight;
+        const int tw = renderer.textureWidth;
+        const int th = renderer.textureHeight;
 
         if (flip) {
             return TexturedQuad(std::move(verts), u2, v2, u1, v1, tw, th);
@@ -100,8 +100,8 @@ void ModelBox::buildQuadsFromTable(const std::array<std::array<int, 4>, 6>& face
 }
 
 void ModelBox::buildQuadsFromAtlas(ModelRenderer& renderer, int textureX, int textureY, float dx, float dy, float dz, bool mirror) {
-    const int tw = 64; // renderer.textureWidth;
-    const int th = 64; // renderer.textureHeight;
+    const int tw = renderer.textureWidth;
+    const int th = renderer.textureHeight;
 
     const int tx = textureX;
     const int ty = textureY;

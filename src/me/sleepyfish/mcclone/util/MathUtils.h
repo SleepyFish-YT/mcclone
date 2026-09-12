@@ -42,6 +42,7 @@ private:
 public:
 
     static constexpr float PI = std::numbers::pi_v<float>;
+    static constexpr float PId = std::numbers::pi_v<double>;
     static constexpr float PI2 = std::numbers::pi_v<float> * 2.0f;
     static constexpr float PId2 = std::numbers::pi_v<float> / 2.0f;
 

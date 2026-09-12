@@ -3,7 +3,7 @@
 // Project: mcclone
 //
 
-// not FULLY implemented yet.
+// not shader implemented yet.
 
 #include "WorldRenderer.h"
 
