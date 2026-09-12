@@ -147,6 +147,8 @@ public:
 
     void renderGameLoop();
 
+    bool isUnicode() const noexcept { return false; }
+
 };
 
 

@@ -21,6 +21,9 @@
 #include "../util/McCloneError.h"
 #include "shader/Framebuffer.h"
 #include "renderer/vertex/DefaultVertexFormats.h"
+#include "renderer/Tessellator.h"
+#include "renderer/WorldRenderer.h"
+#include "gui/ScaledResolution.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -83,7 +86,7 @@ Minecraft *Minecraft::getMinecraft() noexcept {
 }
 
 void Minecraft::startGame() {
-
+    // this->gameSettings = new GameSettings(this->mcDataDir);
 }
 
 void Minecraft::shutdownMinecraftApplet() {
@@ -99,6 +102,7 @@ void Minecraft::run() {
 
     try {
         DefaultVertexFormats::staticInit();
+
         this->startGame();
     } catch (const std::exception& e) {
         Logger::fatal("startGame failed: {}", e.what());
@@ -212,8 +216,6 @@ void Minecraft::runGameLoop() {
 
             this->mcProfiler->printProfilerSection("root");
 #endif //MCCLONE_DEBUG
-
-
         }
 
         this->mcProfiler->startSection("soundEngine");
@@ -228,8 +230,8 @@ void Minecraft::runGameLoop() {
 void Minecraft::renderGameLoop() {
     if (this->pendingResize.load(std::memory_order_acquire)) {
         this->pendingResize.store(false, std::memory_order_relaxed);
-        this->displayWidth  = MathHelper::abs_max(1, this->pendingResizeW.load());
-        this->displayHeight = MathHelper::abs_max(1, this->pendingResizeH.load());
+        this->displayWidth  = (int) MathHelper::abs_max(1, this->pendingResizeW.load());
+        this->displayHeight = (int) MathHelper::abs_max(1, this->pendingResizeH.load());
         this->updateFramebufferSize();
     }
 
@@ -240,14 +242,29 @@ void Minecraft::renderGameLoop() {
 
         // actual render here...
         {
-            GlStateManager::glBegin_(GL_QUADS);
-            {
-                ::glVertex2f(-1.0f, -1.0f);
-                ::glVertex2f(1.0f, -1.0f);
-                ::glVertex2f(1.0f, 1.0f);
-                ::glVertex2f(-1.0f, 1.0f);
+            if (!this->skipRenderWorld) {
+                this->mcProfiler->startSection("gameRenderer");
+                {
+                    ScaledResolution scaledRes(*this);
+                    int k = scaledRes.getScaledWidth();
+                    int l = scaledRes.getScaledHeight();
+                    float f = 32.0F;
+                    int x = 40;
+                    int y = 40;
+
+                    Tessellator &tess = Tessellator::getInstance();
+                    WorldRenderer &renderer = tess.getWorldRenderer();
+                    {
+                        renderer.begin(7, DefaultVertexFormats::ITEM);
+                        renderer.pos(x, l, 0).tex((float) x / f, (float) l / f).color(64, 64, 128, 255).endVertex();
+                        renderer.pos(k, l, 0).tex((float) k / f, (float) l / f).color(64, 64, 128, 255).endVertex();
+                        renderer.pos(k, y, 0).tex((float) k / f, (float) y / f).color(64, 64, 128, 255).endVertex();
+                        renderer.pos(x, y, 0).tex((float) x / f, (float) y / f).color(64, 64, 128, 255).endVertex();
+                    }
+                    tess.draw();
+                }
+                this->mcProfiler->endSection();
             }
-            GlStateManager::glEnd_();
         }
     }
     this->framebufferMc->framebufferRender_(this->displayWidth, this->displayHeight);

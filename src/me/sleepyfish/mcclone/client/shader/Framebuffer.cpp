@@ -9,6 +9,10 @@
 #include "../../client/renderer/OpenGlHelper.h"
 #include "../../client/renderer/texture/TextureUtil.h"
 
+#include "../renderer/Tessellator.h"
+#include "../renderer/WorldRenderer.h"
+#include "../renderer/vertex/DefaultVertexFormats.h"
+
 #include <glad/glad.h>
 
 void Framebuffer::createBindFramebuffer_(int width, int height) {
@@ -147,6 +151,9 @@ void Framebuffer::framebufferRenderExt_(int width, int height, bool disableBlend
         return;
     }
 
+    OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
+    GlStateManager::viewport_(0, 0, width, height);
+
     GlStateManager::colorMask_(true, true, true, false);
     GlStateManager::disableDepth_();
     GlStateManager::depthMask_(false);
@@ -170,14 +177,14 @@ void Framebuffer::framebufferRenderExt_(int width, int height, bool disableBlend
     float f1 = (float) height;
     float f2 = (float) this->m_framebufferWidth  / (float) this->m_framebufferTextureWidth;
     float f3 = (float) this->m_framebufferHeight / (float) this->m_framebufferTextureHeight;
-    // Tessellator& tessellator = Tessellator::getInstance();
-    // WorldRenderer& worldrenderer = tessellator.getWorldRenderer();
-    // worldrenderer.begin(7, DefaultVertexFormats::POSITION_TEX_COLOR);
-    // worldrenderer.pos(0.0, f1, 0.0).tex(0.0, 0.0).color(255, 255, 255, 255).endVertex();
-    // worldrenderer.pos(f,  f1, 0.0).tex(f2,  0.0).color(255, 255, 255, 255).endVertex();
-    // worldrenderer.pos(f,  0.0, 0.0).tex(f2,  f3).color(255, 255, 255, 255).endVertex();
-    // worldrenderer.pos(0.0, 0.0, 0.0).tex(0.0, f3).color(255, 255, 255, 255).endVertex();
-    // tessellator.draw();
+    Tessellator& tessellator = Tessellator::getInstance();
+    WorldRenderer& worldrenderer = tessellator.getWorldRenderer();
+    worldrenderer.begin(7, DefaultVertexFormats::POSITION_TEX_COLOR);
+    worldrenderer.pos(0.0, f1, 0.0).tex(0.0, 0.0).color(255, 255, 255, 255).endVertex();
+    worldrenderer.pos(f,  f1, 0.0).tex(f2,  0.0).color(255, 255, 255, 255).endVertex();
+    worldrenderer.pos(f,  0.0, 0.0).tex(f2,  f3).color(255, 255, 255, 255).endVertex();
+    worldrenderer.pos(0.0, 0.0, 0.0).tex(0.0, f3).color(255, 255, 255, 255).endVertex();
+    tessellator.draw();
     this->unbindFramebufferTexture_();
     GlStateManager::depthMask_(true);
     GlStateManager::colorMask_(true, true, true, true);

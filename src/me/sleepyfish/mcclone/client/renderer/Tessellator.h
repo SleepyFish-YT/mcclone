@@ -26,7 +26,7 @@ public:
     Tessellator(const Tessellator&) = delete;
     Tessellator& operator=(const Tessellator&) = delete;
 
-    static Tessellator& getInstance() {
+    static Tessellator &getInstance() {
         static Tessellator instance(2097152);
         return instance;
     }
@@ -34,6 +34,8 @@ public:
     explicit Tessellator(int bufferSize);
 
     void draw();
+
+    WorldRenderer &getWorldRenderer();
 
 };
 

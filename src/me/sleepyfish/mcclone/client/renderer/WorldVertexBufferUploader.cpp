@@ -30,7 +30,6 @@ void WorldVertexBufferUploader::draw(WorldRenderer &renderer) {
     const auto& bytebuffer = renderer.getByteBuffer();
     const auto& list = vertexFormat.getElements();
 
-
     for (size_t j = 0; j < list.size(); ++j) {
         const VertexFormatElement& vertexFormatElement = list.at(j);
         const VertexFormatElement::EnumUsage usage = vertexFormatElement.getUsage();
@@ -42,7 +41,7 @@ void WorldVertexBufferUploader::draw(WorldRenderer &renderer) {
 
         const int typeGlConstant = VertexFormatElement::getTypeGLConstant(vertexFormatElement.getType());
         const int index = vertexFormatElement.getIndex();
-        const int offset = vertexFormat.getOffset(j);
+        const int offset = vertexFormat.getOffset((int) j);
 
         const void* ptr = static_cast<const void*>(bytebuffer.data() + offset);
 
@@ -79,8 +78,7 @@ void WorldVertexBufferUploader::draw(WorldRenderer &renderer) {
         GlStateManager::glDrawArrays_(renderer.getDrawMode(), 0, renderer.getVertexCount());
     }
 
-    for (size_t j = 0; j < list.size(); ++j) {
-        const VertexFormatElement& vertexFormatElement = list.at(j);
+    for (auto vertexFormatElement : list) {
         const VertexFormatElement::EnumUsage usage = vertexFormatElement.getUsage();
 
         if (flag1) {

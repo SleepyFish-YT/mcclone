@@ -30,7 +30,7 @@ Main::Main() {
     // version
     this->majorVersion = "1";
     this->minorVersion = "0";
-    this->patchVersion = "2";
+    this->patchVersion = "3";
 }
 
 int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gameDir_dir) {

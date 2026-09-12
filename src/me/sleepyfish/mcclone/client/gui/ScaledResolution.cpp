@@ -14,7 +14,7 @@ ScaledResolution::ScaledResolution(const Minecraft& mcIn) noexcept {
     this->scaledHeight = mcIn.displayHeight;
 
     this->scaleFactor = 1;
-    const bool unicode = false; //mcIn.isUnicode();
+    const bool unicode = mcIn.isUnicode();
     int i = mcIn.gameSettings->guiScale;
 
     if (i == 0) {

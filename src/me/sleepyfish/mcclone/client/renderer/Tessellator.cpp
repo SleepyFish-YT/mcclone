@@ -24,3 +24,7 @@ void Tessellator::draw() {
     this->worldRenderer->finishDrawing();
     this->vboUploader->draw(*this->worldRenderer);
 }
+
+WorldRenderer &Tessellator::getWorldRenderer() {
+    return *this->worldRenderer;
+}

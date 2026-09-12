@@ -26,22 +26,22 @@
 
 namespace {
 
-    static inline bool isLittleEndian() {
+    inline bool isLittleEndian() {
         uint32_t v = 1;
         return *reinterpret_cast<uint8_t*>(&v) == 1;
     }
 
-    static inline int clampInt(int v, int lo, int hi) {
+    inline int clampInt(int v, int lo, int hi) {
         return MathHelper::clamp_int(v, lo, hi);
     }
 
-    static inline float intBitsToFloat(int bits) {
+    inline float intBitsToFloat(int bits) {
         float f;
         std::memcpy(&f, &bits, 4);
         return f;
     }
 
-    static inline int floatToRawIntBits(float f) {
+    inline int floatToRawIntBits(float f) {
         int bits;
         std::memcpy(&bits, &f, 4);
         return bits;
@@ -49,16 +49,15 @@ namespace {
 
 }
 
-WorldRenderer::State::State(std::vector<int> buffer, VertexFormat format,
-                            std::vector<TextureAtlasSprite*> quadSprites)
-        : stateRawBuffer(std::move(buffer))
-        , stateVertexFormat(std::move(format))
-        , stateQuadSprites(std::move(quadSprites))
+WorldRenderer::State::State(std::vector<int> buffer, VertexFormat format, std::vector<TextureAtlasSprite*> quadSprites) :
+    stateRawBuffer(std::move(buffer)),
+    stateVertexFormat(std::move(format)),
+    stateQuadSprites(std::move(quadSprites))
 {}
 
-WorldRenderer::State::State(std::vector<int> buffer, VertexFormat format)
-        : stateRawBuffer(std::move(buffer))
-        , stateVertexFormat(std::move(format))
+WorldRenderer::State::State(std::vector<int> buffer, VertexFormat format) :
+    stateRawBuffer(std::move(buffer)),
+    stateVertexFormat(std::move(format))
 {}
 
 int WorldRenderer::State::getVertexCount() const {
@@ -144,15 +143,14 @@ void WorldRenderer::finishDrawing() {
 }
 
 WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
-    int i = vertexCount * m_vertexFormat.getNextOffset()
-            + m_vertexFormat.getOffset(m_vertexFormatIndex);
+    int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
 
-    float fx = static_cast<float>(x + m_xOffset);
-    float fy = static_cast<float>(y + m_yOffset);
-    float fz = static_cast<float>(z + m_zOffset);
+    auto fx = static_cast<float>(x + m_xOffset);
+    auto fy = static_cast<float>(y + m_yOffset);
+    auto fz = static_cast<float>(z + m_zOffset);
 
     switch (type) {
         case T::FLOAT:
@@ -160,6 +158,7 @@ WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
             std::memcpy(&m_byteBuffer[i + 4], &fy, 4);
             std::memcpy(&m_byteBuffer[i + 8], &fz, 4);
             break;
+
         case T::UINT: case T::INT: {
             int ix = floatToRawIntBits(fx);
             int iy = floatToRawIntBits(fy);
@@ -169,15 +168,17 @@ WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
             std::memcpy(&m_byteBuffer[i + 8], &iz, 4);
             break;
         }
+
         case T::USHORT: case T::SHORT: {
-            int16_t sx = static_cast<int16_t>(x + m_xOffset);
-            int16_t sy = static_cast<int16_t>(y + m_yOffset);
-            int16_t sz = static_cast<int16_t>(z + m_zOffset);
+            auto sx = static_cast<int16_t>(x + m_xOffset);
+            auto sy = static_cast<int16_t>(y + m_yOffset);
+            auto sz = static_cast<int16_t>(z + m_zOffset);
             std::memcpy(&m_byteBuffer[i],     &sx, 2);
             std::memcpy(&m_byteBuffer[i + 2], &sy, 2);
             std::memcpy(&m_byteBuffer[i + 4], &sz, 2);
             break;
         }
+
         case T::UBYTE: case T::BYTE:
             m_byteBuffer[i]     = static_cast<uint8_t>(x + m_xOffset);
             m_byteBuffer[i + 1] = static_cast<uint8_t>(y + m_yOffset);
@@ -199,40 +200,41 @@ WorldRenderer& WorldRenderer::color(float red, float green, float blue, float al
 WorldRenderer& WorldRenderer::color(int red, int green, int blue, int alpha) {
     if (m_noColor) return *this;
 
-    int i = vertexCount * m_vertexFormat.getNextOffset()
-            + m_vertexFormat.getOffset(m_vertexFormatIndex);
+    int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
 
     switch (type) {
         case T::FLOAT: {
-            float fr = red / 255.0f, fg = green / 255.0f,
-                    fb = blue / 255.0f, fa = alpha / 255.0f;
+            const float fr = red / 255.0f, fg = green / 255.0f, fb = blue / 255.0f, fa = alpha / 255.0f;
             std::memcpy(&m_byteBuffer[i],      &fr, 4);
             std::memcpy(&m_byteBuffer[i + 4],  &fg, 4);
             std::memcpy(&m_byteBuffer[i + 8],  &fb, 4);
             std::memcpy(&m_byteBuffer[i + 12], &fa, 4);
             break;
         }
+
         case T::UINT: case T::INT: {
-            float fr = static_cast<float>(red),   fg = static_cast<float>(green);
-            float fb = static_cast<float>(blue),  fa = static_cast<float>(alpha);
+            auto fr = static_cast<float>(red),   fg = static_cast<float>(green);
+            auto fb = static_cast<float>(blue),  fa = static_cast<float>(alpha);
             std::memcpy(&m_byteBuffer[i],      &fr, 4);
             std::memcpy(&m_byteBuffer[i + 4],  &fg, 4);
             std::memcpy(&m_byteBuffer[i + 8],  &fb, 4);
             std::memcpy(&m_byteBuffer[i + 12], &fa, 4);
             break;
         }
+
         case T::USHORT: case T::SHORT: {
-            int16_t sr = static_cast<int16_t>(red),   sg = static_cast<int16_t>(green);
-            int16_t sb = static_cast<int16_t>(blue),  sa = static_cast<int16_t>(alpha);
+            auto sr = static_cast<int16_t>(red),   sg = static_cast<int16_t>(green);
+            auto sb = static_cast<int16_t>(blue),  sa = static_cast<int16_t>(alpha);
             std::memcpy(&m_byteBuffer[i],     &sr, 2);
             std::memcpy(&m_byteBuffer[i + 2], &sg, 2);
             std::memcpy(&m_byteBuffer[i + 4], &sb, 2);
             std::memcpy(&m_byteBuffer[i + 6], &sa, 2);
             break;
         }
+
         case T::UBYTE: case T::BYTE:
             if (isLittleEndian()) {
                 m_byteBuffer[i]     = static_cast<uint8_t>(red);
@@ -253,31 +255,33 @@ WorldRenderer& WorldRenderer::color(int red, int green, int blue, int alpha) {
 }
 
 WorldRenderer& WorldRenderer::tex(double u, double v) {
-    int i = vertexCount * m_vertexFormat.getNextOffset()
-            + m_vertexFormat.getOffset(m_vertexFormatIndex);
+    int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
 
     switch (type) {
         case T::FLOAT: {
-            float fu = static_cast<float>(u), fv = static_cast<float>(v);
+            auto fu = static_cast<float>(u), fv = static_cast<float>(v);
             std::memcpy(&m_byteBuffer[i],     &fu, 4);
             std::memcpy(&m_byteBuffer[i + 4], &fv, 4);
             break;
         }
+
         case T::UINT: case T::INT: {
-            int iu = static_cast<int>(u), iv = static_cast<int>(v);
+            auto iu = static_cast<int>(u), iv = static_cast<int>(v);
             std::memcpy(&m_byteBuffer[i],     &iu, 4);
             std::memcpy(&m_byteBuffer[i + 4], &iv, 4);
             break;
         }
+
         case T::USHORT: case T::SHORT: {
-            int16_t sv = static_cast<int16_t>(v), su = static_cast<int16_t>(u);
+            auto sv = static_cast<int16_t>(v), su = static_cast<int16_t>(u);
             std::memcpy(&m_byteBuffer[i],     &sv, 2);
             std::memcpy(&m_byteBuffer[i + 2], &su, 2);
             break;
         }
+
         case T::UBYTE: case T::BYTE:
             m_byteBuffer[i]     = static_cast<uint8_t>(v);
             m_byteBuffer[i + 1] = static_cast<uint8_t>(u);
@@ -289,29 +293,31 @@ WorldRenderer& WorldRenderer::tex(double u, double v) {
 }
 
 WorldRenderer& WorldRenderer::lightmap(int s, int t) {
-    int i = vertexCount * m_vertexFormat.getNextOffset()
-            + m_vertexFormat.getOffset(m_vertexFormatIndex);
+    int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
 
     switch (type) {
         case T::FLOAT: {
-            float fs = static_cast<float>(s), ft = static_cast<float>(t);
+            auto fs = static_cast<float>(s), ft = static_cast<float>(t);
             std::memcpy(&m_byteBuffer[i],     &fs, 4);
             std::memcpy(&m_byteBuffer[i + 4], &ft, 4);
             break;
         }
+
         case T::UINT: case T::INT:
             std::memcpy(&m_byteBuffer[i],     &s, 4);
             std::memcpy(&m_byteBuffer[i + 4], &t, 4);
             break;
+
         case T::USHORT: case T::SHORT: {
-            int16_t st = static_cast<int16_t>(t), ss = static_cast<int16_t>(s);
+            auto st = static_cast<int16_t>(t), ss = static_cast<int16_t>(s);
             std::memcpy(&m_byteBuffer[i],     &st, 2);
             std::memcpy(&m_byteBuffer[i + 2], &ss, 2);
             break;
         }
+
         case T::UBYTE: case T::BYTE:
             m_byteBuffer[i]     = static_cast<uint8_t>(t);
             m_byteBuffer[i + 1] = static_cast<uint8_t>(s);
@@ -323,8 +329,7 @@ WorldRenderer& WorldRenderer::lightmap(int s, int t) {
 }
 
 WorldRenderer& WorldRenderer::normal(float x, float y, float z) {
-    int i = vertexCount * m_vertexFormat.getNextOffset()
-            + m_vertexFormat.getOffset(m_vertexFormatIndex);
+    int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
@@ -335,6 +340,7 @@ WorldRenderer& WorldRenderer::normal(float x, float y, float z) {
             std::memcpy(&m_byteBuffer[i + 4], &y, 4);
             std::memcpy(&m_byteBuffer[i + 8], &z, 4);
             break;
+
         case T::UINT: case T::INT: {
             int ix = static_cast<int>(x), iy = static_cast<int>(y), iz = static_cast<int>(z);
             std::memcpy(&m_byteBuffer[i],     &ix, 4);
@@ -342,15 +348,17 @@ WorldRenderer& WorldRenderer::normal(float x, float y, float z) {
             std::memcpy(&m_byteBuffer[i + 8], &iz, 4);
             break;
         }
+
         case T::USHORT: case T::SHORT: {
-            int16_t sx = static_cast<int16_t>(static_cast<int>(x * 32767.0f) & 0xFFFF);
-            int16_t sy = static_cast<int16_t>(static_cast<int>(y * 32767.0f) & 0xFFFF);
-            int16_t sz = static_cast<int16_t>(static_cast<int>(z * 32767.0f) & 0xFFFF);
+            auto sx = static_cast<int16_t>(static_cast<int>(x * 32767.0f) & 0xFFFF);
+            auto sy = static_cast<int16_t>(static_cast<int>(y * 32767.0f) & 0xFFFF);
+            auto sz = static_cast<int16_t>(static_cast<int>(z * 32767.0f) & 0xFFFF);
             std::memcpy(&m_byteBuffer[i],     &sx, 2);
             std::memcpy(&m_byteBuffer[i + 2], &sy, 2);
             std::memcpy(&m_byteBuffer[i + 4], &sz, 2);
             break;
         }
+
         case T::UBYTE: case T::BYTE:
             m_byteBuffer[i]     = static_cast<uint8_t>(static_cast<int>(x * 127.0f) & 0xFF);
             m_byteBuffer[i + 1] = static_cast<uint8_t>(static_cast<int>(y * 127.0f) & 0xFF);
@@ -377,8 +385,7 @@ void WorldRenderer::addVertexData(const std::vector<int>& vertexData) {
 }
 
 void WorldRenderer::putBrightness4(int v0, int v1, int v2, int v3) {
-    int i = (vertexCount - 4) * m_vertexFormat.getIntegerSize()
-            + m_vertexFormat.getUvOffsetById(1) / 4;
+    int i = (vertexCount - 4) * m_vertexFormat.getIntegerSize() + m_vertexFormat.getUvOffsetById(1) / 4;
     int stride = m_vertexFormat.getNextOffset() >> 2;
     rawIntBuffer[i]              = v0;
     rawIntBuffer[i + stride]     = v1;
@@ -425,8 +432,7 @@ void WorldRenderer::putNormal(float x, float y, float z) {
 }
 
 int WorldRenderer::getColorIndex(int vertexIndex) const {
-    return ((vertexCount - vertexIndex) * m_vertexFormat.getNextOffset()
-            + m_vertexFormat.getColorOffset()) / 4;
+    return ((vertexCount - vertexIndex) * m_vertexFormat.getNextOffset() + m_vertexFormat.getColorOffset()) / 4;
 }
 
 void WorldRenderer::putColor(int argb, int vertexIndex) {
@@ -460,14 +466,14 @@ void WorldRenderer::putColorMultiplier(float red, float green, float blue, int v
     int j = rawIntBuffer[i];
 
     if (isLittleEndian()) {
-        int r = static_cast<int>((j        & 0xFF) * red);
-        int g = static_cast<int>((j >>  8  & 0xFF) * green);
-        int b = static_cast<int>((j >> 16  & 0xFF) * blue);
+        auto r = static_cast<int>((j        & 0xFF) * red);
+        auto g = static_cast<int>((j >>  8  & 0xFF) * green);
+        auto b = static_cast<int>((j >> 16  & 0xFF) * blue);
         j = (j & 0xFF000000) | (b << 16) | (g << 8) | r;
     } else {
-        int r = static_cast<int>((j >> 24 & 0xFF) * red);
-        int g = static_cast<int>((j >> 16 & 0xFF) * green);
-        int b = static_cast<int>((j >>  8 & 0xFF) * blue);
+        auto r = static_cast<int>((j >> 24 & 0xFF) * red);
+        auto g = static_cast<int>((j >> 16 & 0xFF) * green);
+        auto b = static_cast<int>((j >>  8 & 0xFF) * blue);
         j = (j & 0xFF) | (r << 24) | (g << 16) | (b << 8);
     }
 
@@ -481,16 +487,16 @@ void WorldRenderer::putColorMultiplierRgba(float r, float g, float b, float a, i
     int j = rawIntBuffer[i];
 
     if (isLittleEndian()) {
-        int ri = static_cast<int>((j        & 0xFF) * r);
-        int gi = static_cast<int>((j >>  8  & 0xFF) * g);
-        int bi = static_cast<int>((j >> 16  & 0xFF) * b);
-        int ai = static_cast<int>((j >> 24  & 0xFF) * a);
+        auto ri = static_cast<int>((j        & 0xFF) * r);
+        auto gi = static_cast<int>((j >>  8  & 0xFF) * g);
+        auto bi = static_cast<int>((j >> 16  & 0xFF) * b);
+        auto ai = static_cast<int>((j >> 24  & 0xFF) * a);
         j = (ai << 24) | (bi << 16) | (gi << 8) | ri;
     } else {
-        int ri = static_cast<int>((j >> 24 & 0xFF) * r);
-        int gi = static_cast<int>((j >> 16 & 0xFF) * g);
-        int bi = static_cast<int>((j >>  8 & 0xFF) * b);
-        int ai = static_cast<int>((j       & 0xFF) * a);
+        auto ri = static_cast<int>((j >> 24 & 0xFF) * r);
+        auto gi = static_cast<int>((j >> 16 & 0xFF) * g);
+        auto bi = static_cast<int>((j >>  8 & 0xFF) * b);
+        auto ai = static_cast<int>((j       & 0xFF) * a);
         j = (ri << 24) | (gi << 16) | (bi << 8) | ai;
     }
 
@@ -532,9 +538,9 @@ void WorldRenderer::sortVertexData(float camX, float camY, float camZ) {
     int intSize  = m_vertexFormat.getIntegerSize();
     int nextOffF = m_vertexFormat.getNextOffset() / 4;
 
-    float ox = static_cast<float>(camX + m_xOffset);
-    float oy = static_cast<float>(camY + m_yOffset);
-    float oz = static_cast<float>(camZ + m_zOffset);
+    auto ox = static_cast<float>(camX + m_xOffset);
+    auto oy = static_cast<float>(camY + m_yOffset);
+    auto oz = static_cast<float>(camZ + m_zOffset);
 
     for (int q = 0; q < quadCount; ++q)
         distances[q] = getDistanceSq(floatView, ox, oy, oz, intSize, q * nextOffF);
@@ -589,7 +595,11 @@ WorldRenderer::State WorldRenderer::getVertexState() const {
         sprites.assign((*m_quadSprites).begin(), (*m_quadSprites).begin() + quadCount);
     }
 
-    return State(std::move(buf), VertexFormat(m_vertexFormat), std::move(sprites));
+    return {
+        std::move(buf),
+        VertexFormat(m_vertexFormat),
+        std::move(sprites)
+    };
 }
 
 void WorldRenderer::setVertexState(const State& state) {
