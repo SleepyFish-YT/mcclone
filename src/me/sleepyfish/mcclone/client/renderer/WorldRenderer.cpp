@@ -139,7 +139,10 @@ void WorldRenderer::finishDrawing() {
         throw std::runtime_error("Not building!");
 
     m_isDrawing = false;
-    m_byteBuffer.resize(static_cast<size_t>(getBufferSize()) * 4);
+    size_t needed = static_cast<size_t>(getBufferSize()) * 4;
+    if (m_byteBuffer.size() < needed) {
+        m_byteBuffer.resize(needed);
+    }
 }
 
 WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
