@@ -33,17 +33,12 @@ private:
     Minecraft* minecraft{};
 
     ::GLFWwindow* window{};
-
     std::string title{};
-
     bool fullscreen{};
-
     bool mouseCaptured{};
-
     bool focused{};
 
     GameConfiguration::DisplayInformation displayInfo{};
-
     RenderInformation* renderContext{};
 
     // render thread .run();
@@ -57,17 +52,14 @@ private:
 
 public:
 
-    uint64_t frameCount;
+    uint16_t renderFps{};
 
-    std::chrono::steady_clock::time_point lastSecond;
+    std::chrono::steady_clock::time_point lastSecond{};
 
-    int savedWindowPosX;
-
-    int savedWindowPosY;
-
-    int savedWindowWidth;
-
-    int savedWindowHeight;
+    int savedWindowPosX{};
+    int savedWindowPosY{};
+    int savedWindowWidth{};
+    int savedWindowHeight{};
 
     OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept;
 
@@ -77,21 +69,25 @@ public:
 
     void thread_run();
 
+    void setTitle(const std::string& wndTitle);
+
+    std::string getTitle() const noexcept { return this->title; }
+
     void toggleFullscreen();
 
     void toggleCaptureMouse();
 
-    MCCLONE_GLFW_CALLBACK handleKeypress(GLFWwindow* window, int key, int scancode, int action, int mods);
+    MCCLONE_GLFW_CALLBACK handleKeypress(::GLFWwindow* window, int key, int scancode, int action, int mods);
 
-    MCCLONE_GLFW_CALLBACK handleMouseButton(GLFWwindow* window, int button, int action, int mods);
+    MCCLONE_GLFW_CALLBACK handleMouseButton(::GLFWwindow* window, int button, int action, int mods);
 
-    MCCLONE_GLFW_CALLBACK handleMouseMove(GLFWwindow* window, double xpos, double ypos);
+    MCCLONE_GLFW_CALLBACK handleMouseMove(::GLFWwindow* window, double xpos, double ypos);
 
-    MCCLONE_GLFW_CALLBACK handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
+    MCCLONE_GLFW_CALLBACK handleMouseScroll(::GLFWwindow* window, double xoffset, double yoffset);
 
-    MCCLONE_GLFW_CALLBACK handleFramebufferResize(GLFWwindow* window, int width, int height);
+    MCCLONE_GLFW_CALLBACK handleFramebufferResize(::GLFWwindow* window, int width, int height);
 
-    MCCLONE_GLFW_CALLBACK handleWindowFocus(GLFWwindow* window, int focused);
+    MCCLONE_GLFW_CALLBACK handleWindowFocus(::GLFWwindow* window, int focused);
 
     RenderInformation* getRenderContext() noexcept;
 

@@ -17,7 +17,12 @@ class GlStateManager {
 
 public:
 
-    enum class TexGen { S, T, R, Q };
+    enum class TexGen {
+        S = 0,
+        T,
+        R,
+        Q
+    };
 
     struct BooleanState {
 
@@ -338,6 +343,8 @@ public:
     static int  glGetTexLevelParameteri_(int target, int level, int pname);
 
     static void glMultiDrawArrays_(int mode, const int* first, const int* count, int drawCount);
+
+    static int _getGLMaximumTextureSize();
 
 };
 

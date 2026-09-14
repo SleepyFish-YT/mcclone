@@ -8,48 +8,45 @@
 #include "../GlStateManager.h"
 #include "DynamicTexture.h"
 
+#include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <stdexcept>
 #include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#include <stdexcept>
-
 // -------------------------------------------------------------------------
 // Static member definitions
 // -------------------------------------------------------------------------
 
-std::vector<int> TextureUtil::dataBuffer_        = std::vector<int>(4194304);
-std::vector<int> TextureUtil::dataArray_         = std::vector<int>(4194304);
-int              TextureUtil::mipmapBuffer_[4]   = {};
+std::vector<int> TextureUtil::dataBuffer_ = std::vector<int>(4194304);
+std::vector<int> TextureUtil::dataArray_  = std::vector<int>(4194304);
+int TextureUtil::mipmapBuffer_[4] = {};
 
 void TextureUtil::init() {
-    // missingTextureData = missingTexture.getTextureData();
+    constexpr int MAGENTA = 0xFF7F007F;
+    constexpr int BLACK   = 0xFF000000;
+    constexpr int missingTexturePixelSize = 16;
 
-    constexpr int MAGENTA = -524040;    // 0xFF7F007F
-    constexpr int BLACK   = -16777216;  // 0xFF000000
-    constexpr int HALF    = 8;
-
-    int magentaRow[8] = { MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA };
-    int blackRow[8]   = { BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK,   BLACK   };
-
-    TextureUtil::missingTexture = new DynamicTexture(16, 16);
+    TextureUtil::missingTexture = new DynamicTexture(missingTexturePixelSize, missingTexturePixelSize);
 
     std::vector<int>& texData = TextureUtil::missingTexture->getTextureData();
-    texData.resize(16 * 16, 0);
+    texData.resize(missingTexturePixelSize * missingTexturePixelSize, 0);
 
-    for (int l = 0; l < 16; ++l) {
-        for (int col = 0; col < 16; ++col) {
-            bool leftHalf = col < 8;
-            bool topHalf  = l < 8;
-            texData[l * 16 + col] = (topHalf == leftHalf) ? MAGENTA : BLACK;
+    for (int l = 0; l < missingTexturePixelSize; ++l) {
+        for (int col = 0; col < missingTexturePixelSize; ++col) {
+            bool leftHalf = col < (missingTexturePixelSize / 2);
+            bool topHalf  = l < (missingTexturePixelSize / 2);
+            texData[l * missingTexturePixelSize + col] = (topHalf == leftHalf) ? MAGENTA : BLACK;
         }
     }
 
     TextureUtil::missingTexture->updateDynamicTexture();
+
+    if (TextureUtil::missingTexture != nullptr)
+        TextureUtil::missingTextureData = TextureUtil::missingTexture->getTextureData().data();
 }
 
 // -------------------------------------------------------------------------
@@ -273,6 +270,40 @@ std::vector<int> TextureUtil::readImageData_(const std::string& path, int& width
     std::vector<int> result(pixelCount);
 
     // stb_image gives RGBA, pack into ARGB int
+    for (int i = 0; i < pixelCount; ++i) {
+        uint8_t r = data[i * 4 + 0];
+        uint8_t g = data[i * 4 + 1];
+        uint8_t b = data[i * 4 + 2];
+        uint8_t a = data[i * 4 + 3];
+        result[i] = (a << 24) | (r << 16) | (g << 8) | b;
+    }
+
+    stbi_image_free(data);
+    return result;
+}
+
+std::vector<int> TextureUtil::readImageData_(std::istream& stream, int& widthOut, int& heightOut) {
+    // stb_image stream callbacks
+    stbi_io_callbacks callbacks;
+    callbacks.read = [](void* user, char* data, int size) -> int {
+        auto& s = *static_cast<std::istream*>(user);
+        s.read(data, size);
+        return static_cast<int>(s.gcount());
+    };
+    callbacks.skip = [](void* user, int n) {
+        static_cast<std::istream*>(user)->seekg(n, std::ios::cur);
+    };
+    callbacks.eof = [](void* user) -> int {
+        return static_cast<std::istream*>(user)->eof() ? 1 : 0;
+    };
+
+    int channels;
+    uint8_t* data = stbi_load_from_callbacks(&callbacks, &stream, &widthOut, &heightOut, &channels, 4);
+    if (!data)
+        throw std::runtime_error("Failed to load image from stream");
+
+    int pixelCount = widthOut * heightOut;
+    std::vector<int> result(pixelCount);
     for (int i = 0; i < pixelCount; ++i) {
         uint8_t r = data[i * 4 + 0];
         uint8_t g = data[i * 4 + 1];

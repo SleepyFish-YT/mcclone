@@ -19,14 +19,10 @@ class AttributeModifier {
 
 private:
 
-    UUID id;
-
-    std::string name;
-
     double amount;
-
     int operation;
-
+    std::string name;
+    UUID id;
     bool isSaved_;
 
 public:

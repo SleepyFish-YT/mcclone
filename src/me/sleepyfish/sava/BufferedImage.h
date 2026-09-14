@@ -11,7 +11,7 @@
 
 /**
  * @author SleepyFish - SleepyAVA
- * @version 1.2
+ * @version 1.3
  * @brief Buffered image
  */
 struct BufferedImage {
@@ -24,12 +24,27 @@ public:
     int height   = 0;
     int channels = 0;
 
+    BufferedImage(const std::vector<int>& packedPixels, int w, int h) {
+        width    = w;
+        height   = h;
+        channels = 4;
+        pixels   = packedPixels;
+        data.resize(static_cast<size_t>(w) * h * 4);
+        for (int i = 0; i < w * h; ++i) {
+            int argb     = packedPixels[i];
+            data[i*4+0]  = (argb >> 16) & 0xFF; // R
+            data[i*4+1]  = (argb >>  8) & 0xFF; // G
+            data[i*4+2]  = (argb      ) & 0xFF; // B
+            data[i*4+3]  = (argb >> 24) & 0xFF; // A
+        }
+    }
+
     void syncPixels() {
         pixels.resize(static_cast<size_t>(width) * height);
         getRGB(0, 0, width, height, pixels.data(), 0, width);
     }
 
-    void getRGB(int x, int y, int w, int h, int* dest, int offset, int scansize) const {
+    void getRGB(int x, int y, int w, int h, int* dest, int offset, int scanSize) const {
         for (int row = 0; row < h; ++row) {
             for (int col = 0; col < w; ++col) {
                 const int sx  = x + col;
@@ -42,7 +57,7 @@ public:
                 if (channels >= 3) b = data[idx + 2];
                 if (channels >= 4) a = data[idx + 3];
 
-                dest[offset + row * scansize + col] =
+                dest[offset + row * scanSize + col] =
                         (static_cast<int>(a) << 24) |
                         (static_cast<int>(r) << 16) |
                         (static_cast<int>(g) <<  8) |

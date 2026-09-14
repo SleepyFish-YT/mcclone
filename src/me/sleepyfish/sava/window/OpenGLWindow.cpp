@@ -23,20 +23,24 @@
 #endif //_WIN32
 
 OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept {
-    this->minecraft = minecraft;
-    this->window = nullptr;
+    this->displayInfo = displayInfo;
     this->title = std::move(title);
+    this->minecraft = minecraft;
+
+    this->window = nullptr;
     this->fullscreen = false;
     this->mouseCaptured = false;
-    this->displayInfo = displayInfo;
     this->renderContext = new RenderInformation();
-    this->setRunning(false);
-    this->frameCount = 0;
+
+    this->renderFps = 0;
     this->lastSecond = std::chrono::steady_clock::now();
+
     this->savedWindowPosX = 0;
     this->savedWindowPosY = 0;
     this->savedWindowWidth = 0;
     this->savedWindowHeight = 0;
+
+    this->setRunning(false);
 }
 
 bool OpenGLWindow::init() {
@@ -101,27 +105,27 @@ bool OpenGLWindow::init() {
 
         ::glfwSetWindowUserPointer(this->window, this);
 
-        ::glfwSetKeyCallback(this->window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        ::glfwSetKeyCallback(this->window, [](::GLFWwindow* window, int key, int scancode, int action, int mods) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleKeypress(window, key, scancode, action, mods);
         });
-        ::glfwSetMouseButtonCallback(this->window, [](GLFWwindow* window, int button, int action, int mods) {
+        ::glfwSetMouseButtonCallback(this->window, [](::GLFWwindow* window, int button, int action, int mods) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseButton(window, button, action, mods);
         });
-        ::glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double x, double y) {
+        ::glfwSetCursorPosCallback(this->window, [](::GLFWwindow* window, double x, double y) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseMove(window, x, y);
         });
-        ::glfwSetScrollCallback(this->window, [](GLFWwindow* window, double xOffset, double yOffset) {
+        ::glfwSetScrollCallback(this->window, [](::GLFWwindow* window, double xOffset, double yOffset) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseScroll(window, xOffset, yOffset);
         });
-        ::glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow* window, int width, int height) {
+        ::glfwSetFramebufferSizeCallback(this->window, [](::GLFWwindow* window, int width, int height) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleFramebufferResize(window, width, height);
         });
-        ::glfwSetWindowFocusCallback(this->window, [](GLFWwindow* window, int focused) {
+        ::glfwSetWindowFocusCallback(this->window, [](::GLFWwindow* window, int focused) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleWindowFocus(window, focused);
         });
@@ -156,14 +160,14 @@ void OpenGLWindow::run() {
 
             const auto frameTime = std::chrono::duration<double>(1.0 / targetFps);
 
-            this->frameCount++;
+            this->renderFps++;
 
             if (std::chrono::duration_cast<std::chrono::milliseconds>(frameStart - this->lastSecond).count() >= 1000) {
                 this->lastSecond = frameStart;
 #ifdef MCCLONE_DEBUG
-               // Logger::log("fps: {}", this->frameCount);
+               Logger::log("fps: {}", this->renderFps);
 #endif //MCCLONE_DEBUG
-                this->frameCount = 0;
+                this->renderFps = 0;
             }
 
             this->renderGameLoop();
@@ -171,7 +175,7 @@ void OpenGLWindow::run() {
             if (this->displayInfo.showGlErrors) {
                 GLenum error;
                 while ((error = GlStateManager::glGetError_()) != GL_NO_ERROR) {
-                    Logger::error("OpenGL error [frame {}]: {}", this->frameCount, Config::getGlErrorString(error));
+                    Logger::error("OpenGL error: {}", Config::getGlErrorString(error));
                 }
             }
 
@@ -210,6 +214,11 @@ void OpenGLWindow::thread_run() {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     this->setRunning(false);
+}
+
+void OpenGLWindow::setTitle(const std::string& wndTitle) {
+    this->title = wndTitle;
+    ::glfwSetWindowTitle(this->window, this->title.c_str());
 }
 
 void OpenGLWindow::onStop() {
@@ -270,7 +279,7 @@ void OpenGLWindow::toggleCaptureMouse() {
     ::glfwSetInputMode(this->window, GLFW_CURSOR, this->mouseCaptured ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleKeypress(GLFWwindow* window, int key, int scancode, int action, int mods) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleKeypress(::GLFWwindow* window, int key, int scancode, int action, int mods) {
     this->minecraft->handleKeypress(key, scancode, action, mods);
 
     if (action == GLFW_PRESS) {
@@ -284,23 +293,23 @@ MCCLONE_GLFW_CALLBACK OpenGLWindow::handleKeypress(GLFWwindow* window, int key, 
     }
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseButton(GLFWwindow* window, int button, int action, int mods) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseButton(::GLFWwindow* window, int button, int action, int mods) {
     this->minecraft->handleMouseButton(button, action, mods);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseMove(GLFWwindow* window, double xpos, double ypos) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseMove(::GLFWwindow* window, double xpos, double ypos) {
     this->minecraft->handleMouseMove(xpos, ypos);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseScroll(::GLFWwindow* window, double xoffset, double yoffset) {
     this->minecraft->handleMouseScroll(xoffset, yoffset);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleFramebufferResize(GLFWwindow* window, int width, int height) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleFramebufferResize(::GLFWwindow* window, int width, int height) {
     this->minecraft->resizeWindow(width, height);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleWindowFocus(GLFWwindow* window, int focused) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleWindowFocus(::GLFWwindow* window, int focused) {
     this->focused = (focused == GLFW_TRUE);
 }
 

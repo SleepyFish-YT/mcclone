@@ -20,9 +20,7 @@ class RangedAttribute : public BaseAttribute {
 private:
 
     double minimumValue;
-
     double maximumValue;
-
     std::string description;
 
 public:

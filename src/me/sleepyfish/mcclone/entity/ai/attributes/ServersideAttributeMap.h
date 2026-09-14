@@ -19,6 +19,17 @@
  */
 class ServersideAttributeMap : public BaseAttributeMap {
 
+protected:
+
+    virtual IAttributeInstance* createInstance(IAttribute* attribute) override {
+        return new ModifiableAttributeInstance(this, attribute);
+    }
+
+private:
+
+    std::unordered_set<IAttributeInstance*> m_dirtyInstances;
+    std::unordered_map<std::string, IAttributeInstance*> m_descriptionToInstance;
+
 public:
 
     virtual ModifiableAttributeInstance* getAttributeInstance(IAttribute* attribute) override {
@@ -82,17 +93,6 @@ public:
 
         return result;
     }
-
-protected:
-
-    virtual IAttributeInstance* createInstance(IAttribute* attribute) override {
-        return new ModifiableAttributeInstance(this, attribute);
-    }
-
-private:
-
-    std::unordered_set<IAttributeInstance*> m_dirtyInstances;
-    std::unordered_map<std::string, IAttributeInstance*> m_descriptionToInstance;
 
 };
 

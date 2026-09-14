@@ -22,10 +22,7 @@ class UUID {
 public:
 
     uint64_t hi; // high bits
-
     uint64_t lo; // low bits
-
-
 
     UUID() noexcept :
         hi(0),
@@ -75,10 +72,10 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const UUID &u) {
         os << std::hex << std::setfill('0')
-           << std::setw(8)  << (u.hi >> 32)              << '-'
-           << std::setw(4)  << ((u.hi >> 16) & 0xFFFF)   << '-'
-           << std::setw(4)  << (u.hi & 0xFFFF)            << '-'
-           << std::setw(4)  << (u.lo >> 48)               << '-'
+           << std::setw(8)  << (u.hi >> 32)            << '-'
+           << std::setw(4)  << ((u.hi >> 16) & 0xFFFF) << '-'
+           << std::setw(4)  << (u.hi & 0xFFFF)         << '-'
+           << std::setw(4)  << (u.lo >> 48)            << '-'
            << std::setw(12) << (u.lo & 0x0000FFFFFFFFFFFFull);
         return os;
     }

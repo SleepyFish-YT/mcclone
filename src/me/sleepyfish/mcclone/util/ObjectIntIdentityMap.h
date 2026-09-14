@@ -49,7 +49,7 @@ public:
     }
 
     // -------------------------------------------------------------------------
-    // iterator — skips nulls, equivalent to Iterators.filter(notNull())
+    // iterator - skips nulls, equivalent to Iterators.filter(notNull())
     // -------------------------------------------------------------------------
 
     struct iterator {

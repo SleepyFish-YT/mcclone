@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <istream>
 
 class DynamicTexture;
 class TextureAtlasSprite;
@@ -96,6 +97,7 @@ public:
     // Image loading (stb_image)
     // -------------------------------------------------------------------------
     static std::vector<int> readImageData_(const std::string& path, int& widthOut, int& heightOut);
+    static std::vector<int> readImageData_(std::istream& stream, int& widthOut, int& heightOut);
 
     // -------------------------------------------------------------------------
     // Pixel ops

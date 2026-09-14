@@ -6,9 +6,9 @@
 #ifndef MCCLONE_IRESOURCEMANAGER_H
 #define MCCLONE_IRESOURCEMANAGER_H
 
+#include <unordered_set>
 #include <string>
 #include <vector>
-#include <unordered_set>
 
 class ResourceLocation;
 class IResource;

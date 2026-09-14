@@ -6,11 +6,10 @@
 #ifndef MCCLONE_IRESOURCE_H
 #define MCCLONE_IRESOURCE_H
 
-#include <string>
 #include <memory>
-#include <vector>
-#include <memory>
+#include <istream>
 #include <any>
+#include <string>
 
 class ResourceLocation;
 class IMetadataSection;

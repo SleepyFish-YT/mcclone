@@ -164,9 +164,9 @@ void Minecraft::updateFramebufferSize() {
 }
 
 void Minecraft::resizeWindow(int width, int height) {
-    this->pendingResizeW.store(width,  std::memory_order_relaxed);
-    this->pendingResizeH.store(height, std::memory_order_relaxed);
-    this->pendingResize.store(true,    std::memory_order_release);
+    this->_pendingResizeW.set(width, std::memory_order_relaxed);
+    this->_pendingResizeH.set(height,std::memory_order_relaxed);
+    this->_pendingResize.set(true, std::memory_order_release);
 
     /*
     if (this->currentScreen != nullptr) {
@@ -221,12 +221,15 @@ void Minecraft::runGameLoop() {
 }
 
 void Minecraft::renderGameLoop(bool hasFocus) {
-    if (this->pendingResize.load(std::memory_order_acquire)) {
-        this->pendingResize.store(false, std::memory_order_relaxed);
-        this->displayWidth  = (int) MathHelper::abs_max(1, this->pendingResizeW.load());
-        this->displayHeight = (int) MathHelper::abs_max(1, this->pendingResizeH.load());
+    if (this->_pendingResize.get()) {
+        this->displayWidth  = (int) MathHelper::abs_max(1, this->_pendingResizeW.get());
+        this->displayHeight = (int) MathHelper::abs_max(1, this->_pendingResizeH.get());
         this->updateFramebufferSize();
+
+        this->_pendingResize.set(false, std::memory_order_relaxed);
     }
+
+    this->_windowHasFocus = hasFocus;
 
     this->framebufferMc->bindFramebuffer_(true);
     {
@@ -235,7 +238,7 @@ void Minecraft::renderGameLoop(bool hasFocus) {
 
         // actual render here...
         {
-            if (!this->skipRenderWorld) {
+            if (!this->skipRenderWorld && !this->gameSettings->hideGUI) {
                 this->mcProfiler->startSection("gameRenderer");
                 {
                     ScaledResolution scaledRes(*this);
@@ -320,11 +323,10 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
                 settings.saveSettings();
             }
 
-            // if (this->currentScreen == nullptr) {
+            // if (this->currentScreen == nullptr)
             {
-                // ESC - pause menu
                 if (key == GLFW_KEY_ESCAPE) {
-                    // this->displayInGameMenu();
+                    this->displayInGameMenu();
                 }
 
                 // F3 + key shortcuts
@@ -342,7 +344,7 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
 
                     // F3+A - reload renderers
                     if (key == GLFW_KEY_A) {
-                        // this->renderGlobal.loadRenderers();
+                        // this->renderGlobal->loadRenderers();
                     }
 
                     // F3+T - refresh resources
@@ -360,7 +362,7 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
                     }
 
                     if (key == GLFW_KEY_B) {
-                        // this->renderManager.setDebugBoundingBox(!this->renderManager.isDebugBoundingBox());
+                        // this->renderManager->setDebugBoundingBox(!this->renderManager->isDebugBoundingBox());
                     }
 
                     if (key == GLFW_KEY_P) {
@@ -370,13 +372,12 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
 
                     // F3+H - clear chat
                     if (key == GLFW_KEY_H) {
-                        // this->ingameGUI.getChatGUI().clearChatMessages();
+                        // this->ingameGUI->getChatGUI().clearChatMessages();
                     }
                 }
 
-                // F1 - hide HUD
                 if (key == settings.keyBindHideGui->getKeyCode()) {
-                    // settings.hideGUI = !settings.hideGUI;
+                    settings.hideGUI = !settings.hideGUI;
                 }
 
                 if (key == settings.keyBindToggleDebugOverlay->getKeyCode()) {
@@ -387,10 +388,10 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
             for (int i = 0; i < 9; ++i) {
                 KeyBinding* keybinding = settings.keyBindHotbar[i];
                 if (keybinding != nullptr) {
-                    // if (this->thePlayer.isSpectator()) {
-                    //     this->ingameGUI.getSpectatorGui().func_175260_a(l);
+                    // if (this->thePlayer->isSpectator()) {
+                    //     this->ingameGUI->getSpectatorGui()->func_175260_a(l);
                     // } else {
-                    //     this->thePlayer.inventory.currentItem = l;
+                    //     this->thePlayer->inventory->currentItem = l;
                     // }
                 }
             }
@@ -417,15 +418,15 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
                 // this->displayGuiScreen(GuiChat("/"));
             }
 
-            // if (this->thePlayer.isUsingItem()) {
-            //     if (!settings.keyBindUseItem.isKeyDown()) {
-            //         this->playerController.onStoppedUsingItem(this->thePlayer);
+            // if (this->thePlayer->isUsingItem()) {
+            //     if (!settings.keyBindUseItem->isKeyDown()) {
+            //         this->playerController->onStoppedUsingItem(this->thePlayer);
             //     }
             // } else {
-            //     if (key = settings.keyBindAttack.getKeyCode()) {
+            //     if (key = settings->keyBindAttack->getKeyCode()) {
             //         this->leftClickMouse();
             //     }
-            //     if (key = settings.keyBindUseItem.getKeyCode()) {
+            //     if (key = settings->keyBindUseItem->getKeyCode()) {
             //         this->rightClickMouse();
             //     }
             //     if (key = settings.keyBindPickBlock.getKeyCode()) {
@@ -448,8 +449,8 @@ void Minecraft::handleMouseButton(int button, int action, int mods) {
             KeyBinding::onTick(keyCode);
 
             if (keyCode == this->gameSettings->keyBindPickItem->getKeyCode()) {
-                // if (this->thePlayer.isSpectator()) {
-                //     this->ingameGUI.getSpectatorGui().func_175261_b();
+                // if (this->thePlayer->isSpectator()) {
+                //     this->ingameGUI->getSpectatorGui()->func_175261_b();
                 // } else {
                 //     this->displayGuiScreen(GuiInventory(this->thePlayer));
                 // }
@@ -471,7 +472,7 @@ void Minecraft::handleMouseButton(int button, int action, int mods) {
         if (action == GLFW_RELEASE) {
             // if player is using item and key released, stop using
             if (!this->gameSettings->keyBindUseItem->isKeyDown()) {
-            //     this->playerController.onStoppedUsingItem(this->thePlayer);
+                // this->playerController.onStoppedUsingItem(this->thePlayer);
             }
         }
     }
@@ -503,8 +504,11 @@ void Minecraft::handleMouseScroll(double xOffset, double yOffset) {
 }
 
 void Minecraft::handleMouseMove(double x, double y) {
-    // if (!this-->inGameHasFocus) return;
-    // this->entityRenderer.updateCameraAndRender(...)
+    if (!this->inGameHasFocus) {
+        return;
+    }
+
+    // this->entityRenderer->updateCameraAndRender(...)
 }
 
 void Minecraft::onFullscreenChange(bool fullscreen_, int width, int height) {
@@ -575,7 +579,7 @@ void Minecraft::setIngameFocus() {
     if (this->_windowHasFocus) {
         if (!this->inGameHasFocus) {
             this->inGameHasFocus = true;
-            // this->mouseHelper.grabMouseCursor();
+            // this->mouseHelper->grabMouseCursor();
             // this->displayGuiScreen((GuiScreen) nullptr);
             this->leftClickCounter = 255; // usually 1000
         }
@@ -586,7 +590,7 @@ void Minecraft::setIngameNotInFocus() {
     if (this->inGameHasFocus) {
         KeyBinding::unPressAllKeys();
         this->inGameHasFocus = false;
-        // this->mousehelper.ungrabMouseCursor();
+        // this->mousehelper->ungrabMouseCursor();
     }
 }
 

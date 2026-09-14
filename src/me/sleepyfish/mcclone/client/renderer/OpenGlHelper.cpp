@@ -5,9 +5,10 @@
 
 #include "OpenGlHelper.h"
 
-#include <glad/glad.h>
 #include <algorithm>
 #include <string>
+
+#include <glad/glad.h>
 
 // -------------------------------------------------------------------------
 // Static member definitions

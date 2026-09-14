@@ -22,8 +22,7 @@ public:
 
     virtual void restoreLastBlurMipmap() = 0;
 
-    // throws std::ios_base::failure
-    virtual void loadTexture(IResourceManager& resourceManager) = 0;
+    virtual void loadTexture(IResourceManager& resourceManager) = 0; // throws std::ios_base::failure
 
     virtual int getGlTextureId() const = 0;
 

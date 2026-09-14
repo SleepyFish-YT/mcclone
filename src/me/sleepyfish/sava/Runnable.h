@@ -6,8 +6,9 @@
 #ifndef MCCLONE_RUNNABLE_H
 #define MCCLONE_RUNNABLE_H
 
+#include "ThreadSave.h"
+
 #include <thread>
-#include <atomic>
 
 /**
  * @author SleepyFish - SleepyAVA
@@ -20,7 +21,7 @@ private:
 
     std::thread thread;
 
-    std::atomic<bool> running;
+    ThreadSave<bool> running;
 
 protected:
 
@@ -37,6 +38,11 @@ public:
     Runnable() noexcept :
         running(false)
     {}
+
+    ~Runnable() {
+        this->stop();
+        this->join();
+    }
 
     void start() {
         this->setRunning(true);
@@ -58,11 +64,11 @@ public:
     }
 
     void setRunning(bool value, std::memory_order order = std::memory_order_release) noexcept {
-        this->running.store(value, order);
+        this->running.set(value, order);
     }
 
     bool isRunning(std::memory_order order = std::memory_order_acquire) const noexcept {
-        return this->running.load(order);
+        return this->running.get(order);
     }
 
 };

@@ -7,6 +7,7 @@
 #define MCCLONE_MINECRAFT_H
 
 #include "../../sava/Runnable.h"
+#include "../../sava/ThreadSave.h"
 
 #include <atomic>
 #include <thread>
@@ -89,9 +90,9 @@ private:
 
     FutureTaskQueue<void>* scheduledTasks{};
 
-    std::atomic<bool> pendingResize{false};
-    std::atomic<int> pendingResizeW{0};
-    std::atomic<int> pendingResizeH{0};
+    ThreadSave<bool> _pendingResize{false};
+    ThreadSave<int> _pendingResizeW{0};
+    ThreadSave<int> _pendingResizeH{0};
 
     static Minecraft* instance;
 

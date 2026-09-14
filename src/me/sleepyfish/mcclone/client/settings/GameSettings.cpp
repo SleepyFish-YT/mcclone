@@ -31,6 +31,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->fullScreen = false;
     this->pauseOnLostFocus = false;
     this->showDebugInfo = false;
+    this->hideGUI = false;
     this->heldItemTooltips = true;
     this->advancedItemTooltips = false;
 
@@ -165,6 +166,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"fullScreen", false},
             {"pauseOnLostFocus", false},
             {"showDebugInfo", false},
+            {"hideGUI", false},
             {"heldItemTooltips", true},
             {"advancedItemTooltips", false},
             {"fovSetting", 70},
@@ -214,6 +216,7 @@ void GameSettings::loadSettings() {
     this->fullScreen           = this->settingsJson.value("fullScreen", false);
     this->pauseOnLostFocus     = this->settingsJson.value("pauseOnLostFocus", false);
     this->showDebugInfo        = this->settingsJson.value("showDebugInfo", false);
+    this->hideGUI              = this->settingsJson.value("hideGUI", false);
     this->heldItemTooltips     = this->settingsJson.value("heldItemTooltips", true);
     this->advancedItemTooltips = this->settingsJson.value("advancedItemTooltips", false);
     this->fovSetting           = this->settingsJson.value("fovSetting", 70);
@@ -273,6 +276,7 @@ void GameSettings::saveSettings() {
         this->settingsJson["fullScreen"]           = this->fullScreen;
         this->settingsJson["pauseOnLostFocus"]     = this->pauseOnLostFocus;
         this->settingsJson["showDebugInfo"]        = this->showDebugInfo;
+        this->settingsJson["hideGUI"]              = this->hideGUI;
         this->settingsJson["heldItemTooltips"]     = this->heldItemTooltips;
         this->settingsJson["advancedItemTooltips"] = this->advancedItemTooltips;
         this->settingsJson["fovSetting"]           = this->fovSetting;

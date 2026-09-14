@@ -10,11 +10,17 @@
 
 /**
  * @author SleepyFish
+ * @brief Exception thrown by the stitcher
  */
 class StitcherException : public std::exception {
 
-    // not implemented yet.
+public:
+
+    StitcherException( const std::string& message) :
+        std::exception(message.c_str())
+    {}
 
 };
+
 
 #endif //MCCLONE_STITCHEREXCEPTION_H

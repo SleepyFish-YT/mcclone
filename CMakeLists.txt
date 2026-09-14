@@ -70,6 +70,7 @@ add_executable(${PROJECT_NAME}
         # sava
         ${SVA_DIR}/SavaUtil.cpp
         ${SVA_DIR}/SavaUtil.h
+        ${SVA_DIR}/ThreadSave.h
         ${SVA_DIR}/Runnable.h
         ${SVA_DIR}/Tuple.h
         ${SVA_DIR}/UUID.h
@@ -170,6 +171,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/renderer/texture/TextureAtlasSprite.h
         ${SRC_DIR}/client/renderer/texture/TextureUtil.cpp
         ${SRC_DIR}/client/renderer/texture/TextureUtil.h
+        ${SRC_DIR}/client/renderer/texture/IIconCreator.h
         ${SRC_DIR}/client/renderer/texture/ITextureObject.h
         ${SRC_DIR}/client/renderer/texture/ITickableTexture.h
         ${SRC_DIR}/client/renderer/texture/ITickableTextureObject.h
@@ -181,6 +183,14 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/renderer/texture/AbstractTexture.h
         ${SRC_DIR}/client/renderer/texture/DynamicTexture.cpp
         ${SRC_DIR}/client/renderer/texture/DynamicTexture.h
+        ${SRC_DIR}/client/renderer/texture/SimpleTexture.cpp
+        ${SRC_DIR}/client/renderer/texture/SimpleTexture.h
+        ${SRC_DIR}/client/renderer/texture/LayeredTexture.cpp
+        ${SRC_DIR}/client/renderer/texture/LayeredTexture.h
+        ${SRC_DIR}/client/renderer/texture/Stitcher.cpp
+        ${SRC_DIR}/client/renderer/texture/Stitcher.h
+        ${SRC_DIR}/client/renderer/texture/TextureManager.cpp
+        ${SRC_DIR}/client/renderer/texture/TextureManager.h
 
         # client/renderer/culling
         ${SRC_DIR}/client/renderer/culling/ICamera.h
@@ -364,6 +374,9 @@ add_executable(${PROJECT_NAME}
 
         # entity/passive
         ${SRC_DIR}/entity/passive/IAnimals.h
+
+        # entity/ai
+        ${SRC_DIR}/entity/ai/EntityAIBase.h
 
         # entity/ai/attributes
         ${SRC_DIR}/entity/ai/attributes/IAttribute.h

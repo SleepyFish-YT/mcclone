@@ -8,7 +8,7 @@
 
 #include <string>
 #include <algorithm>
-#include <cctype> // std::tolower
+#include <cctype> // std::tolower, std::toupper
 
 /**
  * @author SleepyFish - SleepyAVA

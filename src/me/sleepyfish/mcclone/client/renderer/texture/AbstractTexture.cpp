@@ -10,6 +10,10 @@
 
 #include <glad/glad.h>
 
+void AbstractTexture::loadTexture(IResourceManager& resourceManager) {
+
+}
+
 void AbstractTexture::setBlurMipmapDirect(bool blur_, bool mipmap_) {
     this->blur   = blur_;
     this->mipmap = mipmap_;

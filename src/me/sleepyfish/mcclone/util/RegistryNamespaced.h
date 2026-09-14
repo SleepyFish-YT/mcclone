@@ -61,10 +61,6 @@ public:
         return this->underlyingIntegerMap.getByValue(id);
     }
 
-    // -------------------------------------------------------------------------
-    // Iteration over values (via underlyingIntegerMap)
-    // -------------------------------------------------------------------------
-
     // shadow underlyingIntegerMap
     typename ObjectIntIdentityMap<V>::iterator begin() {
         return this->underlyingIntegerMap.begin();

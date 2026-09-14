@@ -8,7 +8,7 @@
 
 #include "../../../../sava/BufferedImage.h"
 
-DynamicTexture::DynamicTexture(const BufferedImage& bufferedImage) :
+DynamicTexture::DynamicTexture(const BufferedImage &bufferedImage) :
     DynamicTexture(bufferedImage.width, bufferedImage.height)
 {
     dynamicTextureData.assign(
@@ -26,14 +26,14 @@ DynamicTexture::DynamicTexture(int textureWidth, int textureHeight) :
     TextureUtil::allocateTexture_(this->getGlTextureId(), textureWidth, textureHeight);
 }
 
-void DynamicTexture::loadTexture(IResourceManager& resourceManager) {
-    // Intentionally empty — matches Java implementation
+void DynamicTexture::loadTexture(IResourceManager &resourceManager) {
+    // intentionally empty - matches java implementation
 }
 
 void DynamicTexture::updateDynamicTexture() {
     TextureUtil::uploadTexture_(this->getGlTextureId(), dynamicTextureData.data(), width, height);
 }
 
-std::vector<int>& DynamicTexture::getTextureData() {
+std::vector<int> &DynamicTexture::getTextureData() {
     return dynamicTextureData;
 }

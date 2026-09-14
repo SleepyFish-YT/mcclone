@@ -27,16 +27,15 @@ private:
 
 public:
 
-    explicit DynamicTexture(const BufferedImage& bufferedImage);
+    explicit DynamicTexture(const BufferedImage &bufferedImage);
+
     DynamicTexture(int textureWidth, int textureHeight);
 
-    void loadTexture(IResourceManager& resourceManager) override;
+    void loadTexture(IResourceManager &resourceManager) override;
 
     void updateDynamicTexture();
 
-    // returns a mutable reference so callers can modify pixel data
-    // then call updateDynamicTexture() to push changes to GPU
-    std::vector<int>& getTextureData();
+    std::vector<int> &getTextureData(); // then call updateDynamicTexture() to push changes to gpu
 
 };
 

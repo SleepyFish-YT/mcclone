@@ -18,9 +18,9 @@ protected:
 
     mutable int glTextureId = -1;
 
-    bool blur       = false;
-    bool mipmap     = false;
-    bool blurLast   = false;
+    bool blur = false;
+    bool mipmap = false;
+    bool blurLast = false;
     bool mipmapLast = false;
 
 public:
@@ -29,7 +29,7 @@ public:
 
     void setBlurMipmapDirect(bool blur_, bool mipmap_);
 
-    void loadTexture(IResourceManager& resourceManager) override {};
+    virtual void loadTexture(IResourceManager& resourceManager) override;
 
     void setBlurMipmap(bool blur_, bool mipmap_) override;
 

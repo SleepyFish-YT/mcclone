@@ -43,6 +43,7 @@ public:
     bool fullScreen;
     bool pauseOnLostFocus;
     bool showDebugInfo;
+    bool hideGUI;
     bool heldItemTooltips;
     bool advancedItemTooltips;
     uint8_t thirdPersonView;
