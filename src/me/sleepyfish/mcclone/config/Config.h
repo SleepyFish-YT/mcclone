@@ -17,7 +17,7 @@ class Config {
 
 public:
 
-    static std::string getGlErrorString(GLenum error) {
+    static std::string getGlErrorString(::GLenum error) {
         std::string result;
 
         switch (error) {

@@ -173,7 +173,7 @@ void OpenGLWindow::run() {
             this->renderGameLoop();
 
             if (this->displayInfo.showGlErrors) {
-                GLenum error;
+                ::GLenum error;
                 while ((error = GlStateManager::glGetError_()) != GL_NO_ERROR) {
                     Logger::error("OpenGL error: {}", Config::getGlErrorString(error));
                 }

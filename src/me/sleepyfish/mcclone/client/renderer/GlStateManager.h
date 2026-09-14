@@ -167,7 +167,7 @@ public:
     struct TextureState {
 
         BooleanState texture2DState { 3553 };
-        int textureName = 0;
+        unsigned int textureName = 0;
 
     };
 
@@ -207,7 +207,7 @@ private:
     static BooleanState      normalizeState;
     static int               activeTextureUnit;
     static TextureState      textureState[32];
-    static int               activeShadeModel;
+    static unsigned int      activeShadeModel;
     static BooleanState      rescaleNormalState;
     static ColorMask         colorMaskState;
     static Color             colorState;
@@ -274,17 +274,17 @@ public:
     static void setActiveTexture_(int texture);
     static void enableTexture2D_();
     static void disableTexture2D_();
-    static int  generateTexture_();
-    static void deleteTexture_(int texture);
-    static void deleteTextures_(const std::vector<int>& textures);
-    static void bindTexture_(int texture);
+    static unsigned int generateTexture_();
+    static void deleteTexture_(unsigned int texture);
+    static void deleteTextures_(const std::vector<unsigned int>& textures);
+    static void bindTexture_(unsigned int texture);
     static void bindCurrentTexture_();
-    static int  getBoundTexture_();
+    static unsigned int getBoundTexture_();
     static int  getActiveTextureUnit_();
 
     static void enableNormalize_();
     static void disableNormalize_();
-    static void shadeModel_(int mode);
+    static void shadeModel_(unsigned int mode);
     static void enableRescaleNormal_();
     static void disableRescaleNormal_();
 
@@ -331,7 +331,7 @@ public:
     static void glNewList_(int list, int mode);
     static void glEndList_();
 
-    static int glGetError_();
+    static unsigned int glGetError_();
     static void drainGlErrors();
 
     static void glTexImage2D_(int target, int level, int internalFormat, int width, int height, int border, int format, int type, const int* pixels);

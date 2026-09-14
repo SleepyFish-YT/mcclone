@@ -15,7 +15,6 @@
     X(DIMENSIONS, -5) \
     X(GAME_CONFIG, -6)\
     X(OPENGL_INIT, -7)
-
 #define MCCLONE_ERR_SIZE (-7)
 
 #define X(name, value) MCCLONE_ERR_##name = value,

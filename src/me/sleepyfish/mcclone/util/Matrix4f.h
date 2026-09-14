@@ -10,9 +10,9 @@
 
 /**
  * @author SleepyFish
- * @brief Matrix4f (4x4) data struct forwarding using (using glm::mat4x4)
+ * @brief Matrix4f (4x4) data struct forwarding using (using ::glm::mat4x4)
  */
-using Matrix4f = glm::mat4x4;
+using Matrix4f = ::glm::mat4x4;
 
 
 #endif //MCCLONE_MATRIX4F_H

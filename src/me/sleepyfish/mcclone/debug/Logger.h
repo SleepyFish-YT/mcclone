@@ -7,9 +7,9 @@
 #define MCCLONE_LOGGER_H
 
 #include <filesystem>
+#include <fstream>
 #include <string>
 #include <format>
-#include <fstream>
 
 /**
  * @author SleepyFish
@@ -21,9 +21,9 @@ private:
 
     static inline bool initialized = false;
 
-    static inline std::filesystem::path logFolderPath {};
+    static inline std::filesystem::path logFolderPath{};
 
-    static inline std::ofstream logFile {};
+    static inline std::ofstream logFile{};
 
     static std::string getPrefix();
 

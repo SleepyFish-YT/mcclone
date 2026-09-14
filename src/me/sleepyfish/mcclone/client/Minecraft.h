@@ -8,6 +8,7 @@
 
 #include "../../sava/Runnable.h"
 #include "../../sava/ThreadSave.h"
+#include "../profiler/IPlayerUsage.h"
 
 #include <atomic>
 #include <thread>
@@ -26,12 +27,13 @@ class FrameTimer;
 class CrashReport;
 template<typename T>
 class FutureTaskQueue;
+class TextureMap;
 
 /**
  * @author SleepyFish
  * @brief Minecraft main class
  */
-class Minecraft : public Runnable {
+class Minecraft : public Runnable, public IPlayerUsage {
 
 protected:
 
@@ -58,7 +60,7 @@ private:
 
     int tempDisplayHeight{};
 
-    const bool isDemo{};
+    const bool isDemo_{};
 
     bool fullscreen{};
 
@@ -94,13 +96,21 @@ private:
     ThreadSave<int> _pendingResizeW{0};
     ThreadSave<int> _pendingResizeH{0};
 
-    static Minecraft* instance;
+    static Minecraft *instance;
 
     void leftClickMouse();
 
     void rightClickMouse();
 
-    CrashReport* crashReporter{};
+    CrashReport *crashReporter{};
+
+    void middleClickMouse();
+
+    TextureMap *textureMapBlocks;
+
+    std::string serverName;
+
+    int serverPort;
 
 public:
 
@@ -173,6 +183,22 @@ public:
     std::string getLaunchedVersion() const noexcept { return this->launchedVersion; }
 
     void crashed(CrashReport* crash);
+
+    bool isDemo() const noexcept { return this->isDemo_; }
+
+    static bool isGuiEnabled();
+
+    static bool isFancyGraphicsEnabled();
+
+    static bool isAmbientOcclusionEnabled();
+
+    void addServerStatsToSnooper(PlayerUsageSnooper *playerSnooper) override;
+
+    void addServerTypeToSnooper(PlayerUsageSnooper *playerSnooper) override;
+
+    bool isSnooperEnabled() override;
+
+    bool isFullScreen() const noexcept { return this->fullscreen; }
 
 };
 

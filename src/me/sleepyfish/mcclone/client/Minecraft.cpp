@@ -13,6 +13,7 @@
 #include "renderer/GlStateManager.h"
 #include "renderer/OpenGlHelper.h"
 #include "renderer/texture/TextureUtil.h"
+#include "renderer/texture/TextureMap.h"
 
 #include "../debug/Logger.h"
 #include "../profiler/Profiler.h"
@@ -40,7 +41,7 @@ ResourceLocation* Minecraft::locationMojangPng = new ResourceLocation("textures/
 Minecraft::Minecraft(GameConfiguration* gameConfig) :
     Runnable(),
     soundEngine(new SoundEngine(std::filesystem::path(gameConfig->folderInformation.mcDataDir / "sounds"))),
-    isDemo(gameConfig->gameInformation.isDemo)
+    isDemo_(gameConfig->gameInformation.isDemo)
 {
     this->mcDataDir = gameConfig->folderInformation.mcDataDir;
     this->fileAssets = gameConfig->folderInformation.assetsDir;
@@ -80,7 +81,21 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
     this->theTimer = new Timer(20.0f);
     this->frameTimer = new FrameTimer();
 
+    this->textureMapBlocks = new TextureMap("textures");
+    this->textureMapBlocks->setMipmapLevels(this->gameSettings->mipmapLevels);
+    // this->renderEngine.loadTickableTexture(TextureMap::LOCATION_BLOCKS_TEXTURE, this->textureMapBlocks);
+    // this->renderEngine.bindTexture(TextureMap::LOCATION_BLOCKS_TEXTURE);
+    this->textureMapBlocks->setBlurMipmapDirect(false, this->gameSettings->mipmapLevels > 0);
+    // this->modelManager = new ModelManager(this->textureMapBlocks);
+
     Minecraft::debugFPS = 0;
+
+    if (!gameConfig->serverInformation.serverName.empty()) {
+        this->serverName = gameConfig->serverInformation.serverName;
+        this->serverPort = gameConfig->serverInformation.serverPort;
+    }
+
+
 
     Minecraft::instance = this;
 }
@@ -610,3 +625,43 @@ void Minecraft::crashed(CrashReport *crash) {
     this->hasCrashed = true;
     this->crashReporter = crash;
 }
+
+bool Minecraft::isGuiEnabled() {
+    return Minecraft::instance == nullptr || !Minecraft::instance->gameSettings->hideGUI;
+}
+
+bool Minecraft::isFancyGraphicsEnabled() {
+    if (Minecraft::instance != nullptr) {
+        return Minecraft::instance->gameSettings->fancyGraphics;
+    }
+
+    return false;
+}
+
+bool Minecraft::isAmbientOcclusionEnabled() {
+    if (Minecraft::instance != nullptr) {
+        return Minecraft::instance->gameSettings->ambientOcclusion != 0;
+    }
+
+    return false;
+}
+
+void Minecraft::middleClickMouse() {
+    if (this->objectMouseOver != nullptr) {
+
+    }
+}
+
+void Minecraft::addServerStatsToSnooper(PlayerUsageSnooper *playerSnooper) {
+
+}
+
+void Minecraft::addServerTypeToSnooper(PlayerUsageSnooper *playerSnooper) {
+
+}
+
+bool Minecraft::isSnooperEnabled() {
+    return this->gameSettings->snooperEnabled;
+}
+
+

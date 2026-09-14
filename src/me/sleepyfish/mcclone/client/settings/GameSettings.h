@@ -58,6 +58,8 @@ public:
     int ambientOcclusion;
     bool reducedDebugInfo;
     bool forceUnicodeFont;
+    bool snooperEnabled;
+    int mipmapLevels;
 
     // Movement
     KeyBinding* keyBindForward;

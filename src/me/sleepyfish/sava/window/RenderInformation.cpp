@@ -7,6 +7,8 @@
 
 #include "../../mcclone/debug/Logger.h"
 
+#include <glad/glad.h>
+
 void RenderInformation::init() {
     this->vendor   = reinterpret_cast<const char*>(::glGetString(GL_VENDOR));
     this->renderer = reinterpret_cast<const char*>(::glGetString(GL_RENDERER));

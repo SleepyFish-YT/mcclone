@@ -10,7 +10,7 @@
 bool GlStateManager::clearEnabled = true;
 bool GlStateManager::creatingDisplayList = false;
 int  GlStateManager::activeTextureUnit = 0;
-int  GlStateManager::activeShadeModel = 7425;
+unsigned int GlStateManager::activeShadeModel = 7425;
 
 GlStateManager::AlphaState   GlStateManager::alphaState;
 GlStateManager::BooleanState GlStateManager::lightingState{2896};
@@ -244,27 +244,27 @@ void GlStateManager::enableTexture2D_() { textureState[activeTextureUnit].textur
 
 void GlStateManager::disableTexture2D_() { textureState[activeTextureUnit].texture2DState.setDisabled(); }
 
-int GlStateManager::generateTexture_() {
-    GLuint t;
+unsigned int GlStateManager::generateTexture_() {
+    ::GLuint t;
     ::glGenTextures(1, &t);
     return t;
 }
 
-void GlStateManager::deleteTexture_(int texture) {
+void GlStateManager::deleteTexture_(unsigned int texture) {
     if (texture == 0) return;
-    GLuint t = texture;
+    ::GLuint t = texture;
     ::glDeleteTextures(1, &t);
     for (auto &ts: textureState)
         if (ts.textureName == texture)
             ts.textureName = 0;
 }
 
-void GlStateManager::deleteTextures_(const std::vector<int> &textures) {
-    for (int t: textures)
+void GlStateManager::deleteTextures_(const std::vector<unsigned int> &textures) {
+    for (unsigned int t: textures)
         deleteTexture_(t);
 }
 
-void GlStateManager::bindTexture_(int texture) {
+void GlStateManager::bindTexture_(unsigned int texture) {
     if (texture != textureState[activeTextureUnit].textureName) {
         textureState[activeTextureUnit].textureName = texture;
         ::glBindTexture(GL_TEXTURE_2D, texture);
@@ -275,7 +275,7 @@ void GlStateManager::bindCurrentTexture_() {
     ::glBindTexture(GL_TEXTURE_2D, textureState[activeTextureUnit].textureName);
 }
 
-int GlStateManager::getBoundTexture_() { return textureState[activeTextureUnit].textureName; }
+unsigned int GlStateManager::getBoundTexture_() { return textureState[activeTextureUnit].textureName; }
 
 int GlStateManager::getActiveTextureUnit_() { return activeTextureUnit; }
 
@@ -287,7 +287,7 @@ void GlStateManager::enableRescaleNormal_() { rescaleNormalState.setEnabled(); }
 
 void GlStateManager::disableRescaleNormal_() { rescaleNormalState.setDisabled(); }
 
-void GlStateManager::shadeModel_(int mode) {
+void GlStateManager::shadeModel_(unsigned int mode) {
     if (mode != activeShadeModel) {
         activeShadeModel = mode;
         ::glShadeModel(mode);
@@ -418,7 +418,7 @@ void GlStateManager::glEndList_() {
     creatingDisplayList = false;
 }
 
-int GlStateManager::glGetError_() { return ::glGetError(); }
+unsigned int GlStateManager::glGetError_() { return ::glGetError(); }
 
 void GlStateManager::drainGlErrors() {
     while (::GlStateManager::glGetError_() != GL_NO_ERROR) {}
@@ -461,7 +461,7 @@ void GlStateManager::glMultiDrawArrays_(int mode, const int *first, const int *c
 
 int GlStateManager::_getGLMaximumTextureSize() {
     for (int i = 16384; i > 0; i >>= 1) {
-        ::glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA, i, i, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ::GlStateManager::glTexImage2D_(GL_PROXY_TEXTURE_2D, 0, GL_RGBA, i, i, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         int j = 0;
         ::glGetTexLevelParameteriv(GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &j);
         if (j != 0) return i;

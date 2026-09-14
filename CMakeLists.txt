@@ -108,6 +108,10 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/AnvilConverterException.h
         ${SRC_DIR}/client/ClientBrandRetriever.h
 
+        # client/multiplayer
+        ${SRC_DIR}/client/multiplayer/ServerData.cpp
+        ${SRC_DIR}/client/multiplayer/ServerData.h
+
         # client/shader
         ${SRC_DIR}/client/shader/Framebuffer.cpp
         ${SRC_DIR}/client/shader/Framebuffer.h
@@ -266,6 +270,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/block/state/IBlockState.h
 
         # profiler
+        ${SRC_DIR}/profiler/IPlayerUsage.h
         ${SRC_DIR}/profiler/Profiler.cpp
         ${SRC_DIR}/profiler/Profiler.h
 
@@ -365,6 +370,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/nbt/NBTTagInt.h
         ${SRC_DIR}/nbt/NBTTagIntArray.h
         ${SRC_DIR}/nbt/NBTTagFloat.h
+        ${SRC_DIR}/nbt/CompressedStreamTools.cpp
+        ${SRC_DIR}/nbt/CompressedStreamTools.h
 
         # entity
         ${SRC_DIR}/entity/EnumCreatureAttribute.h

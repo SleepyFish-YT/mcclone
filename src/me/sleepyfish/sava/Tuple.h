@@ -7,7 +7,7 @@
 #define MCCLONE_TUPLE_H
 
 /**
- * @author SleepyFish
+ * @author SleepyFish - SleepyAVA
  * @brief Tuple class - equal to std::pair
  */
 template<typename A, typename B>

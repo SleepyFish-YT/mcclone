@@ -12,6 +12,6 @@
 std::string SavaUtil::StringUtil::GetRandomPlayerName() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    const int rand = MathHelper::getRandomIntegerInRange(gen, 1, 999);
+    const int rand = MathHelper::getRandomIntegerInRange(gen, 100, 999);
     return "Player" + std::to_string(rand);
 }

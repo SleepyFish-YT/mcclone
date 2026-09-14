@@ -49,6 +49,8 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->ambientOcclusion = 2;
     this->reducedDebugInfo = false;
     this->forceUnicodeFont = false;
+    this->snooperEnabled = false;
+    this->mipmapLevels = 4;
 
     // Keybinds
     {
@@ -181,6 +183,8 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"ambientOcclusion", 2},
             {"reducedDebugInfo", false},
             {"forceUnicodeFont", false},
+            {"snooperEnabled", false},
+            {"mipmapLevels", 4},
     };
 
     for (auto& keybind : this->keyBinds) {
@@ -231,6 +235,8 @@ void GameSettings::loadSettings() {
     this->ambientOcclusion     = this->settingsJson.value("ambientOcclusion", 2);
     this->reducedDebugInfo     = this->settingsJson.value("reducedDebugInfo", false);
     this->forceUnicodeFont     = this->settingsJson.value("forceUnicodeFont", false);
+    this->snooperEnabled       = this->settingsJson.value("snooperEnabled", false);
+    this->mipmapLevels         = this->settingsJson.value("mipmapLevels", 4);
 
     KeyBinding::resetKeyBindingArrayAndHash();
     KeyBinding::unregisterAllBinds();
@@ -291,6 +297,8 @@ void GameSettings::saveSettings() {
         this->settingsJson["ambientOcclusion"]     = this->ambientOcclusion;
         this->settingsJson["reducedDebugInfo"]     = this->reducedDebugInfo;
         this->settingsJson["forceUnicodeFont"]     = this->forceUnicodeFont;
+        this->settingsJson["snooperEnabled"]       = this->snooperEnabled;
+        this->settingsJson["mipmapLevels"]         = 4;
     }
 
     std::ofstream file(this->settingsFilePath);

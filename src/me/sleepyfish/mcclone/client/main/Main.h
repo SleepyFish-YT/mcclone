@@ -6,11 +6,10 @@
 #ifndef MCCLONE_MAIN_H
 #define MCCLONE_MAIN_H
 
-#include "../../debug/Logger.h"
-
 #include <vector>
 #include <string>
 #include <thread>
+#include <filesystem>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -31,7 +30,7 @@ private:
 #ifdef _WIN32
     ::HWND consoleWindow;
 #endif //_WIN32
-    glm::ivec2 screenSize;
+    ::glm::ivec2 screenSize;
 
     std::string majorVersion;
 

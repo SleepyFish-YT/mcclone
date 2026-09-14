@@ -7,12 +7,11 @@
 
 #include "Main.h"
 
+#include "GameConfiguration.h"
 #include "../Minecraft.h"
 #include "../../debug/Logger.h"
 #include "../../../sava/window/OpenGLWindow.h"
 #include "../../../sava/window/RenderInformation.h"
-#include "GameConfiguration.h"
-
 #include "../../../sava/SavaUtil.h"
 
 Main::Main() {
@@ -45,7 +44,7 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
         return MCCLONE_ERR_RESOLUTION;
     }
 
-    glm::ivec2 windowSize = {1050, 700};
+    ::glm::ivec2 windowSize = {1050, 700};
 
     // clion shows this is unused but it is used. (search for this->gameConfiguration =) to find it.
     bool args_showGlErrors = true;
@@ -187,8 +186,6 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
 
     glWindow.thread_start();
     glWindow.thread_run();
-    glWindow.stop();
-    glWindow.join();
 
     delete minecraft;
 
@@ -198,4 +195,3 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
 std::string Main::getVersion() const {
     return this->majorVersion + "." + this->minorVersion + "." + this->patchVersion;
 }
-
