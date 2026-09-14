@@ -42,13 +42,13 @@ public:
         try {
             task();
         } catch (const std::future_error& e) {
-            Logger::fatal("Error executing task", e.what());
+            Logger::fatal("Exception in Util::runTask (Future error): {}", e.what());
             throw;
         } catch (const std::bad_alloc& e) {
-            Logger::fatal("Out of memory", e.what());
+            Logger::fatal("Exception in Util::runTask (Out of memory): {}", e.what());
             throw;
         } catch (const std::exception& e) {
-            Logger::fatal("Error executing task", e.what());
+            Logger::fatal("Exception in Util::runTask: {}", e.what());
         }
     }
 

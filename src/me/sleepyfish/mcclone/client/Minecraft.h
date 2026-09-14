@@ -7,7 +7,6 @@
 #define MCCLONE_MINECRAFT_H
 
 #include "../../sava/Runnable.h"
-#include "../../sava/FutureTaskQueue.h"
 
 #include <atomic>
 #include <thread>
@@ -23,6 +22,9 @@ class ResourceLocation;
 class GameConfiguration;
 class Framebuffer;
 class FrameTimer;
+class CrashReport;
+template<typename T>
+class FutureTaskQueue;
 
 /**
  * @author SleepyFish
@@ -37,57 +39,55 @@ protected:
 
     void onStop() override;
 
-    uint16_t fpsCounter;
-
 private:
 
-    uint8_t leftClickCounter;
+    uint8_t leftClickCounter{};
 
-    uint8_t rightClickDelayTimer;
+    uint8_t rightClickDelayTimer{};
 
     void runGameLoop(); // throws IOException
 
-    uint16_t tpsCounter;
+    uint16_t tpsCounter{};
 
-    uint16_t tickCounter;
+    uint16_t tickCounter{};
 
-    std::chrono::steady_clock::time_point prevFrameTime;
+    std::chrono::steady_clock::time_point prevFrameTime{};
 
-    int tempDisplayWidth;
+    int tempDisplayWidth{};
 
-    int tempDisplayHeight;
+    int tempDisplayHeight{};
 
-    const bool isDemo;
+    const bool isDemo{};
 
-    bool fullscreen;
+    bool fullscreen{};
 
-    bool enableGLErrorChecking;
+    bool enableGLErrorChecking{};
 
-    bool hasCrashed;
+    bool hasCrashed{};
 
-    bool connectedToRealms;
+    bool connectedToRealms{};
 
-    bool isGamePaused_;
+    bool isGamePaused_{};
 
-    std::filesystem::path fileResourcepacks;
+    std::filesystem::path fileResourcepacks{};
 
-    std::filesystem::path fileAssets;
+    std::filesystem::path fileAssets{};
 
-    std::string launchedVersion;
+    std::string launchedVersion{};
 
-    Timer* theTimer;
+    Timer* theTimer{};
 
     void updateFramebufferSize();
 
-    static inline uint16_t debugFPS = 0;
+    static inline uint16_t debugFPS{};
 
     void startGame(); // throws LWJGLException
 
     void shutdownMinecraftApplet();
 
-    Framebuffer* framebufferMc;
+    Framebuffer* framebufferMc{};
 
-    FutureTaskQueue<void> scheduledTasks{};
+    FutureTaskQueue<void>* scheduledTasks{};
 
     std::atomic<bool> pendingResize{false};
     std::atomic<int> pendingResizeW{0};
@@ -95,27 +95,37 @@ private:
 
     static Minecraft* instance;
 
+    void leftClickMouse();
+
+    void rightClickMouse();
+
+    CrashReport* crashReporter{};
+
 public:
 
     static ResourceLocation* locationMojangPng;
 
-    std::filesystem::path mcDataDir;
+    std::filesystem::path mcDataDir{};
 
-    Profiler *mcProfiler;
+    Profiler *mcProfiler{};
 
-    GameSettings *gameSettings;
+    GameSettings *gameSettings{};
 
-    SoundEngine *soundEngine;
+    SoundEngine *soundEngine{};
 
-    MovingObjectPosition *objectMouseOver;
+    MovingObjectPosition *objectMouseOver{};
 
-    FrameTimer *frameTimer;
+    FrameTimer *frameTimer{};
 
-    int displayWidth;
+    Framebuffer* getFramebuffer() noexcept { return this->framebufferMc; }
 
-    int displayHeight;
+    int displayWidth{};
 
-    bool skipRenderWorld;
+    int displayHeight{};
+
+    bool skipRenderWorld{};
+
+    bool debuggerEnabled{};
 
     explicit Minecraft(GameConfiguration* gameConfig);
 
@@ -145,9 +155,23 @@ public:
 
     void resizeWindow(int width, int height);
 
-    void renderGameLoop();
+    void renderGameLoop(bool hasFocus);
 
-    bool isUnicode() const noexcept { return false; }
+    bool isUnicode() const noexcept;
+
+    bool _windowHasFocus{};
+
+    bool inGameHasFocus{};
+
+    void setIngameFocus();
+
+    void setIngameNotInFocus();
+
+    void displayInGameMenu();
+
+    std::string getLaunchedVersion() const noexcept { return this->launchedVersion; }
+
+    void crashed(CrashReport* crash);
 
 };
 

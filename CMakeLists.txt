@@ -406,6 +406,19 @@ add_executable(${PROJECT_NAME}
 # ======================== add inlined definitions ========================
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG)
+
+    target_compile_options(${PROJECT_NAME} PRIVATE /fsanitize=address)
+
+    # copy MSVC ASan DLL next to exe
+    file(GLOB_RECURSE ASAN_DLLS
+            "C:/Program Files/Microsoft Visual Studio/*/VC/Tools/MSVC/*/bin/Hostx64/x64/clang_rt.asan_dynamic-x86_64.dll"
+    )
+    foreach(DLL ${ASAN_DLLS})
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${DLL}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        )
+    endforeach()
 endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

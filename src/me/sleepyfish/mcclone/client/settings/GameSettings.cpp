@@ -4,6 +4,7 @@
 //
 
 #include "GameSettings.h"
+#include "KeyBinding.h"
 
 #include "../../debug/Logger.h"
 
@@ -46,90 +47,90 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->fancyGraphics = true;
     this->ambientOcclusion = 2;
     this->reducedDebugInfo = false;
-
+    this->forceUnicodeFont = false;
 
     // Keybinds
     {
-        this->keyBindForward      = KeyBinding("key.forward", GLFW_KEY_W, "key.categories.movement");
-        this->keyBindLeft         = KeyBinding("key.left", GLFW_KEY_A, "key.categories.movement");
-        this->keyBindBack         = KeyBinding("key.back", GLFW_KEY_S, "key.categories.movement");
-        this->keyBindRight        = KeyBinding("key.right", GLFW_KEY_D, "key.categories.movement");
-        this->keyBindJump         = KeyBinding("key.jump", GLFW_KEY_SPACE, "key.categories.movement");
-        this->keyBindSneak        = KeyBinding("key.sneak", GLFW_KEY_LEFT_SHIFT, "key.categories.movement");
-        this->keyBindSprint       = KeyBinding("key.sprint", GLFW_KEY_LEFT_CONTROL, "key.categories.movement");
+        this->keyBindForward      = new KeyBinding("key.forward", GLFW_KEY_W, "key.categories.movement");
+        this->keyBindLeft         = new KeyBinding("key.left", GLFW_KEY_A, "key.categories.movement");
+        this->keyBindBack         = new KeyBinding("key.back", GLFW_KEY_S, "key.categories.movement");
+        this->keyBindRight        = new KeyBinding("key.right", GLFW_KEY_D, "key.categories.movement");
+        this->keyBindJump         = new KeyBinding("key.jump", GLFW_KEY_SPACE, "key.categories.movement");
+        this->keyBindSneak        = new KeyBinding("key.sneak", GLFW_KEY_LEFT_SHIFT, "key.categories.movement");
+        this->keyBindSprint       = new KeyBinding("key.sprint", GLFW_KEY_LEFT_CONTROL, "key.categories.movement");
 
-        this->keyBindInventory    = KeyBinding("key.inventory", GLFW_KEY_E  , "key.categories.inventory");
-        this->keyBindHotbar1      = KeyBinding("key.hotbar.1", GLFW_KEY_1, "key.categories.inventory");
-        this->keyBindHotbar2      = KeyBinding("key.hotbar.2", GLFW_KEY_2, "key.categories.inventory");
-        this->keyBindHotbar3      = KeyBinding("key.hotbar.3", GLFW_KEY_3, "key.categories.inventory");
-        this->keyBindHotbar4      = KeyBinding("key.hotbar.4", GLFW_KEY_4, "key.categories.inventory");
-        this->keyBindHotbar5      = KeyBinding("key.hotbar.5", GLFW_KEY_5, "key.categories.inventory");
-        this->keyBindHotbar6      = KeyBinding("key.hotbar.6", GLFW_KEY_6, "key.categories.inventory");
-        this->keyBindHotbar7      = KeyBinding("key.hotbar.7", GLFW_KEY_7, "key.categories.inventory");
-        this->keyBindHotbar8      = KeyBinding("key.hotbar.8", GLFW_KEY_8, "key.categories.inventory");
-        this->keyBindHotbar9      = KeyBinding("key.hotbar.9", GLFW_KEY_9, "key.categories.inventory");
+        this->keyBindInventory    = new KeyBinding("key.inventory", GLFW_KEY_E  , "key.categories.inventory");
+        this->keyBindHotbar1      = new KeyBinding("key.hotbar.1", GLFW_KEY_1, "key.categories.inventory");
+        this->keyBindHotbar2      = new KeyBinding("key.hotbar.2", GLFW_KEY_2, "key.categories.inventory");
+        this->keyBindHotbar3      = new KeyBinding("key.hotbar.3", GLFW_KEY_3, "key.categories.inventory");
+        this->keyBindHotbar4      = new KeyBinding("key.hotbar.4", GLFW_KEY_4, "key.categories.inventory");
+        this->keyBindHotbar5      = new KeyBinding("key.hotbar.5", GLFW_KEY_5, "key.categories.inventory");
+        this->keyBindHotbar6      = new KeyBinding("key.hotbar.6", GLFW_KEY_6, "key.categories.inventory");
+        this->keyBindHotbar7      = new KeyBinding("key.hotbar.7", GLFW_KEY_7, "key.categories.inventory");
+        this->keyBindHotbar8      = new KeyBinding("key.hotbar.8", GLFW_KEY_8, "key.categories.inventory");
+        this->keyBindHotbar9      = new KeyBinding("key.hotbar.9", GLFW_KEY_9, "key.categories.inventory");
 
-        this->keyBindUseItem      = KeyBinding("key.use", 1000 + GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay");
-        this->keyBindDrop         = KeyBinding("key.drop", GLFW_KEY_Q, "key.categories.gameplay");
-        this->keyBindAttack       = KeyBinding("key.attack", 1000 + GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay");
-        this->keyBindPickItem     = KeyBinding("key.pickItem", 1000 + GLFW_MOUSE_BUTTON_MIDDLE, "key.categories.gameplay");
-        this->keyBindMouseBack    = KeyBinding("key.mouseBack", 1000 + GLFW_MOUSE_BUTTON_4, "key.categories.gameplay");
-        this->keyBindMouseForward = KeyBinding("key.mouseForward", 1000 + GLFW_MOUSE_BUTTON_5, "key.categories.gameplay");
+        this->keyBindUseItem      = new KeyBinding("key.use", 1000 + GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay");
+        this->keyBindDrop         = new KeyBinding("key.drop", GLFW_KEY_Q, "key.categories.gameplay");
+        this->keyBindAttack       = new KeyBinding("key.attack", 1000 + GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay");
+        this->keyBindPickItem     = new KeyBinding("key.pickItem", 1000 + GLFW_MOUSE_BUTTON_MIDDLE, "key.categories.gameplay");
+        this->keyBindMouseBack    = new KeyBinding("key.mouseBack", 1000 + GLFW_MOUSE_BUTTON_4, "key.categories.gameplay");
+        this->keyBindMouseForward = new KeyBinding("key.mouseForward", 1000 + GLFW_MOUSE_BUTTON_5, "key.categories.gameplay");
 
-        this->keyBindChat         = KeyBinding("key.chat", GLFW_KEY_T, "key.categories.multiplayer");
-        this->keyBindPlayerList   = KeyBinding("key.playerlist", GLFW_KEY_TAB, "key.categories.multiplayer");
-        this->keyBindCommand      = KeyBinding("key.command", GLFW_KEY_APOSTROPHE, "key.categories.multiplayer");
+        this->keyBindChat         = new KeyBinding("key.chat", GLFW_KEY_T, "key.categories.multiplayer");
+        this->keyBindPlayerList   = new KeyBinding("key.playerlist", GLFW_KEY_TAB, "key.categories.multiplayer");
+        this->keyBindCommand      = new KeyBinding("key.command", GLFW_KEY_APOSTROPHE, "key.categories.multiplayer");
 
-        this->keyBindScreenshot   = KeyBinding("key.screenshot", GLFW_KEY_F2, "key.categories.misc");
-        this->keyBindPerspective  = KeyBinding("key.togglePerspective", GLFW_KEY_F5, "key.categories.misc");
-        this->keyBindSmoothCamera = KeyBinding("key.smoothCamera", 0, "key.categories.misc");
-        this->keyBindFullscreen   = KeyBinding("key.fullscreen", GLFW_KEY_F11, "key.categories.misc");
-        this->keyBindHideGui      = KeyBinding("key.hideGui", GLFW_KEY_F1, "key.categories.misc");
-        this->keyBindToggleDebugOverlay = KeyBinding("key.toggleDebugOverlay", GLFW_KEY_F3, "key.categories.misc");
-        this->keyBindExitGame     = KeyBinding("key.exitGame", GLFW_KEY_F12, "key.categories.misc");
-        this->keyBindZoom         = KeyBinding("key.zoom", GLFW_KEY_C, "key.categories.misc");
-        this->keyFreelook         = KeyBinding("key.freelook", GLFW_KEY_LEFT_ALT, "key.categories.misc");
+        this->keyBindScreenshot   = new KeyBinding("key.screenshot", GLFW_KEY_F2, "key.categories.misc");
+        this->keyBindPerspective  = new KeyBinding("key.togglePerspective", GLFW_KEY_F5, "key.categories.misc");
+        this->keyBindSmoothCamera = new KeyBinding("key.smoothCamera", 0, "key.categories.misc");
+        this->keyBindFullscreen   = new KeyBinding("key.fullscreen", GLFW_KEY_F11, "key.categories.misc");
+        this->keyBindHideGui      = new KeyBinding("key.hideGui", GLFW_KEY_F1, "key.categories.misc");
+        this->keyBindToggleDebugOverlay = new KeyBinding("key.toggleDebugOverlay", GLFW_KEY_F3, "key.categories.misc");
+        this->keyBindExitGame     = new KeyBinding("key.exitGame", GLFW_KEY_F12, "key.categories.misc");
+        this->keyBindZoom         = new KeyBinding("key.zoom", GLFW_KEY_C, "key.categories.misc");
+        this->keyFreelook         = new KeyBinding("key.freelook", GLFW_KEY_LEFT_ALT, "key.categories.misc");
     }
 
     this->keyBindHotbar = {
-            &this->keyBindHotbar1,
-            &this->keyBindHotbar2,
-            &this->keyBindHotbar3,
-            &this->keyBindHotbar4,
-            &this->keyBindHotbar5,
-            &this->keyBindHotbar6,
-            &this->keyBindHotbar7,
-            &this->keyBindHotbar8,
-            &this->keyBindHotbar9
+            this->keyBindHotbar1,
+            this->keyBindHotbar2,
+            this->keyBindHotbar3,
+            this->keyBindHotbar4,
+            this->keyBindHotbar5,
+            this->keyBindHotbar6,
+            this->keyBindHotbar7,
+            this->keyBindHotbar8,
+            this->keyBindHotbar9
     };
 
     this->keyBinds = {};
-    this->keyBinds.push_back(&this->keyBindForward);
-    this->keyBinds.push_back(&this->keyBindLeft);
-    this->keyBinds.push_back(&this->keyBindBack);
-    this->keyBinds.push_back(&this->keyBindRight);
-    this->keyBinds.push_back(&this->keyBindJump);
-    this->keyBinds.push_back(&this->keyBindSneak);
-    this->keyBinds.push_back(&this->keyBindSprint);
-    this->keyBinds.push_back(&this->keyBindInventory);
-    this->keyBinds.push_back(&this->keyBindUseItem);
-    this->keyBinds.push_back(&this->keyBindDrop);
-    this->keyBinds.push_back(&this->keyBindAttack);
-    this->keyBinds.push_back(&this->keyBindPickItem);
-    this->keyBinds.push_back(&this->keyBindMouseBack);
-    this->keyBinds.push_back(&this->keyBindMouseForward);
-    this->keyBinds.push_back(&this->keyBindChat);
-    this->keyBinds.push_back(&this->keyBindPlayerList);
-    this->keyBinds.push_back(&this->keyBindCommand);
-    this->keyBinds.push_back(&this->keyBindScreenshot);
-    this->keyBinds.push_back(&this->keyBindPerspective);
-    this->keyBinds.push_back(&this->keyBindSmoothCamera);
-    this->keyBinds.push_back(&this->keyBindFullscreen);
-    this->keyBinds.push_back(&this->keyBindHideGui);
-    this->keyBinds.push_back(&this->keyBindToggleDebugOverlay);
-    this->keyBinds.push_back(&this->keyBindExitGame);
-    this->keyBinds.push_back(&this->keyBindZoom);
-    this->keyBinds.push_back(&this->keyFreelook);
+    this->keyBinds.push_back(this->keyBindForward);
+    this->keyBinds.push_back(this->keyBindLeft);
+    this->keyBinds.push_back(this->keyBindBack);
+    this->keyBinds.push_back(this->keyBindRight);
+    this->keyBinds.push_back(this->keyBindJump);
+    this->keyBinds.push_back(this->keyBindSneak);
+    this->keyBinds.push_back(this->keyBindSprint);
+    this->keyBinds.push_back(this->keyBindInventory);
+    this->keyBinds.push_back(this->keyBindUseItem);
+    this->keyBinds.push_back(this->keyBindDrop);
+    this->keyBinds.push_back(this->keyBindAttack);
+    this->keyBinds.push_back(this->keyBindPickItem);
+    this->keyBinds.push_back(this->keyBindMouseBack);
+    this->keyBinds.push_back(this->keyBindMouseForward);
+    this->keyBinds.push_back(this->keyBindChat);
+    this->keyBinds.push_back(this->keyBindPlayerList);
+    this->keyBinds.push_back(this->keyBindCommand);
+    this->keyBinds.push_back(this->keyBindScreenshot);
+    this->keyBinds.push_back(this->keyBindPerspective);
+    this->keyBinds.push_back(this->keyBindSmoothCamera);
+    this->keyBinds.push_back(this->keyBindFullscreen);
+    this->keyBinds.push_back(this->keyBindHideGui);
+    this->keyBinds.push_back(this->keyBindToggleDebugOverlay);
+    this->keyBinds.push_back(this->keyBindExitGame);
+    this->keyBinds.push_back(this->keyBindZoom);
+    this->keyBinds.push_back(this->keyFreelook);
 
     for (auto* kb : this->keyBinds) {
         KeyBinding::registerBinding(kb);
@@ -177,6 +178,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"fancyGraphics", true},
             {"ambientOcclusion", 2},
             {"reducedDebugInfo", false},
+            {"forceUnicodeFont", false},
     };
 
     for (auto& keybind : this->keyBinds) {
@@ -225,6 +227,7 @@ void GameSettings::loadSettings() {
     this->fancyGraphics        = this->settingsJson.value("fancyGraphics", true);
     this->ambientOcclusion     = this->settingsJson.value("ambientOcclusion", 2);
     this->reducedDebugInfo     = this->settingsJson.value("reducedDebugInfo", false);
+    this->forceUnicodeFont     = this->settingsJson.value("forceUnicodeFont", false);
 
     KeyBinding::resetKeyBindingArrayAndHash();
     KeyBinding::unregisterAllBinds();
@@ -283,6 +286,7 @@ void GameSettings::saveSettings() {
         this->settingsJson["fancyGraphics"]        = this->fancyGraphics;
         this->settingsJson["ambientOcclusion"]     = this->ambientOcclusion;
         this->settingsJson["reducedDebugInfo"]     = this->reducedDebugInfo;
+        this->settingsJson["forceUnicodeFont"]     = this->forceUnicodeFont;
     }
 
     std::ofstream file(this->settingsFilePath);

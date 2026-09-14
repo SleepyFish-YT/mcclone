@@ -6,12 +6,12 @@
 #ifndef MCCLONE_GAMESETTINGS_H
 #define MCCLONE_GAMESETTINGS_H
 
-#include "KeyBinding.h"
-
 #include <nlohmann/json.hpp>
 #include <filesystem>
 #include <vector>
 #include <array>
+
+class KeyBinding;
 
 /**
  * @author SleepyFish
@@ -56,51 +56,52 @@ public:
     bool fancyGraphics;
     int ambientOcclusion;
     bool reducedDebugInfo;
+    bool forceUnicodeFont;
 
     // Movement
-    KeyBinding keyBindForward {"", 0, ""};
-    KeyBinding keyBindLeft {"", 0, ""};
-    KeyBinding keyBindBack {"", 0, ""};
-    KeyBinding keyBindRight {"", 0, ""};
-    KeyBinding keyBindJump {"", 0, ""};
-    KeyBinding keyBindSneak {"", 0, ""};
-    KeyBinding keyBindSprint {"", 0, ""};
+    KeyBinding* keyBindForward;
+    KeyBinding* keyBindLeft;
+    KeyBinding* keyBindBack;
+    KeyBinding* keyBindRight;
+    KeyBinding* keyBindJump;
+    KeyBinding* keyBindSneak;
+    KeyBinding* keyBindSprint;
 
     // Inventory
-    KeyBinding keyBindInventory {"", 0, ""};
-    KeyBinding keyBindHotbar1 {"", 0, ""};
-    KeyBinding keyBindHotbar2 {"", 0, ""};
-    KeyBinding keyBindHotbar3 {"", 0, ""};
-    KeyBinding keyBindHotbar4 {"", 0, ""};
-    KeyBinding keyBindHotbar5 {"", 0, ""};
-    KeyBinding keyBindHotbar6 {"", 0, ""};
-    KeyBinding keyBindHotbar7 {"", 0, ""};
-    KeyBinding keyBindHotbar8 {"", 0, ""};
-    KeyBinding keyBindHotbar9 {"", 0, ""};
+    KeyBinding* keyBindInventory;
+    KeyBinding* keyBindHotbar1;
+    KeyBinding* keyBindHotbar2;
+    KeyBinding* keyBindHotbar3;
+    KeyBinding* keyBindHotbar4;
+    KeyBinding* keyBindHotbar5;
+    KeyBinding* keyBindHotbar6;
+    KeyBinding* keyBindHotbar7;
+    KeyBinding* keyBindHotbar8;
+    KeyBinding* keyBindHotbar9;
 
     // Gameplay
-    KeyBinding keyBindUseItem {"", 0, ""};
-    KeyBinding keyBindDrop {"", 0, ""};
-    KeyBinding keyBindAttack {"", 0, ""};
-    KeyBinding keyBindPickItem {"", 0, ""};
-    KeyBinding keyBindMouseBack {"", 0, ""};
-    KeyBinding keyBindMouseForward {"", 0, ""};
+    KeyBinding* keyBindUseItem;
+    KeyBinding* keyBindDrop;
+    KeyBinding* keyBindAttack;
+    KeyBinding* keyBindPickItem;
+    KeyBinding* keyBindMouseBack;
+    KeyBinding* keyBindMouseForward;
 
     // Multiplayer
-    KeyBinding keyBindChat {"", 0, ""};
-    KeyBinding keyBindPlayerList {"", 0, ""};
-    KeyBinding keyBindCommand {"", 0, ""};
+    KeyBinding* keyBindChat;
+    KeyBinding* keyBindPlayerList;
+    KeyBinding* keyBindCommand;
 
     // Misc
-    KeyBinding keyBindScreenshot {"", 0, ""};
-    KeyBinding keyBindPerspective {"", 0, ""};
-    KeyBinding keyBindSmoothCamera {"", 0, ""};
-    KeyBinding keyBindHideGui {"", 0, ""};
-    KeyBinding keyBindToggleDebugOverlay {"", 0, ""};
-    KeyBinding keyBindFullscreen {"", 0, ""};
-    KeyBinding keyBindExitGame {"", 0, ""};
-    KeyBinding keyBindZoom {"", 0, ""};
-    KeyBinding keyFreelook {"", 0, ""};
+    KeyBinding* keyBindScreenshot;
+    KeyBinding* keyBindPerspective;
+    KeyBinding* keyBindSmoothCamera;
+    KeyBinding* keyBindHideGui;
+    KeyBinding* keyBindToggleDebugOverlay;
+    KeyBinding* keyBindFullscreen;
+    KeyBinding* keyBindExitGame;
+    KeyBinding* keyBindZoom;
+    KeyBinding* keyFreelook;
 
     std::array<KeyBinding*, 9> keyBindHotbar;
     std::vector<KeyBinding*> keyBinds;

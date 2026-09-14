@@ -25,17 +25,17 @@ private:
 
     static std::unordered_set<std::string> keybindSet;
 
-    std::string keyDescription;
+    std::string keyDescription{};
 
-    std::string keyCategory;
+    std::string keyCategory{};
 
-    uint16_t keyCode;
+    uint16_t keyCode{};
 
-    uint16_t keyCodeDefault;
+    uint16_t keyCodeDefault{};
 
-    bool pressed;
+    bool pressed{};
 
-    uint16_t pressTime;
+    uint16_t pressTime{};
 
     void unpressKey() noexcept;
 
@@ -63,8 +63,6 @@ public:
     static const std::unordered_set<std::string>& getKeybinds();
 
     static size_t getRegisteredCount() noexcept;
-
-
 
     bool isKeyDown() const noexcept;
 

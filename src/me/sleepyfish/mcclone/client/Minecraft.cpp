@@ -4,9 +4,11 @@
 //
 
 #include "Minecraft.h"
+#include "../../sava/FutureTaskQueue.h"
 
 #include "main/GameConfiguration.h"
 #include "settings/GameSettings.h"
+#include "settings/KeyBinding.h"
 #include "audio/SoundEngine.h"
 #include "renderer/GlStateManager.h"
 #include "renderer/OpenGlHelper.h"
@@ -44,8 +46,8 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
     this->fileAssets = gameConfig->folderInformation.assetsDir;
     this->fileResourcepacks = gameConfig->folderInformation.resourcePacksDir;
     this->launchedVersion = gameConfig->gameInformation.version;
-    // this->profileProperties = gameConfig.userInformation.profileProperties;
-    // this->mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig.folderInformation.assetsDir, gameConfig.folderInformation.assetIndex)).getResourceMap());
+    // this->profileProperties = gameConfig->userInformation.profileProperties;
+    // this->mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig->folderInformation.assetsDir, gameConfig->folderInformation.assetIndex)).getResourceMap());
 
     this->displayWidth = gameConfig->displayInformation.width > 0 ? gameConfig->displayInformation.width : 1;
     this->displayHeight = gameConfig->displayInformation.height > 0 ? gameConfig->displayInformation.height : 1;
@@ -53,6 +55,9 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
     this->tempDisplayHeight = gameConfig->displayInformation.height;
     this->fullscreen = gameConfig->displayInformation.fullscreen;
     this->enableGLErrorChecking = gameConfig->displayInformation.showGlErrors;
+    this->debuggerEnabled = gameConfig->debugMode;
+
+    this->scheduledTasks = new FutureTaskQueue<void>();
 
     this->hasCrashed = false;
     this->connectedToRealms = false;
@@ -75,7 +80,6 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
     this->theTimer = new Timer(20.0f);
     this->frameTimer = new FrameTimer();
 
-    this->fpsCounter = 0;
     Minecraft::debugFPS = 0;
 
     Minecraft::instance = this;
@@ -93,20 +97,24 @@ void Minecraft::shutdownMinecraftApplet() {
     try {
         Logger::log("Stopping!");
     } catch (const std::exception& e) {
-
+        Logger::error("Exception in Minecraft::shutdownMinecraftApplet: {}", e.what());
     }
 }
 
 void Minecraft::run() {
-    Logger::log("Update thread started");
+    if (this->debuggerEnabled) {
+        Logger::log("Update thread started");
+    }
 
     try {
         DefaultVertexFormats::staticInit();
 
         this->startGame();
     } catch (const std::exception& e) {
-        Logger::fatal("startGame failed: {}", e.what());
-        this->hasCrashed = true;
+        Logger::fatal("Exception in Minecraft::run::startGame: {}", e.what());
+        // final CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Initializing game");
+        // crashreport.makeCategory("Initialization");
+        // this.displayCrashReport(this.addGraphicsAndWorldToCrashReport(crashreport));
         return;
     }
 
@@ -116,23 +124,24 @@ void Minecraft::run() {
                 try {
                     this->runGameLoop();
                 } catch (const std::exception& e) {
-                    Logger::fatal("Exception: {}", e.what());
+                    Logger::fatal("Exception in Minecraft::run::runGameLoop: {}", e.what());
                     throw;
                 }
             }
         }
-    } catch (const McCloneError& e) {
-        Logger::fatal("McCloneError: {}", e.what());
-        throw;
     } catch (const std::exception& e) {
-        Logger::fatal("Exception: {}", e.what());
-        throw;
-    } catch (...) {
-        this->shutdownMinecraftApplet();
+        // CrashReport crashreport1 = this->addGraphicsAndWorldToCrashReport(new CrashReport("Unexpected error", throwable1));
+        // this->freeMemory();
+        Logger::fatal("Exception in Minecraft::run: {}", e.what());
+        // this->displayCrashReport(crashreport1);
         throw;
     }
 
-    Logger::log("Update thread stopped");
+    this->shutdownMinecraftApplet();
+
+    if (this->debuggerEnabled) {
+        Logger::log("Update thread stopped");
+    }
 }
 
 void Minecraft::onStop() {
@@ -149,7 +158,6 @@ void Minecraft::initializeFramebuffer() {
 
 void Minecraft::updateFramebufferSize() {
     this->framebufferMc->createBindFramebuffer_(this->displayWidth, this->displayHeight);
-
     // if (this->entityRenderer != nullptr) {
     //     this->entityRenderer.updateShaderGroupSize(this->displayWidth, this->displayHeight);
     // }
@@ -193,10 +201,10 @@ void Minecraft::runGameLoop() {
             this->theTimer->updateTimer();
         }
 
-        if (!this->scheduledTasks.empty()) {
+        if (!this->scheduledTasks->empty()) {
             this->mcProfiler->startSection("scheduledExecutables");
             {
-                this->scheduledTasks.runAll();
+                this->scheduledTasks->runAll();
             }
             this->mcProfiler->endSection();
         }
@@ -212,7 +220,7 @@ void Minecraft::runGameLoop() {
     this->theTimer->sleepToNextTick();
 }
 
-void Minecraft::renderGameLoop() {
+void Minecraft::renderGameLoop(bool hasFocus) {
     if (this->pendingResize.load(std::memory_order_acquire)) {
         this->pendingResize.store(false, std::memory_order_relaxed);
         this->displayWidth  = (int) MathHelper::abs_max(1, this->pendingResizeW.load());
@@ -237,7 +245,7 @@ void Minecraft::renderGameLoop() {
                     int x = 40;
                     int y = 40;
 
-                    Tessellator &tess = Tessellator::getInstance();
+                    static Tessellator &tess = Tessellator::getInstance();
                     WorldRenderer &renderer = tess.getWorldRenderer();
                     {
                         renderer.begin(7, DefaultVertexFormats::ITEM);
@@ -253,6 +261,10 @@ void Minecraft::renderGameLoop() {
         }
     }
     this->framebufferMc->framebufferRender_(this->displayWidth, this->displayHeight);
+}
+
+bool Minecraft::isUnicode() const noexcept {
+    return /* this->mcLanguageManager->isCurrentLocaleUnicode() || */ this->gameSettings->forceUnicodeFont;
 }
 
 bool Minecraft::isGamePaused() const noexcept {
@@ -283,13 +295,16 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
         }
 
         if (action == GLFW_PRESS) {
-            if (key == settings.keyBindScreenshot.getKeyCode()) {
+            if (key == settings.keyBindScreenshot->getKeyCode()) {
                 // ScreenshotHelper::saveScreenshot(...)
-                Logger::log("base: {}", (void*) this);
-                Logger::log("loc: {}", (void*) Minecraft::locationMojangPng);
+
+                if (this->debuggerEnabled) {
+                    Logger::log("base: {}", (void*) this);
+                    Logger::log("loc: {}", (void*) Minecraft::locationMojangPng);
+                }
             }
 
-            if (key == settings.keyBindPerspective.getKeyCode()) {
+            if (key == settings.keyBindPerspective->getKeyCode()) {
                 ++settings.thirdPersonView;
 
                 if (settings.thirdPersonView > 2) {
@@ -360,11 +375,11 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
                 }
 
                 // F1 - hide HUD
-                if (key == settings.keyBindHideGui.getKeyCode()) {
+                if (key == settings.keyBindHideGui->getKeyCode()) {
                     // settings.hideGUI = !settings.hideGUI;
                 }
 
-                if (key == settings.keyBindToggleDebugOverlay.getKeyCode()) {
+                if (key == settings.keyBindToggleDebugOverlay->getKeyCode()) {
                     settings.showDebugInfo = !settings.showDebugInfo;
                 }
             }
@@ -381,24 +396,24 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
             }
 
             // Inventory
-            if (key == settings.keyBindInventory.getKeyCode()) {
+            if (key == settings.keyBindInventory->getKeyCode()) {
                 // this->displayGuiScreen(GuiInventory(this->thePlayer));
             }
 
             // Drop item
-            if (key == settings.keyBindDrop.getKeyCode()) {
+            if (key == settings.keyBindDrop->getKeyCode()) {
                 // if (!this->thePlayer.isSpectator()) {
                 //     this->thePlayer.dropOneItem((mods & GLFW_MOD_CONTROL) != 0);
                 // }
             }
 
             // Chat
-            if (key == settings.keyBindChat.getKeyCode()) {
+            if (key == settings.keyBindChat->getKeyCode()) {
                 // this->displayGuiScreen(GuiChat());
             }
 
             // Command
-            if (key == settings.keyBindCommand.getKeyCode()) {
+            if (key == settings.keyBindCommand->getKeyCode()) {
                 // this->displayGuiScreen(GuiChat("/"));
             }
 
@@ -432,29 +447,32 @@ void Minecraft::handleMouseButton(int button, int action, int mods) {
         if (action == GLFW_PRESS) {
             KeyBinding::onTick(keyCode);
 
-            if (keyCode == this->gameSettings->keyBindPickItem.getKeyCode()) {
+            if (keyCode == this->gameSettings->keyBindPickItem->getKeyCode()) {
                 // if (this->thePlayer.isSpectator()) {
                 //     this->ingameGUI.getSpectatorGui().func_175261_b();
                 // } else {
                 //     this->displayGuiScreen(GuiInventory(this->thePlayer));
                 // }
-                Logger::log("Middle click mouse");
+
+                if (this->debuggerEnabled) {
+                    Logger::log("Middle click mouse");
+                }
             }
 
-            if (keyCode == this->gameSettings->keyBindAttack.getKeyCode()) {
-                // this->leftClickMouse();
+            if (keyCode == this->gameSettings->keyBindAttack->getKeyCode()) {
+                this->leftClickMouse();
             }
 
-            if (keyCode == this->gameSettings->keyBindUseItem.getKeyCode()) {
-                // this->rightClickMouse();
+            if (keyCode == this->gameSettings->keyBindUseItem->getKeyCode()) {
+                this->rightClickMouse();
             }
         }
 
         if (action == GLFW_RELEASE) {
             // if player is using item and key released, stop using
-            // if (!this->gameSettings.keyBindUseItem.isKeyDown()) {
+            if (!this->gameSettings->keyBindUseItem->isKeyDown()) {
             //     this->playerController.onStoppedUsingItem(this->thePlayer);
-            // }
+            }
         }
     }
     this->mcProfiler->endSection();
@@ -511,3 +529,80 @@ void Minecraft::onFullscreenChange(bool fullscreen_, int width, int height) {
     this->fullscreen = fullscreen_;
 }
 
+void Minecraft::leftClickMouse() {
+    if (this->leftClickCounter >= 0) {
+        return;
+    }
+
+    // this.thePlayer.swingItem();
+
+    if (this->objectMouseOver == nullptr) {
+        // if (this->playerController->isNotCreative()) {
+        //     this->leftClickCounter = 10;
+        // }
+        return;
+    }
+
+    switch (this->objectMouseOver->typeOfHit) {
+        case MovingObjectPosition::MovingObjectType::ENTITY: {
+            // this->playerController->attackEntity(this->thePlayer, this->objectMouseOver->entityHit);
+            break;
+        }
+
+        case MovingObjectPosition::MovingObjectType::BLOCK: {
+            auto blockPos = this->objectMouseOver->getBlockPos();
+            // if (this->theWorld->getBlockState(blockpos).getBlock().getMaterial() != Materials::air) {
+            //     this->playerController->clickBlock(blockpos, this->objectMouseOver->sideHit);
+            //     break;
+            // }
+            break;
+        }
+
+        case MovingObjectPosition::MovingObjectType::MISS: {
+            // if (this->playerController->isNotCreative()) {
+            //     this->leftClickCounter = 10;
+            // }
+            break;
+        }
+    }
+}
+
+void Minecraft::rightClickMouse() {
+
+}
+
+void Minecraft::setIngameFocus() {
+    if (this->_windowHasFocus) {
+        if (!this->inGameHasFocus) {
+            this->inGameHasFocus = true;
+            // this->mouseHelper.grabMouseCursor();
+            // this->displayGuiScreen((GuiScreen) nullptr);
+            this->leftClickCounter = 255; // usually 1000
+        }
+    }
+}
+
+void Minecraft::setIngameNotInFocus() {
+    if (this->inGameHasFocus) {
+        KeyBinding::unPressAllKeys();
+        this->inGameHasFocus = false;
+        // this->mousehelper.ungrabMouseCursor();
+    }
+}
+
+void Minecraft::displayInGameMenu() {
+    /*
+    if (this->currentScreen == nullptr) {
+        this->displayGuiScreen((new GuiIngameMenu()));
+
+        if (this->isSingleplayer() && !this->theIntegratedServer->getPublic()) {
+            this->mcSoundHandler->pauseSounds();
+        }
+    }
+    */
+}
+
+void Minecraft::crashed(CrashReport *crash) {
+    this->hasCrashed = true;
+    this->crashReporter = crash;
+}

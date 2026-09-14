@@ -14,7 +14,9 @@
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <glfw/glfw3.h>
+
+#define MCCLONE_GLFW_CALLBACK void
 
 class Minecraft;
 class RenderInformation;
@@ -79,23 +81,22 @@ public:
 
     void toggleCaptureMouse();
 
-    GLFWkeyfun handleKeypress(GLFWwindow* window, int key, int scancode, int action, int mods);
+    MCCLONE_GLFW_CALLBACK handleKeypress(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-    GLFWmousebuttonfun handleMouseButton(GLFWwindow* window, int button, int action, int mods);
+    MCCLONE_GLFW_CALLBACK handleMouseButton(GLFWwindow* window, int button, int action, int mods);
 
-    GLFWcursorposfun handleMouseMove(GLFWwindow* window, double xpos, double ypos);
+    MCCLONE_GLFW_CALLBACK handleMouseMove(GLFWwindow* window, double xpos, double ypos);
 
-    GLFWscrollfun handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
+    MCCLONE_GLFW_CALLBACK handleMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 
-    GLFWframebuffersizefun handleFramebufferResize(GLFWwindow* window, int width, int height);
+    MCCLONE_GLFW_CALLBACK handleFramebufferResize(GLFWwindow* window, int width, int height);
 
-    GLFWwindowfocusfun handleWindowFocus(GLFWwindow* window, int focused);
+    MCCLONE_GLFW_CALLBACK handleWindowFocus(GLFWwindow* window, int focused);
 
     RenderInformation* getRenderContext() noexcept;
 
     ::GLFWwindow* getWindow() noexcept;
 
 };
-
 
 #endif //MCCLONE_OPENGLWINDOW_H

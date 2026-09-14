@@ -6,6 +6,7 @@
 #include "MovementInputFromOptions.h"
 
 #include "../client/settings/GameSettings.h"
+#include "../client/settings/KeyBinding.h"
 
 MovementInputFromOptions::MovementInputFromOptions(GameSettings *gameSettings) noexcept :
     gameSettings(gameSettings)
@@ -15,24 +16,24 @@ void MovementInputFromOptions::updatePlayerMoveState() {
     this->moveStrafe = 0.0f;
     this->moveForward = 0.0f;
 
-    if (this->gameSettings->keyBindLeft.isKeyDown()) {
+    if (this->gameSettings->keyBindLeft->isKeyDown()) {
         ++this->moveForward;
     }
 
-    if (this->gameSettings->keyBindRight.isKeyDown()) {
+    if (this->gameSettings->keyBindRight->isKeyDown()) {
         --this->moveForward;
     }
 
-    if (this->gameSettings->keyBindBack.isKeyDown()) {
+    if (this->gameSettings->keyBindBack->isKeyDown()) {
         ++this->moveStrafe;
     }
 
-    if (this->gameSettings->keyBindJump.isKeyDown()) {
+    if (this->gameSettings->keyBindJump->isKeyDown()) {
         --this->moveStrafe;
     }
 
-    this->jump = this->gameSettings->keyBindSneak.isKeyDown();
-    this->sneak = this->gameSettings->keyBindSprint.isKeyDown();
+    this->jump = this->gameSettings->keyBindSneak->isKeyDown();
+    this->sneak = this->gameSettings->keyBindSprint->isKeyDown();
 
     if (this->sneak) {
         this->moveStrafe *= 0.3f;

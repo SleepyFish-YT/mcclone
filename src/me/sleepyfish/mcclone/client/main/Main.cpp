@@ -190,6 +190,8 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
     glWindow.stop();
     glWindow.join();
 
+    delete minecraft;
+
     return MCCLONE_ERR_NONE;
 }
 

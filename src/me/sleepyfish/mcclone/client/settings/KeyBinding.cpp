@@ -7,7 +7,7 @@
 
 #include "../../debug/Logger.h"
 
-#include <GLFW/glfw3.h>
+#include <glfw/glfw3.h>
 
 std::vector<KeyBinding*> KeyBinding::keybindArray {};
 std::unordered_map<uint16_t, KeyBinding*> KeyBinding::hash {};
