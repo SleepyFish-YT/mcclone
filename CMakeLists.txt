@@ -193,6 +193,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/renderer/texture/LayeredTexture.h
         ${SRC_DIR}/client/renderer/texture/Stitcher.cpp
         ${SRC_DIR}/client/renderer/texture/Stitcher.h
+        ${SRC_DIR}/client/renderer/texture/TextureMap.cpp
+        ${SRC_DIR}/client/renderer/texture/TextureMap.h
         ${SRC_DIR}/client/renderer/texture/TextureManager.cpp
         ${SRC_DIR}/client/renderer/texture/TextureManager.h
 
