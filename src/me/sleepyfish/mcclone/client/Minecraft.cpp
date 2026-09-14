@@ -83,10 +83,6 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
 
     this->textureMapBlocks = new TextureMap("textures");
     this->textureMapBlocks->setMipmapLevels(this->gameSettings->mipmapLevels);
-    // this->renderEngine.loadTickableTexture(TextureMap::LOCATION_BLOCKS_TEXTURE, this->textureMapBlocks);
-    // this->renderEngine.bindTexture(TextureMap::LOCATION_BLOCKS_TEXTURE);
-    this->textureMapBlocks->setBlurMipmapDirect(false, this->gameSettings->mipmapLevels > 0);
-    // this->modelManager = new ModelManager(this->textureMapBlocks);
 
     Minecraft::debugFPS = 0;
 
@@ -94,8 +90,6 @@ Minecraft::Minecraft(GameConfiguration* gameConfig) :
         this->serverName = gameConfig->serverInformation.serverName;
         this->serverPort = gameConfig->serverInformation.serverPort;
     }
-
-
 
     Minecraft::instance = this;
 }
@@ -169,6 +163,18 @@ void Minecraft::initializeFramebuffer() {
 
     this->framebufferMc = new Framebuffer(this->displayWidth, this->displayHeight, true);
     this->framebufferMc->setFramebufferColor_(0.53f, 0.41f, 0.72f, 1.0f);
+
+    if (this->textureMapBlocks == nullptr) {
+        Logger::fatal("Minecraft::initializeFramebuffer: TextureMapBlocks is null!");
+        return;
+    }
+
+    // this->renderEngine.loadTickableTexture(TextureMap::LOCATION_BLOCKS_TEXTURE, this->textureMapBlocks);
+    // this->renderEngine.bindTexture(TextureMap::LOCATION_BLOCKS_TEXTURE);
+    this->textureMapBlocks->setBlurMipmapDirect(false, this->gameSettings->mipmapLevels > 0);
+    // this->modelManager = new ModelManager(this->textureMapBlocks);
+
+    Logger::log("textureMapBlocks - glTextureId: {}", this->textureMapBlocks->getGlTextureId());
 }
 
 void Minecraft::updateFramebufferSize() {
@@ -265,14 +271,17 @@ void Minecraft::renderGameLoop(bool hasFocus) {
 
                     static Tessellator &tess = Tessellator::getInstance();
                     WorldRenderer &renderer = tess.getWorldRenderer();
+
+                    GlStateManager::bindTexture_(this->textureMapBlocks->getGlTextureId());
                     {
-                        renderer.begin(7, DefaultVertexFormats::ITEM);
+                        renderer.begin(7, DefaultVertexFormats::POSITION_TEX_NORMAL);
                         renderer.pos(x, l, 0).tex((float) x / f, (float) l / f).color(64, 64, 128, 255).endVertex();
                         renderer.pos(k, l, 0).tex((float) k / f, (float) l / f).color(64, 64, 128, 255).endVertex();
                         renderer.pos(k, y, 0).tex((float) k / f, (float) y / f).color(64, 64, 128, 255).endVertex();
                         renderer.pos(x, y, 0).tex((float) x / f, (float) y / f).color(64, 64, 128, 255).endVertex();
                     }
                     tess.draw();
+                    GlStateManager::bindTexture_(0);
                 }
                 this->mcProfiler->endSection();
             }
