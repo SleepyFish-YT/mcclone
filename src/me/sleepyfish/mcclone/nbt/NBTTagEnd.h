@@ -23,9 +23,9 @@ public:
 
     NBTTagEnd() = default;
 
-    void write(std::ostream& output) const override {}
+    void write(std::ostream &output) const override {}
 
-    void read(std::istream& input, int depth, NBTSizeTracker& sizeTracker) override {
+    void read(std::istream &input, int depth, NBTSizeTracker &sizeTracker) override {
         sizeTracker.read(64ll);
     }
 

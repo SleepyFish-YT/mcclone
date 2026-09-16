@@ -17,9 +17,9 @@ public:
 
     virtual ~IRegistry() = default;
 
-    virtual V* getObject(const K& name) = 0;
+    virtual V *getObject(const K &name) = 0;
 
-    virtual void putObject(const K& key, V* value) = 0;
+    virtual void putObject(const K &key, V *value) = 0;
 
 };
 

@@ -20,11 +20,11 @@ public:
     {}
 
     template<typename... Args>
-    explicit NumberInvalidException(const std::string& message, Args&&... args) :
+    explicit NumberInvalidException(const std::string &message, Args&&... args) :
         CommandException(message, std::forward<Args>(args)...)
     {}
 
-    explicit NumberInvalidException(const std::string& message, const std::vector<std::string>& params) :
+    explicit NumberInvalidException(const std::string &message, const std::vector<std::string> &params) :
         CommandException(message, params)
     {}
 

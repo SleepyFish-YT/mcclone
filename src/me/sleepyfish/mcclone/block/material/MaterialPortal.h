@@ -16,7 +16,7 @@ class MaterialPortal : public Material {
 
 public:
 
-    explicit MaterialPortal(const MapColor& color) :
+    explicit MaterialPortal(const MapColor &color) :
         Material(color)
     {
         this->setAdventureModeExempt();

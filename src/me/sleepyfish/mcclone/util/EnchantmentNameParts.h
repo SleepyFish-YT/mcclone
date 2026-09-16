@@ -41,9 +41,9 @@ public:
 
     // disable copy and move
     EnchantmentNameParts(const EnchantmentNameParts&) = delete;
-    EnchantmentNameParts& operator=(const EnchantmentNameParts&) = delete;
+    EnchantmentNameParts &operator=(const EnchantmentNameParts&) = delete;
 
-    static EnchantmentNameParts& getInstance() noexcept {
+    static EnchantmentNameParts &getInstance() noexcept {
         static EnchantmentNameParts instance;
         return instance;
     }

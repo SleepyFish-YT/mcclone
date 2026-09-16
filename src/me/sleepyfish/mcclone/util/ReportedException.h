@@ -18,15 +18,15 @@ class ReportedException : public std::exception {
 
 public:
 
-    const CrashReport* crashReport{};
+    const CrashReport *crashReport{};
 
-    explicit ReportedException(CrashReport* crashReport) :
+    explicit ReportedException(CrashReport *crashReport) :
         crashReport(crashReport)
     {}
 
-    explicit ReportedException(const std::string& message) : std::exception(message.c_str()) {}
+    explicit ReportedException(const std::string &message) : std::exception(message.c_str()) {}
 
-    char const* what() const override {
+    char const *what() const override {
         // return crashReport.getCrashReport();
         return "DONT FORGET: ReportedException not implemented yet!!!";
     }

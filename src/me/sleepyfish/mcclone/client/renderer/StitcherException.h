@@ -16,7 +16,7 @@ class StitcherException : public std::exception {
 
 public:
 
-    StitcherException( const std::string& message) :
+    StitcherException( const std::string &message) :
         std::exception(message.c_str())
     {}
 

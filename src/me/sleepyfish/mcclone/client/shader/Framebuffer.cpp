@@ -12,6 +12,7 @@
 #include "../renderer/Tessellator.h"
 #include "../renderer/WorldRenderer.h"
 #include "../renderer/vertex/DefaultVertexFormats.h"
+#include "../../debug/Logger.h"
 
 #include <glad/glad.h>
 

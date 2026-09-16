@@ -106,6 +106,14 @@ void WorldRenderer::reset() {
     m_quadSprite          = nullptr;
     m_modeTriangles       = false;
     animatedSprites.clear();
+
+    constexpr size_t INITIAL_SIZE = 2097152;
+    if (m_byteBuffer.size() > INITIAL_SIZE * 4) {
+        m_byteBuffer.resize(INITIAL_SIZE * 4);
+        m_byteBuffer.shrink_to_fit();
+        rawIntBuffer.resize(INITIAL_SIZE);
+        rawIntBuffer.shrink_to_fit();
+    }
 }
 
 void WorldRenderer::begin(int glMode, const VertexFormat& format) {
@@ -146,14 +154,6 @@ void WorldRenderer::finishDrawing() {
 }
 
 WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
-    int bytesNeeded = (vertexCount + 1) * m_vertexFormat.getNextOffset();
-    if (bytesNeeded > static_cast<int>(m_byteBuffer.size())) {
-        int oldBytes = static_cast<int>(m_byteBuffer.size());
-        int newBytes = std::max(bytesNeeded, oldBytes * 2);
-        m_byteBuffer.resize(newBytes, 0);
-        rawIntBuffer.resize(newBytes / 4, 0);
-    }
-
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
 #ifdef MCCLONE_DEBUG

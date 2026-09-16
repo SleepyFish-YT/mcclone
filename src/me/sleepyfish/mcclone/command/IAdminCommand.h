@@ -21,11 +21,11 @@ public:
     virtual ~IAdminCommand() = default;
 
     virtual void notifyOperators(
-            const ICommandSender& sender,
-            const ICommand& command,
+            const ICommandSender &sender,
+            const ICommand &command,
             int flags,
-            const std::string& msgFormat,
-            const std::vector<std::string>& msgParams  // std::any -> std::string
+            const std::string &msgFormat,
+            const std::vector<std::string> &msgParams  // std::any -> std::string
     ) = 0;
 
 };

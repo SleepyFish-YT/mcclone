@@ -26,11 +26,11 @@ public:
         return std::to_string(j) + (i < 10 ? ":0" : ":") + std::to_string(i);
     }
 
-    static std::string StripControlCodes(const std::string& str) {
+    static std::string StripControlCodes(const std::string &str) {
         return std::regex_replace(str, StringUtils::PATTERN_CONTROL_CODE, "");
     }
 
-    static bool IsNullOrEmpty(const std::string& str) noexcept {
+    static bool IsNullOrEmpty(const std::string &str) noexcept {
         return str.empty();
     }
 

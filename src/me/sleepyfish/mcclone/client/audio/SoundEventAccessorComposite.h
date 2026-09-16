@@ -33,7 +33,7 @@ private:
 
 public:
 
-    SoundEventAccessorComposite(const ResourceLocation& soundLocation, double pitch, double volume, SoundCategory category) :
+    SoundEventAccessorComposite(const ResourceLocation &soundLocation, double pitch, double volume, SoundCategory category) :
         soundLocation(soundLocation),
         eventVolume(volume),
         eventPitch(pitch),
@@ -43,7 +43,7 @@ public:
 
     int getWeight() override {
         int total = 0;
-        for (const auto& accessor : this->soundPool)
+        for (const auto &accessor : this->soundPool)
             total += accessor->getWeight();
         return total;
     }
@@ -55,7 +55,7 @@ public:
             std::uniform_int_distribution<int> dist(0, total - 1);
             int j = dist(this->rnd);
 
-            for (const auto& accessor : this->soundPool) {
+            for (const auto &accessor : this->soundPool) {
                 j -= accessor->getWeight();
 
                 if (j < 0) {
@@ -75,7 +75,7 @@ public:
         this->soundPool.push_back(sound);
     }
 
-    const ResourceLocation& getSoundEventLocation() const {
+    const ResourceLocation &getSoundEventLocation() const {
         return this->soundLocation;
     }
 

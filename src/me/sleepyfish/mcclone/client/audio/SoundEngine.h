@@ -35,19 +35,20 @@ public:
 
     // disable copy and move
     SoundEngine(std::filesystem::path  soundDir);
-    SoundEngine& operator=(const SoundEngine&) = delete;
+    SoundEngine &operator=(const SoundEngine&) = delete;
     SoundEngine(SoundEngine&&) = delete;
-    SoundEngine& operator=(SoundEngine&&) = delete;
+    SoundEngine &operator=(SoundEngine&&) = delete;
 
-    void playSound(const std::string& name, float volume = 1.0f, float pitch = 1.0f);
-    void playSound3D(const std::string& name, float x, float y, float z, float volume = 1.0f, float pitch = 1.0f);
+    void playSound(const std::string &name, float volume = 1.0f, float pitch = 1.0f);
+    void playSound3D(const std::string &name, float x, float y, float z, float volume = 1.0f, float pitch = 1.0f);
     void setListenerPosition3D(float x, float y, float z);
+    void setListenerOrientation(float atX, float atY, float atZ, float upX, float upY, float upZ);
     void cleanup();
     void destory(bool msg = true);
 
 private:
 
-    ::ALuint loadBuffer(const std::string& name);
+    ::ALuint loadBuffer(const std::string &name);
 
     ::ALCdevice* device;
     ::ALCcontext* context;

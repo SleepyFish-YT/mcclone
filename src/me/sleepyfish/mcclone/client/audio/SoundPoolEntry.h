@@ -26,14 +26,14 @@ public:
 
     const bool streamingSound;
 
-    SoundPoolEntry(const ResourceLocation& location, const double pitch, const double volume, const bool streamingSound) noexcept :
+    SoundPoolEntry(const ResourceLocation &location, const double pitch, const double volume, const bool streamingSound) noexcept :
         location(location),
         pitch(pitch),
         volume(volume),
         streamingSound(streamingSound)
     {}
 
-    SoundPoolEntry(const SoundPoolEntry& other) noexcept :
+    SoundPoolEntry(const SoundPoolEntry &other) noexcept :
         location(other.location),
         pitch(other.pitch),
         volume(other.volume),

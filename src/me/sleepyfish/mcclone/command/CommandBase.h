@@ -99,15 +99,15 @@ public:
     void processCommand(ICommandSender &sender, const std::vector<std::string> &args) override {
     }
 
-    bool canCommandSenderUseCommand(ICommandSender& sender) override {
+    bool canCommandSenderUseCommand(ICommandSender &sender) override {
         return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
     }
 
-    std::vector<std::string> addTabCompletionOptions(ICommandSender& sender, const std::vector<std::string>& args, const BlockPos& pos) override {
+    std::vector<std::string> addTabCompletionOptions(ICommandSender &sender, const std::vector<std::string> &args, const BlockPos &pos) override {
         return {};
     }
 
-    bool isUsernameIndex(const std::vector<std::string>& args, int index) override {
+    bool isUsernameIndex(const std::vector<std::string> &args, int index) override {
         return false;
     }
 
@@ -115,11 +115,11 @@ public:
         return this->getCommandName() < other.getCommandName();
     }
 
-    int compareTo(ICommand& other) {
+    int compareTo(ICommand &other) {
         return this->getCommandName().compare(other.getCommandName());
     }
 
-    static int parseInt(const std::string& input) {
+    static int parseInt(const std::string &input) {
         try {
             size_t pos;
             int result = std::stoi(input, &pos);
@@ -133,11 +133,11 @@ public:
         }
     }
 
-    static int parseInt(const std::string& input, int min) {
+    static int parseInt(const std::string &input, int min) {
         return CommandBase::parseInt(input, min, std::numeric_limits<int>::max());
     }
 
-    static int parseInt(const std::string& input, int min, int max) {
+    static int parseInt(const std::string &input, int min, int max) {
         int i = CommandBase::parseInt(input);
         if (i < min) {
             throw NumberInvalidException("commands.generic.num.tooSmall", { std::to_string(i), std::to_string(min) });
@@ -150,7 +150,7 @@ public:
         return i;
     }
 
-    static long parseLong(const std::string& input) {
+    static long parseLong(const std::string &input) {
         try {
             size_t pos;
             long result = std::stol(input, &pos);
@@ -164,7 +164,7 @@ public:
         }
     }
 
-    static long parseLong(const std::string& input, long min, long max) {
+    static long parseLong(const std::string &input, long min, long max) {
         long i = CommandBase::parseLong(input);
         if (i < min) {
             throw NumberInvalidException("commands.generic.num.tooSmall", { std::to_string(i), std::to_string(min) });
@@ -177,7 +177,7 @@ public:
         return i;
     }
 
-    static double parseDouble(const std::string& input) {
+    static double parseDouble(const std::string &input) {
         try {
             size_t pos;
             double d = std::stod(input, &pos);
@@ -197,11 +197,11 @@ public:
         }
     }
 
-    static double parseDouble(const std::string& input, double min) {
+    static double parseDouble(const std::string &input, double min) {
         return CommandBase::parseDouble(input, min, std::numeric_limits<double>::max());
     }
 
-    static double parseDouble(const std::string& input, double min, double max) {
+    static double parseDouble(const std::string &input, double min, double max) {
         double d = CommandBase::parseDouble(input);
         if (d < min) {
             throw NumberInvalidException("commands.generic.double.tooSmall", { std::to_string(d), std::to_string(min) });
@@ -215,7 +215,7 @@ public:
     }
 
     // Relative-coordinate overloads ("~" prefix)
-    static double parseDouble(double base, const std::string& input, bool centerBlock) {
+    static double parseDouble(double base, const std::string &input, bool centerBlock) {
         return CommandBase::parseDouble(base, input, -30000000, 30000000, centerBlock);
     }
 
@@ -254,7 +254,7 @@ public:
         return d;
     }
 
-    static CoordinateArg parseCoordinate(double base, const std::string& input, bool centerBlock) {
+    static CoordinateArg parseCoordinate(double base, const std::string &input, bool centerBlock) {
         return CommandBase::parseCoordinate(base, input, -30000000, 30000000, centerBlock);
     }
 

@@ -31,9 +31,9 @@ public:
 
     virtual ~NBTBase() = default;
 
-    virtual void write(std::ostream& output) const = 0;
+    virtual void write(std::ostream &output) const = 0;
 
-    virtual void read(std::istream& input, int depth, NBTSizeTracker& sizeTracker) = 0;
+    virtual void read(std::istream &input, int depth, NBTSizeTracker &sizeTracker) = 0;
 
     virtual std::string toString() const = 0;
 
@@ -43,7 +43,7 @@ public:
 
     virtual bool hasNoTags() const { return false; }
 
-    virtual bool operator==(const NBTBase& other) const {
+    virtual bool operator==(const NBTBase &other) const {
         return this->getId() == other.getId();
     }
 

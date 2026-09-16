@@ -27,30 +27,28 @@ class TextureManager : public ITickableTexture, public IResourceManagerReloadLis
 
 private:
 
-    std::unordered_map<ResourceLocation *, ITextureObject *> mapTextureObjects;
+    std::unordered_map<std::string, ITextureObject *> mapTextureObjects;
     std::vector<ITickableTexture *> listTickables;
     std::unordered_map<std::string, int> mapTextureCounters;
     IResourceManager *resourceManager;
 
 public:
 
-    TextureManager(IResourceManager *resourceManager) :
-        resourceManager(resourceManager)
-    {}
+    explicit TextureManager(IResourceManager *resourceManager) : resourceManager(resourceManager) {}
 
-    void bindTexture(ResourceLocation &resource);
+    void bindTexture(const ResourceLocation &resource);
 
-    bool loadTickableTexture(ResourceLocation &textureLocation, ITickableTextureObject *textureObj);
+    bool loadTickableTexture(const ResourceLocation &textureLocation, ITickableTextureObject *textureObj);
 
-    bool loadTexture(ResourceLocation &textureLocation, ITextureObject *textureObj);
+    bool loadTexture(const ResourceLocation &textureLocation, ITextureObject *textureObj);
 
-    ITextureObject *getTexture(ResourceLocation &textureLocation);
+    ITextureObject *getTexture(const ResourceLocation &textureLocation);
 
     ResourceLocation *getDynamicTextureLocation(std::string name, DynamicTexture *texture);
 
-    void tick() override;
+    void deleteTexture(const ResourceLocation &textureLocation);
 
-    void deleteTexture(ResourceLocation &textureLocation);
+    void update() override;
 
     void onResourceManagerReload(IResourceManager &resourceManager) override;
 

@@ -284,7 +284,7 @@ void TextureMap::updateAnimations() {
         sprite->updateAnimation();
 }
 
-void TextureMap::tick() {
+void TextureMap::update() {
     this->updateAnimations();
 }
 

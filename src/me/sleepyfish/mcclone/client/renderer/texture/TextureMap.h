@@ -7,25 +7,22 @@
 #define MCCLONE_TEXTUREMAP_H
 
 #include "AbstractTexture.h"
-#include "ITickableTexture.h"
+#include "ITickableTextureObject.h"
 
 #include <string>
 #include <vector>
 #include <unordered_map>
 
 class TextureAtlasSprite;
-
 class IResourceManager;
-
 class IIconCreator;
-
 class ResourceLocation;
 
 /**
  * @author SleepyFish
  * @brief Texture atlas map
  */
-class TextureMap : public AbstractTexture, public ITickableTexture {
+class TextureMap : public AbstractTexture, public ITickableTextureObject {
 
 public:
 
@@ -45,7 +42,7 @@ public:
     TextureAtlasSprite *getMissingSprite();
 
     void updateAnimations();
-    void tick() override;
+    void update() override;
 
     void setMipmapLevels(int levels);
 

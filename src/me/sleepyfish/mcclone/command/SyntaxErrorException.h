@@ -20,7 +20,7 @@ public:
     {}
 
     template<typename... Args>
-    explicit SyntaxErrorException(const std::string& message, Args&&... args) :
+    explicit SyntaxErrorException(const std::string &message, Args&&... args) :
         CommandException(message, std::forward<Args>(args)...)
     {}
 

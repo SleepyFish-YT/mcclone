@@ -42,11 +42,11 @@ public:
         return "PropertyHelper{name=" + this->name + ", clazz=" + this->valueClass.name() + "}";
     }
 
-    bool operator==(const PropertyHelper<T>& other) const {
+    bool operator==(const PropertyHelper<T> &other) const {
         return this->valueClass == other.valueClass && this->name == other.name;
     }
 
-    bool operator!=(const PropertyHelper<T>& other) const {
+    bool operator!=(const PropertyHelper<T> &other) const {
         return *this != other;
     }
 

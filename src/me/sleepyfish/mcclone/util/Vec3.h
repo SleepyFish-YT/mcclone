@@ -36,7 +36,7 @@ public:
         Vec3(vec.x, vec.y, vec.z)
     {}
 
-    Vec3& operator=(const Vec3& other) noexcept {
+    Vec3 &operator=(const Vec3 &other) noexcept {
         if (this != &other) {
             this->xCoord = other.xCoord;
             this->yCoord = other.yCoord;

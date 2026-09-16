@@ -32,7 +32,7 @@ public:
         errorObjects({ std::any(std::forward<Args>(args))... })
     {}
 
-    explicit CommandException(std::string  message, const std::vector<std::string>& params) :
+    explicit CommandException(std::string  message, const std::vector<std::string> &params) :
         message(std::move(message)),
         errorObjects({ std::any(params) })
     {}

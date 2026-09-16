@@ -16,7 +16,7 @@ class MaterialTransparent : public Material {
 
 public:
 
-    explicit MaterialTransparent(const MapColor& color) :
+    explicit MaterialTransparent(const MapColor &color) :
         Material(color)
     {
         this->setReplaceable();

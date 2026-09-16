@@ -40,11 +40,11 @@ public:
         Vec3i((int) x, (int) y, (int) z)
     {}
 
-    explicit BlockPos(const Vec3& source) noexcept :
+    explicit BlockPos(const Vec3 &source) noexcept :
         Vec3i((int) source.xCoord, (int) source.yCoord, (int) source.zCoord)
     {}
 
-    explicit BlockPos(const Vec3i& source) noexcept :
+    explicit BlockPos(const Vec3i &source) noexcept :
         Vec3i(source.x, source.y, source.z)
     {}
 
@@ -56,11 +56,11 @@ public:
         return (x == 0 && y == 0 && z == 0) ? *this : BlockPos(this->x + x, this->y + y, this->z + z);
     }
 
-    BlockPos add(const Vec3i& vec) const noexcept {
+    BlockPos add(const Vec3i &vec) const noexcept {
         return (vec.x == 0 && vec.y == 0 && vec.z == 0) ? *this : BlockPos(this->x + vec.x, this->y + vec.y, this->z + vec.z);
     }
 
-    BlockPos subtract(const Vec3i& vec) const noexcept {
+    BlockPos subtract(const Vec3i &vec) const noexcept {
         return (vec.x == 0 && vec.y == 0 && vec.z == 0) ? *this : BlockPos(this->x - vec.x, this->y - vec.y, this->z - vec.z);
     }
 

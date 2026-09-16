@@ -30,7 +30,7 @@ struct RarityInfo {
 
 };
 
-inline const RarityInfo& getRarityInfo(EnumRarity rarity) {
+inline const RarityInfo &getRarityInfo(EnumRarity rarity) {
     static const RarityInfo infos[] = {
             {EnumChatFormatting::WHITE, "Common"},
             {EnumChatFormatting::YELLOW, "Uncommon"},

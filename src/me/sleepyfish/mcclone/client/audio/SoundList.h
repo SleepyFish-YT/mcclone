@@ -13,8 +13,11 @@
 
 /**
  * @author SleepyFish
+ * @brief SoundList
  */
 class SoundList {
+
+public:
 
     class SoundEntry {
 
@@ -35,7 +38,7 @@ class SoundList {
             }
         }
 
-        static SoundEntry::Type* getType(const std::string& name) {
+        static SoundEntry::Type* getType(const std::string &name) {
             static SoundEntry::Type FILE_TYPE = Type::FILE;
             static SoundEntry::Type SOUND_EVENT_TYPE = Type::SOUND_EVENT;
 
@@ -64,7 +67,7 @@ class SoundList {
             return this->name;
         }
 
-        void setSoundEntryName(const std::string& n) {
+        void setSoundEntryName(const std::string &n) {
             this->name = n;
         }
 
@@ -120,11 +123,11 @@ private:
 
 public:
 
-    std::vector<SoundList::SoundEntry>& getSoundList() {
+    std::vector<SoundList::SoundEntry> &getSoundList() {
         return this->soundList;
     }
 
-    const std::vector<SoundList::SoundEntry>& getSoundList() const {
+    const std::vector<SoundList::SoundEntry> &getSoundList() const {
         return this->soundList;
     }
 

@@ -13,7 +13,7 @@
  * @author SleepyFish
  * @brief Tickable texture object interface
  */
-class ITickableTextureObject : public ITextureObject, public ITickableTexture {
+class ITickableTextureObject : public virtual ITextureObject, public ITickableTexture {
 
 public:
 

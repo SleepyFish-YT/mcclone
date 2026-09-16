@@ -35,11 +35,11 @@ public:
             data(data)
     {}
 
-    void write(std::ostream& output) const override {
+    void write(std::ostream &output) const override {
         output.write(reinterpret_cast<const char*>(&this->data), sizeof(double));
     }
 
-    void read(std::istream& input, int depth, NBTSizeTracker& sizeTracker) override {
+    void read(std::istream &input, int depth, NBTSizeTracker &sizeTracker) override {
         sizeTracker.read(128ll);
         input.read(reinterpret_cast<char*>(&this->data), sizeof(double));
     }
@@ -56,7 +56,7 @@ public:
         return std::make_unique<NBTTagDouble>(this->data);
     }
 
-    bool operator==(const NBTBase& other) const override {
+    bool operator==(const NBTBase &other) const override {
         if (!NBTBase::operator==(other)) return false;
         return this->data == static_cast<const NBTTagDouble&>(other).data;
     }

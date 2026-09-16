@@ -56,7 +56,7 @@ public:
         }
     }
 
-    static GameType getGameTypeByName(const std::string& name) {
+    static GameType getGameTypeByName(const std::string &name) {
         if (name == "survival") return GameType::SURVIVAL;
         if (name == "creative") return GameType::CREATIVE;
         if (name == "adventure") return GameType::ADVENTURE;
@@ -76,7 +76,7 @@ public:
         return type == GameType::SURVIVAL || type == GameType::ADVENTURE;
     }
 
-    static void configurePlayerCapabilities(GameType type, PlayerCapabilities& capabilities) {
+    static void configurePlayerCapabilities(GameType type, PlayerCapabilities &capabilities) {
         if (type == GameType::CREATIVE) {
             capabilities.allowFlying = true;
             capabilities.isCreativeMode = true;

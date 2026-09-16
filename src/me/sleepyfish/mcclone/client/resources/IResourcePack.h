@@ -7,7 +7,7 @@
 #define MCCLONE_IRESOURCEPACK_H
 
 #include <string>
-#include <set>
+#include <unordered_set>
 #include <istream>
 #include <memory>
 #include <any>
@@ -31,7 +31,7 @@ public:
 
     virtual bool resourceExists(const ResourceLocation &location) const = 0;
 
-    virtual std::set<std::string> getResourceDomains() const = 0;
+    virtual std::unordered_set<std::string> getResourceDomains() const = 0;
 
     virtual std::any getPackMetadata(IMetadataSerializer &metadataSerializer, const std::string &metadataSectionName) = 0;
 

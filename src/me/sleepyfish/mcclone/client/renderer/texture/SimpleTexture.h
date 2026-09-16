@@ -7,8 +7,10 @@
 #define MCCLONE_SIMPLETEXTURE_H
 
 #include "AbstractTexture.h"
+#include "../../../util/ResourceLocation.h"
 
-class ResourceLocation;
+#include <utility>
+
 class IResourceManager;
 
 /**
@@ -19,12 +21,12 @@ class SimpleTexture : public AbstractTexture {
 
 protected:
 
-    ResourceLocation& textureLocation;
+    ResourceLocation textureLocation;
 
 public:
 
-    SimpleTexture(ResourceLocation& textureLocation) :
-        textureLocation(textureLocation)
+    explicit SimpleTexture(ResourceLocation  textureLocation) :
+        textureLocation(std::move(textureLocation))
     {}
 
     virtual ~SimpleTexture() = default;

@@ -31,7 +31,7 @@ private:
 
     bool hasNotificationData = false;
 
-    WorldType(int id, const std::string& name, int version = 0) noexcept :
+    WorldType(int id, const std::string &name, int version = 0) noexcept :
         worldTypeId(id),
         worldType(name),
         generatorVersion(version),
@@ -40,17 +40,17 @@ private:
         WorldType::worldTypes[id] = this;
     }
 
-    WorldType& setVersioned() noexcept {
+    WorldType &setVersioned() noexcept {
         this->isWorldTypeVersioned = true;
         return *this;
     }
 
-    WorldType& setCanBeCreated(bool enable) noexcept {
+    WorldType &setCanBeCreated(bool enable) noexcept {
         this->canBeCreated = enable;
         return *this;
     }
 
-    WorldType& setNotificationData() noexcept {
+    WorldType &setNotificationData() noexcept {
         this->hasNotificationData = true;
         return *this;
     }
@@ -89,7 +89,7 @@ public:
         return this->generatorVersion;
     }
 
-    WorldType* getWorldTypeForGeneratorVersion(int version) noexcept {
+    WorldType *getWorldTypeForGeneratorVersion(int version) noexcept {
         return this == &DEFAULT && version == 0 ? &DEFAULT_1_1 : this;
     }
 
@@ -109,7 +109,7 @@ public:
         return this->worldTypeId;
     }
 
-    static WorldType* parseWorldType(const std::string& type) {
+    static WorldType* parseWorldType(const std::string &type) {
         for (WorldType* wt : worldTypes) {
             if (wt != nullptr) {
                 std::string name = wt->worldType;

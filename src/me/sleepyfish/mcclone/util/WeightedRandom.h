@@ -30,16 +30,16 @@ public:
     };
 
     template<typename T>
-    static int getTotalWeight(const std::vector<T>& collection) noexcept;
+    static int getTotalWeight(const std::vector<T> &collection) noexcept;
 
     template<typename T>
-    static T getRandomItem(std::mt19937& random, const std::vector<T>& collection, int totalWeight);
+    static T getRandomItem(std::mt19937 &random, const std::vector<T> &collection, int totalWeight);
 
     template<typename T>
-    static T getRandomItem(const std::vector<T>& collection, int weight);
+    static T getRandomItem(const std::vector<T> &collection, int weight);
 
     template<typename T>
-    static T getRandomItem(std::mt19937& random, const std::vector<T>& collection);
+    static T getRandomItem(std::mt19937 &random, const std::vector<T> &collection);
 
 };
 

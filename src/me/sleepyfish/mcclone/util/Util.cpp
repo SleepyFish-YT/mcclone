@@ -57,18 +57,18 @@ Util::EnumOS Util::getOSType() {
 }
 
 template<typename V>
-V Util::runTask(std::future<V>& task) {
+V Util::runTask(std::future<V> &task) {
     try {
         // wait for the task to be ready
         task.wait();
         return task.get();
-    } catch (const std::future_error& e) {
+    } catch (const std::future_error &e) {
         Logger::fatal("Exception in Util::runTask (Future error): {}", e.what());
         throw;
-    } catch (const std::bad_alloc& e) {
+    } catch (const std::bad_alloc &e) {
         Logger::fatal("Exception in Util::runTask (Out of memory): {}", e.what());
         throw;
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         Logger::fatal("Exception in Util::runTask: {}", e.what());
         return V{};
     }
@@ -80,13 +80,13 @@ V Util::runTaskPkg(std::packaged_task<V> &task) {
         // wait for the task to be ready
         task.wait();
         return task.get();
-    } catch (const std::future_error& e) {
+    } catch (const std::future_error &e) {
         Logger::fatal("Exception in Util::runTask (Future error): {}", e.what());
         throw;
-    } catch (const std::bad_alloc& e) {
+    } catch (const std::bad_alloc &e) {
         Logger::fatal("Exception in Util::runTask (Out of memory): {}", e.what());
         throw;
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         Logger::fatal("Exception in Util::runTask: {}", e.what());
         return V{};
     }

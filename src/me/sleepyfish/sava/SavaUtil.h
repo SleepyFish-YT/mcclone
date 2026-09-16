@@ -28,7 +28,7 @@ public:
 
     public:
 
-        static std::string ToLowerCase(const std::string& str) {
+        static std::string ToLowerCase(const std::string &str) {
             std::string result;
             result.reserve(str.size());
 
@@ -39,7 +39,7 @@ public:
             return result;
         }
 
-        static std::string ToUpperCase(const std::string& str) {
+        static std::string ToUpperCase(const std::string &str) {
             std::string result;
             result.reserve(str.size());
 
@@ -50,7 +50,7 @@ public:
             return result;
         }
 
-        static bool StartsWith(const std::string& str, const std::string& prefix, bool ignoreCase = false) {
+        static bool StartsWith(const std::string &str, const std::string &prefix, bool ignoreCase = false) {
             if (prefix.size() > str.size()) {
                 return false;
             }

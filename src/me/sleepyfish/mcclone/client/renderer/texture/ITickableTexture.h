@@ -16,7 +16,7 @@ public:
 
     virtual ~ITickableTexture() = default;
 
-    virtual void tick() = 0;
+    virtual void update() = 0;
 
 };
 

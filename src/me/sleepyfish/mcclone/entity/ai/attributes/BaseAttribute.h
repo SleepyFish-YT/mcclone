@@ -58,7 +58,7 @@ public:
         return this->shouldWatch;
     }
 
-    BaseAttribute& setShouldWatch(bool shouldWatchIn) noexcept {
+    BaseAttribute &setShouldWatch(bool shouldWatchIn) noexcept {
         this->shouldWatch = shouldWatchIn;
         return *this;
     }

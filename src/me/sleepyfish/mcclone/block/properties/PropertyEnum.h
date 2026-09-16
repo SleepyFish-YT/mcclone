@@ -28,11 +28,11 @@ private:
 
 protected:
 
-    PropertyEnum(const std::string& name, const std::vector<T>& values) :
+    PropertyEnum(const std::string &name, const std::vector<T> &values) :
         PropertyHelper<T>(name),
         allowedValues(values)
     {
-        for (const T& t : values) {
+        for (const T &t : values) {
             const std::string s = t.getName();
 
             if (this->nameToValue.count(s))
@@ -48,23 +48,23 @@ public:
         return this->allowedValues;
     }
 
-    std::string getName(const T& value) const override {
+    std::string getName(const T &value) const override {
         return value.getName();
     }
 
-    static PropertyEnum<T> create(const std::string& name, const std::vector<T>& values) {
+    static PropertyEnum<T> create(const std::string &name, const std::vector<T> &values) {
         return PropertyEnum<T>(name, values);
     }
 
-    static PropertyEnum<T> create(const std::string& name, const std::vector<T>& values, std::function<bool(const T&)> filter) {
+    static PropertyEnum<T> create(const std::string &name, const std::vector<T> &values, std::function<bool(const T&)> filter) {
         std::vector<T> filtered;
-        for (const T& v : values)
+        for (const T &v : values)
             if (filter(v))
                 filtered.push_back(v);
         return PropertyEnum<T>(name, filtered);
     }
 
-    const T* getValueByName(const std::string& name) const {
+    const T* getValueByName(const std::string &name) const {
         auto it = this->nameToValue.find(name);
         return it != this->nameToValue.end() ? &it->second : nullptr;
     }

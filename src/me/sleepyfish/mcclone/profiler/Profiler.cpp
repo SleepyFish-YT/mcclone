@@ -9,7 +9,7 @@
 
 Profiler::Profiler() {
     this->profilingEnabled = false;
-    this->profilerGlobalEnabled = true;
+    this->profilerGlobalEnabled = this->profilingEnabled;
     this->profilerLocalEnabled = this->profilerGlobalEnabled;
     this->profilingSection = "";
 }
@@ -23,7 +23,7 @@ void Profiler::clearProfiling() {
     this->profilerLocalEnabled = this->profilerGlobalEnabled;
 }
 
-void Profiler::startSection(const std::string& name) {
+void Profiler::startSection(const std::string &name) {
     std::lock_guard<std::mutex> lock(this->mutex);
     this->startSection_nolock(name);
 }
@@ -33,7 +33,7 @@ void Profiler::endSection() {
     this->endSection_nolock();
 }
 
-void Profiler::endStartSection(const std::string& name) {
+void Profiler::endStartSection(const std::string &name) {
     std::lock_guard<std::mutex> lock(this->mutex);
     if (!this->profilerLocalEnabled) return;
     this->endSection_nolock();
@@ -45,7 +45,7 @@ std::string Profiler::getNameOfLastSection() const noexcept {
     return this->sectionList.empty() ? "[UNKNOWN]" : this->sectionList.back();
 }
 
-std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& profilerName) {
+std::vector<Profiler::Result> Profiler::getProfilingData(const std::string &profilerName) {
     std::lock_guard<std::mutex> lock(this->mutex);
     if (!this->profilingEnabled) return {};
 
@@ -56,7 +56,7 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
     std::string prefix = profilerName.empty() ? "" : profilerName + ".";
 
     long long k = 0ll;
-    for (const auto& [key, val] : this->profilingMap) {
+    for (const auto &[key, val] : this->profilingMap) {
         if (key.length() > prefix.length() && key.starts_with(prefix) && key.find('.', prefix.length() + 1) == std::string::npos) {
             k += val;
         }
@@ -71,7 +71,7 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
         i = k;
     }
 
-    for (const auto& [key, val] : this->profilingMap) {
+    for (const auto &[key, val] : this->profilingMap) {
         if (key.length() > prefix.length() && key.starts_with(prefix) && key.find('.', prefix.length() + 1) == std::string::npos) {
             double d0 = (double) val * 100.0 / (double) k;
             double d1 = (double) val * 100.0 / (double) i;
@@ -81,7 +81,7 @@ std::vector<Profiler::Result> Profiler::getProfilingData(const std::string& prof
     }
 
     // Decay all values by 95%
-    for (auto& [key, val] : this->profilingMap) {
+    for (auto &[key, val] : this->profilingMap) {
         val = val * 950ll / 1000ll;
     }
 

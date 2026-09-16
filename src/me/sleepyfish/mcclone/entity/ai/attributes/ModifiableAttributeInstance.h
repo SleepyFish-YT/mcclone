@@ -46,7 +46,7 @@ private:
             IAttributeInstance* parentInstance = this->attributeMap->getAttributeInstance(parent);
 
             if (parentInstance) {
-                for (auto& mod : parentInstance->getModifiersByOperation(operation)) {
+                for (auto &mod : parentInstance->getModifiersByOperation(operation)) {
                     result.insert(mod);
                 }
             }
@@ -58,17 +58,17 @@ private:
     double computeValue() const {
         double value = this->baseValue;
 
-        for (auto& mod : this->getModifiersForCompute(0)) {
+        for (auto &mod : this->getModifiersForCompute(0)) {
             value += mod.getAmount();
         }
 
         double result = value;
 
-        for (auto& mod : this->getModifiersForCompute(1)) {
+        for (auto &mod : this->getModifiersForCompute(1)) {
             result += value * mod.getAmount();
         }
 
-        for (auto& mod : this->getModifiersForCompute(2)) {
+        for (auto &mod : this->getModifiersForCompute(2)) {
             result *= 1.0 + mod.getAmount();
         }
 
@@ -89,7 +89,7 @@ public:
         }
     }
 
-    IAttribute& getAttribute() override {
+    IAttribute &getAttribute() override {
         return *this->genericAttribute;
     }
 
@@ -122,7 +122,7 @@ public:
                 continue;
             }
 
-            for (auto& mod : it->second) {
+            for (auto &mod : it->second) {
                 if (seen.insert(mod.getID()).second) {
                     result.push_back(mod);
                 }

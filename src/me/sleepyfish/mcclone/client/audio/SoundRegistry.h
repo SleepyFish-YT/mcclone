@@ -18,8 +18,8 @@ class SoundRegistry : public RegistrySimple<ResourceLocation, SoundEventAccessor
 
 public:
 
-    void registerSound(const SoundEventAccessorComposite &sound) {
-        this->putObject(sound.getSoundEventLocation(), sound);
+    void registerSound(SoundEventAccessorComposite *sound) {
+        this->putObject(sound->getSoundEventLocation(), sound);
     }
 
     void clearMap() {

@@ -12,7 +12,7 @@
  * @author SleepyFish
  * @brief Abstract texture
  */
-class AbstractTexture : public ITextureObject {
+class AbstractTexture : public virtual ITextureObject {
 
 protected:
 
@@ -29,7 +29,7 @@ public:
 
     void setBlurMipmapDirect(bool blur_, bool mipmap_);
 
-    virtual void loadTexture(IResourceManager& resourceManager) override;
+    void loadTexture(IResourceManager& resourceManager) override;
 
     void setBlurMipmap(bool blur_, bool mipmap_) override;
 

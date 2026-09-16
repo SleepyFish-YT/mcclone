@@ -65,7 +65,7 @@ public:
      * @args --resolution fullscreen
      * @returns Exit code
      */
-    int main(int arg_count, char* arg_vals[], const std::filesystem::path& exec_path);
+    int main(int arg_count, char* arg_vals[], const std::filesystem::path &exec_path);
 
     std::string getVersion() const;
 #ifdef _WIN32

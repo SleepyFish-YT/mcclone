@@ -51,7 +51,7 @@ public:
     std::unordered_set<K, Hash, Equal> getKeys() const {
         std::unordered_set<K, Hash, Equal> keys;
 
-        for (const auto& [k, _] : this->registryObjects) {
+        for (const auto &[k, _] : this->registryObjects) {
             keys.insert(k);
         }
 

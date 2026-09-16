@@ -16,7 +16,7 @@ class WrongUsageException : public SyntaxErrorException {
 public:
 
     template<typename... Args>
-    explicit WrongUsageException(const std::string& message, Args&&... args) :
+    explicit WrongUsageException(const std::string &message, Args&&... args) :
         SyntaxErrorException(message, std::forward<Args>(args)...)
     {}
 

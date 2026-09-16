@@ -27,7 +27,7 @@ public:
         field_176114_d(w)
     {}
 
-    Vec4b(const Vec4b& vec4b) noexcept :
+    Vec4b(const Vec4b &vec4b) noexcept :
         field_176117_a(vec4b.field_176117_a),
         field_176115_b(vec4b.field_176115_b),
         field_176116_c(vec4b.field_176116_c),

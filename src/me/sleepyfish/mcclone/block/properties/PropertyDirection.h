@@ -21,17 +21,17 @@ class PropertyDirection : public PropertyEnum<EnumFacing> {
 
 protected:
 
-    PropertyDirection(const std::string& name, const std::vector<EnumFacing>& values) :
+    PropertyDirection(const std::string &name, const std::vector<EnumFacing> &values) :
         PropertyEnum<EnumFacing>(name, values)
     {}
 
 public:
 
-    static PropertyDirection create(const std::string& name) {
+    static PropertyDirection create(const std::string &name) {
         return create(name, [](const EnumFacing&) { return true; });
     }
 
-    static PropertyDirection create(const std::string& name, std::function<bool(const EnumFacing&)> filter) {
+    static PropertyDirection create(const std::string &name, std::function<bool(const EnumFacing&)> filter) {
         std::vector<EnumFacing> values;
         for (int i = 0; i < 6; ++i) {
             EnumFacing f((EnumFacing::Value)i);
@@ -41,7 +41,7 @@ public:
         return create(name, values);
     }
 
-    static PropertyDirection create(const std::string& name, const std::vector<EnumFacing>& values) {
+    static PropertyDirection create(const std::string &name, const std::vector<EnumFacing> &values) {
         return PropertyDirection(name, values);
     }
 

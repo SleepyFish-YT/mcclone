@@ -16,7 +16,7 @@ class MaterialLiquid : public Material {
 
 public:
 
-    explicit MaterialLiquid(const MapColor& color) :
+    explicit MaterialLiquid(const MapColor &color) :
             Material(color)
     {
         this->setReplaceable();

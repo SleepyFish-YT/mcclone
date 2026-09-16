@@ -32,22 +32,22 @@ public:
     static EnumOS getOSType();
 
     template<typename V>
-    static V runTask(std::future<V>& task);
+    static V runTask(std::future<V> &task);
 
     template<typename V>
-    static V runTaskPkg(std::packaged_task<V>& task);
+    static V runTaskPkg(std::packaged_task<V> &task);
 
     template<typename V>
-    static void runTaskFunc(std::packaged_task<V()>& task) {
+    static void runTaskFunc(std::packaged_task<V()> &task) {
         try {
             task();
-        } catch (const std::future_error& e) {
+        } catch (const std::future_error &e) {
             Logger::fatal("Exception in Util::runTask (Future error): {}", e.what());
             throw;
-        } catch (const std::bad_alloc& e) {
+        } catch (const std::bad_alloc &e) {
             Logger::fatal("Exception in Util::runTask (Out of memory): {}", e.what());
             throw;
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             Logger::fatal("Exception in Util::runTask: {}", e.what());
         }
     }

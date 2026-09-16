@@ -21,7 +21,7 @@ public:
 
     virtual ~IAttributeInstance() = default;
 
-    virtual IAttribute& getAttribute() = 0;
+    virtual IAttribute &getAttribute() = 0;
 
     virtual double getBaseValue() const = 0;
 

@@ -22,15 +22,15 @@ public:
 
     virtual ~ICommandManager() = default;
 
-    virtual int executeCommand(ICommandSender& sender, const std::string& rawCommand) = 0;
+    virtual int executeCommand(ICommandSender &sender, const std::string &rawCommand) = 0;
 
     virtual std::vector<std::string> getTabCompletionOptions(
-            ICommandSender& sender,
-            const std::string& input,
-            const BlockPos& pos
+            ICommandSender &sender,
+            const std::string &input,
+            const BlockPos &pos
     ) = 0;
 
-    virtual std::vector<ICommand*> getPossibleCommands(ICommandSender& sender) = 0;
+    virtual std::vector<ICommand*> getPossibleCommands(ICommandSender &sender) = 0;
 
     virtual std::map<std::string, ICommand*> getCommands() = 0;
 

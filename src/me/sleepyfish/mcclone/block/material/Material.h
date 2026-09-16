@@ -30,7 +30,7 @@ private:
 
 public:
 
-    explicit Material(const MapColor& color) :
+    explicit Material(const MapColor &color) :
         materialMapColor(color)
     {}
 

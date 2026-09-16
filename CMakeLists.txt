@@ -133,12 +133,17 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/audio/SoundEngine.h
 
         # client/audio - others
+        ${SRC_DIR}/client/audio/SoundHandler.cpp
+        ${SRC_DIR}/client/audio/SoundHandler.h
+        ${SRC_DIR}/client/audio/SoundManager.cpp
+        ${SRC_DIR}/client/audio/SoundManager.h
         ${SRC_DIR}/client/audio/ISound.h
         ${SRC_DIR}/client/audio/ISoundEventAccessor.h
         ${SRC_DIR}/client/audio/SoundEventAccessor.h
         ${SRC_DIR}/client/audio/ITickableSound.h
         ${SRC_DIR}/client/audio/SoundPoolEntry.h
         ${SRC_DIR}/client/audio/SoundEventAccessorComposite.h
+        ${SRC_DIR}/client/audio/SoundEventAccessorDelegate.h
         ${SRC_DIR}/client/audio/SoundRegistry.h
         ${SRC_DIR}/client/audio/PositionedSound.h
         ${SRC_DIR}/client/audio/MovingSound.h
@@ -210,6 +215,12 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/resources/IResourcePack.h
         ${SRC_DIR}/client/resources/IReloadableResourceManager.h
         ${SRC_DIR}/client/resources/IResourceManagerReloadListener.h
+        ${SRC_DIR}/client/resources/FallbackResourceManager.cpp
+        ${SRC_DIR}/client/resources/FallbackResourceManager.h
+        ${SRC_DIR}/client/resources/SimpleReloadableResourceManager.cpp
+        ${SRC_DIR}/client/resources/SimpleReloadableResourceManager.h
+        ${SRC_DIR}/client/resources/SimpleResource.cpp
+        ${SRC_DIR}/client/resources/SimpleResource.h
 
         # client/resources/data
         ${SRC_DIR}/client/resources/data/IMetadataSection.h
@@ -217,6 +228,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/resources/data/AnimationFrame.h
         ${SRC_DIR}/client/resources/data/AnimationMetadataSection.h
         ${SRC_DIR}/client/resources/data/FontMetadataSection.h
+        ${SRC_DIR}/client/resources/data/IMetadataSerializer.h
+        ${SRC_DIR}/client/resources/data/IMetadataSectionSerializer.h
 
         # debug
         ${SRC_DIR}/debug/Logger.cpp

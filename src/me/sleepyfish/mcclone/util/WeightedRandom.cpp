@@ -8,10 +8,10 @@
 #include <stdexcept>
 
 template<typename T>
-int WeightedRandom::getTotalWeight(const std::vector<T>& collection) noexcept {
+int WeightedRandom::getTotalWeight(const std::vector<T> &collection) noexcept {
     int total = 0;
 
-    for (const auto& item : collection) {
+    for (const auto &item : collection) {
         total += item.itemWeight;
     }
 
@@ -19,7 +19,7 @@ int WeightedRandom::getTotalWeight(const std::vector<T>& collection) noexcept {
 }
 
 template<typename T>
-T WeightedRandom::getRandomItem(std::mt19937& random, const std::vector<T>& collection, int totalWeight) {
+T WeightedRandom::getRandomItem(std::mt19937 &random, const std::vector<T> &collection, int totalWeight) {
     if (totalWeight <= 0) {
         throw std::invalid_argument("Total weight must be positive");
     }
@@ -30,8 +30,8 @@ T WeightedRandom::getRandomItem(std::mt19937& random, const std::vector<T>& coll
 }
 
 template<typename T>
-T WeightedRandom::getRandomItem(const std::vector<T>& collection, int weight) {
-    for (const auto& item : collection) {
+T WeightedRandom::getRandomItem(const std::vector<T> &collection, int weight) {
+    for (const auto &item : collection) {
         weight -= item.itemWeight;
         if (weight < 0) {
             return item;
@@ -42,6 +42,6 @@ T WeightedRandom::getRandomItem(const std::vector<T>& collection, int weight) {
 }
 
 template<typename T>
-T WeightedRandom::getRandomItem(std::mt19937& random, const std::vector<T>& collection) {
+T WeightedRandom::getRandomItem(std::mt19937 &random, const std::vector<T> &collection) {
     return getRandomItem(random, collection, getTotalWeight(collection));
 }

@@ -60,7 +60,7 @@ public:
         return rawIndex % 240;
     }
 
-    const std::array<long long, 240>& getFrames() const noexcept {
+    const std::array<long long, 240> &getFrames() const noexcept {
         return this->frames;
     }
 

@@ -6,10 +6,13 @@
 #ifndef MCCLONE_GAMESETTINGS_H
 #define MCCLONE_GAMESETTINGS_H
 
-#include <nlohmann/json.hpp>
+#include "../audio/SoundCategory.h"
+
 #include <filesystem>
 #include <vector>
 #include <array>
+
+#include <nlohmann/json.hpp>
 
 class KeyBinding;
 
@@ -29,9 +32,9 @@ public:
 
     // disable copy and move
     GameSettings(const GameSettings&) = delete;
-    GameSettings& operator=(const GameSettings&) = delete;
+    GameSettings &operator=(const GameSettings&) = delete;
     GameSettings(GameSettings&&) = delete;
-    GameSettings& operator=(GameSettings&&) = delete;
+    GameSettings &operator=(GameSettings&&) = delete;
 
     float mouseSensitivity;
     bool invertMouse;
@@ -43,6 +46,7 @@ public:
     bool fullScreen;
     bool pauseOnLostFocus;
     bool showDebugInfo;
+    bool showDebugProfilerChart;
     bool hideGUI;
     bool heldItemTooltips;
     bool advancedItemTooltips;
@@ -62,62 +66,64 @@ public:
     int mipmapLevels;
 
     // Movement
-    KeyBinding* keyBindForward;
-    KeyBinding* keyBindLeft;
-    KeyBinding* keyBindBack;
-    KeyBinding* keyBindRight;
-    KeyBinding* keyBindJump;
-    KeyBinding* keyBindSneak;
-    KeyBinding* keyBindSprint;
+    KeyBinding *keyBindForward;
+    KeyBinding *keyBindLeft;
+    KeyBinding *keyBindBack;
+    KeyBinding *keyBindRight;
+    KeyBinding *keyBindJump;
+    KeyBinding *keyBindSneak;
+    KeyBinding *keyBindSprint;
 
     // Inventory
-    KeyBinding* keyBindInventory;
-    KeyBinding* keyBindHotbar1;
-    KeyBinding* keyBindHotbar2;
-    KeyBinding* keyBindHotbar3;
-    KeyBinding* keyBindHotbar4;
-    KeyBinding* keyBindHotbar5;
-    KeyBinding* keyBindHotbar6;
-    KeyBinding* keyBindHotbar7;
-    KeyBinding* keyBindHotbar8;
-    KeyBinding* keyBindHotbar9;
+    KeyBinding *keyBindInventory;
+    KeyBinding *keyBindHotbar1;
+    KeyBinding *keyBindHotbar2;
+    KeyBinding *keyBindHotbar3;
+    KeyBinding *keyBindHotbar4;
+    KeyBinding *keyBindHotbar5;
+    KeyBinding *keyBindHotbar6;
+    KeyBinding *keyBindHotbar7;
+    KeyBinding *keyBindHotbar8;
+    KeyBinding *keyBindHotbar9;
 
     // Gameplay
-    KeyBinding* keyBindUseItem;
-    KeyBinding* keyBindDrop;
-    KeyBinding* keyBindAttack;
-    KeyBinding* keyBindPickItem;
-    KeyBinding* keyBindMouseBack;
-    KeyBinding* keyBindMouseForward;
+    KeyBinding *keyBindUseItem;
+    KeyBinding *keyBindDrop;
+    KeyBinding *keyBindAttack;
+    KeyBinding *keyBindPickItem;
+    KeyBinding *keyBindMouseBack;
+    KeyBinding *keyBindMouseForward;
 
     // Multiplayer
-    KeyBinding* keyBindChat;
-    KeyBinding* keyBindPlayerList;
-    KeyBinding* keyBindCommand;
+    KeyBinding *keyBindChat;
+    KeyBinding *keyBindPlayerList;
+    KeyBinding *keyBindCommand;
 
     // Misc
-    KeyBinding* keyBindScreenshot;
-    KeyBinding* keyBindPerspective;
-    KeyBinding* keyBindSmoothCamera;
-    KeyBinding* keyBindHideGui;
-    KeyBinding* keyBindToggleDebugOverlay;
-    KeyBinding* keyBindFullscreen;
-    KeyBinding* keyBindExitGame;
-    KeyBinding* keyBindZoom;
-    KeyBinding* keyFreelook;
+    KeyBinding *keyBindScreenshot;
+    KeyBinding *keyBindPerspective;
+    KeyBinding *keyBindSmoothCamera;
+    KeyBinding *keyBindHideGui;
+    KeyBinding *keyBindToggleDebugOverlay;
+    KeyBinding *keyBindFullscreen;
+    KeyBinding *keyBindExitGame;
+    KeyBinding *keyBindZoom;
+    KeyBinding *keyFreelook;
 
-    std::array<KeyBinding*, 9> keyBindHotbar;
-    std::vector<KeyBinding*> keyBinds;
+    std::array<KeyBinding *, 9> keyBindHotbar;
+    std::vector<KeyBinding *> keyBinds;
 
     GameSettings();
 
-    explicit GameSettings(const std::filesystem::path& settingsParentPath);
+    explicit GameSettings(const std::filesystem::path &settingsParentPath);
 
     ::nlohmann::ordered_json createDefaultSettings();
 
     void saveSettings();
 
     void loadSettings();
+
+    float getSoundLevel(SoundCategory &category) const;
 
 };
 

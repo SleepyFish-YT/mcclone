@@ -23,7 +23,7 @@ protected:
 
 public:
 
-    static std::pair<std::string, std::string> SplitObjectName(const std::string& toSplit) {
+    static std::pair<std::string, std::string> SplitObjectName(const std::string &toSplit) {
         std::string domain;
         std::string path = toSplit;
 
@@ -39,9 +39,9 @@ public:
         return { domain, path };
     }
 
-    explicit ResourceLocation(const std::string& resourceName);
+    explicit ResourceLocation(const std::string &resourceName);
 
-    ResourceLocation(const std::string& resourceDomainIn, const std::string& resourcePathIn);
+    ResourceLocation(const std::string &resourceDomainIn, const std::string &resourcePathIn);
 
     std::string getResourcePath() const noexcept {
         return this->resourcePath;
@@ -55,16 +55,16 @@ public:
         return this->resourceDomain + ':' + this->resourcePath;
     }
 
-    bool operator==(const ResourceLocation& other) const {
+    bool operator==(const ResourceLocation &other) const {
         return this->resourceDomain == other.resourceDomain && this->resourcePath == other.resourcePath;
     }
 
-    bool operator!=(const ResourceLocation& other) const {
+    bool operator!=(const ResourceLocation &other) const {
         return !(*this == other);
     }
 
     struct Hash {
-        std::size_t operator()(const ResourceLocation& rl) const {
+        std::size_t operator()(const ResourceLocation &rl) const {
             std::size_t h1 = std::hash<std::string>{}(rl.resourceDomain);
             std::size_t h2 = std::hash<std::string>{}(rl.resourcePath);
             return 31 * h1 + h2;

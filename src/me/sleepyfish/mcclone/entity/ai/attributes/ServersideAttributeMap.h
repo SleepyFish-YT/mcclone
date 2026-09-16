@@ -36,7 +36,7 @@ public:
         return dynamic_cast<ModifiableAttributeInstance*>(BaseAttributeMap::getAttributeInstance(attribute));
     }
 
-    virtual ModifiableAttributeInstance* getAttributeInstanceByName(const std::string& attributeName) override {
+    virtual ModifiableAttributeInstance* getAttributeInstanceByName(const std::string &attributeName) override {
         IAttributeInstance* instance = BaseAttributeMap::getAttributeInstanceByName(attributeName);
 
         if (!instance) {
@@ -65,7 +65,7 @@ public:
             this->m_dirtyInstances.insert(instance);
         }
 
-        for (auto& [parent, child] : this->m_parentToChildren) {
+        for (auto &[parent, child] : this->m_parentToChildren) {
             if (parent == &instance->getAttribute()) {
                 ModifiableAttributeInstance* modifiable = getAttributeInstance(child);
                 if (modifiable) {

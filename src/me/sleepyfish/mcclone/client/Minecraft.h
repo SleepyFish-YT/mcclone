@@ -19,7 +19,6 @@ class Timer;
 class MovingObjectPosition;
 class Profiler;
 class GameSettings;
-class SoundEngine;
 class ResourceLocation;
 class GameConfiguration;
 class Framebuffer;
@@ -28,6 +27,12 @@ class CrashReport;
 template<typename T>
 class FutureTaskQueue;
 class TextureMap;
+class SoundHandler;
+class TextureManager;
+class IResourceManager;
+class IReloadableResourceManager;
+class IMetadataSerializer;
+class SoundEngine;
 
 /**
  * @author SleepyFish
@@ -38,9 +43,11 @@ class Minecraft : public Runnable, public IPlayerUsage {
 protected:
 
     // minecraft tick thread .run();
-    void run() override;
+    void run(std::stop_token st) override;
 
     void onStop() override;
+
+    SoundEngine *_soundEngine{};
 
 private:
 
@@ -54,7 +61,7 @@ private:
 
     uint16_t tickCounter{};
 
-    std::chrono::steady_clock::time_point prevFrameTime{};
+    long long prevFrameTime{};
 
     int tempDisplayWidth{};
 
@@ -78,7 +85,7 @@ private:
 
     std::string launchedVersion{};
 
-    Timer* theTimer{};
+    Timer *theTimer{};
 
     void updateFramebufferSize();
 
@@ -88,9 +95,9 @@ private:
 
     void shutdownMinecraftApplet();
 
-    Framebuffer* framebufferMc{};
+    Framebuffer *framebufferMc{};
 
-    FutureTaskQueue<void>* scheduledTasks{};
+    FutureTaskQueue<void> *scheduledTasks{};
 
     ThreadSave<bool> _pendingResize{false};
     ThreadSave<int> _pendingResizeW{0};
@@ -106,15 +113,23 @@ private:
 
     void middleClickMouse();
 
-    TextureMap *textureMapBlocks;
+    IReloadableResourceManager *mcResourceManager{};
 
-    std::string serverName;
+    const IMetadataSerializer *metadataSerializer_{};
 
-    int serverPort;
+    TextureManager *renderEngine{};
+
+    std::string serverName{};
+
+    int serverPort{};
+
+    void checkGLError(const std::string &message);
+
+    void displayDebugInfo(long long elapsedTicksTime);
 
 public:
 
-    static ResourceLocation* locationMojangPng;
+    static ResourceLocation *locationMojangPng;
 
     std::filesystem::path mcDataDir{};
 
@@ -122,13 +137,15 @@ public:
 
     GameSettings *gameSettings{};
 
-    SoundEngine *soundEngine{};
-
     MovingObjectPosition *objectMouseOver{};
 
     FrameTimer *frameTimer{};
 
-    Framebuffer* getFramebuffer() noexcept { return this->framebufferMc; }
+    Framebuffer *getFramebuffer() noexcept { return this->framebufferMc; }
+
+    TextureMap *textureMapBlocks{};
+
+    SoundHandler *mcSoundHandler{};
 
     int displayWidth{};
 
@@ -138,11 +155,11 @@ public:
 
     bool debuggerEnabled{};
 
-    explicit Minecraft(GameConfiguration* gameConfig);
+    explicit Minecraft(GameConfiguration *gameConfig);
 
     static Minecraft *getMinecraft() noexcept;
 
-    void initializeFramebuffer();
+    void initializeFramebuffer(); // called before the game render loop
 
     static long long getSystemTime() noexcept;
 
@@ -166,7 +183,7 @@ public:
 
     void resizeWindow(int width, int height);
 
-    void renderGameLoop(bool hasFocus);
+    void renderGameLoop(bool hasFocus); // throws IOException
 
     bool isUnicode() const noexcept;
 
@@ -182,7 +199,7 @@ public:
 
     std::string getLaunchedVersion() const noexcept { return this->launchedVersion; }
 
-    void crashed(CrashReport* crash);
+    void crashed(CrashReport *crash);
 
     bool isDemo() const noexcept { return this->isDemo_; }
 
@@ -199,6 +216,14 @@ public:
     bool isSnooperEnabled() override;
 
     bool isFullScreen() const noexcept { return this->fullscreen; }
+
+    IResourceManager *getResourceManager() noexcept;
+
+    TextureManager *getTextureManager() noexcept {
+        return this->renderEngine;
+    }
+
+    void runTick(); // throws IOException
 
 };
 

@@ -14,10 +14,10 @@
 #include "../../../debug/Logger.h"
 #include "../../../util/ReportedException.h"
 
-// not FULLY implemented yet.
+void TextureManager::bindTexture(const ResourceLocation &resource) {
+    auto it = this->mapTextureObjects.find(resource.toString());
 
-void TextureManager::bindTexture(ResourceLocation &resource) {
-    ITextureObject *textureObj = this->mapTextureObjects.at(&resource);
+    ITextureObject *textureObj = (it != this->mapTextureObjects.end()) ? it->second : nullptr;
 
     if (textureObj == nullptr) {
         textureObj = new SimpleTexture(resource);
@@ -27,16 +27,15 @@ void TextureManager::bindTexture(ResourceLocation &resource) {
     TextureUtil::bindTexture_(textureObj->getGlTextureId());
 }
 
-bool TextureManager::loadTickableTexture(ResourceLocation &textureLocation, ITickableTextureObject *textureObj) {
+bool TextureManager::loadTickableTexture(const ResourceLocation &textureLocation, ITickableTextureObject *textureObj) {
     if (this->loadTexture(textureLocation, textureObj)) {
         this->listTickables.push_back(textureObj);
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
-bool TextureManager::loadTexture(ResourceLocation &textureLocation, ITextureObject *textureObj) {
+bool TextureManager::loadTexture(const ResourceLocation &textureLocation, ITextureObject *textureObj) {
     bool flag = true;
 
     try {
@@ -44,50 +43,40 @@ bool TextureManager::loadTexture(ResourceLocation &textureLocation, ITextureObje
     } catch (std::ios_base::failure &e) {
         Logger::warn("Failed loading texture: ({}) {}", textureLocation.toString(), e.what());
         textureObj = TextureUtil::missingTexture;
-        this->mapTextureObjects[&textureLocation] = textureObj;
         flag = false;
-    } catch (std::exception &e) {
-        // CrashReport report = CrashReport::makeCrashReport(throwable, "Registering texture");
-        // CrashReportCategory category = report.makeCategory("Resource location being registered");
-        // category.addCrashSection("Resource location", textureLocation);
-        // category.addCrashSectionCallable("Texture object class", new Callable<String>() {
-        //     public String call() {
-        //             return textureObj.getClass().getName();
-        //     }
-        // });
-        throw new ReportedException(/*report*/nullptr);
+    } catch (std::exception&) {
+        throw ReportedException(nullptr);
     }
 
-    this->mapTextureObjects[&textureLocation] = textureObj;
+    this->mapTextureObjects[textureLocation.toString()] = textureObj;
     return flag;
 }
 
-ITextureObject *TextureManager::getTexture(ResourceLocation &textureLocation) {
-    return this->mapTextureObjects.at(&textureLocation);
+ITextureObject *TextureManager::getTexture(const ResourceLocation &textureLocation) {
+    auto it = this->mapTextureObjects.find(textureLocation.toString());
+    return (it != this->mapTextureObjects.end()) ? it->second : nullptr;
 }
 
 ResourceLocation *TextureManager::getDynamicTextureLocation(std::string name, DynamicTexture *texture) {
-    int integer = this->mapTextureCounters.at(name);
-    if (integer == 0) {
-        integer = 1;
+    int &counter = this->mapTextureCounters[name];
+    if (counter == 0) {
+        counter = 1;
     } else {
-        integer = integer + 1;
+        counter++;
     }
 
-    this->mapTextureCounters[name] = integer;
-
-    ResourceLocation *location = new ResourceLocation(std::format("dynamic/%s_%d", name, integer));
+    auto *location = new ResourceLocation(std::format("dynamic/{}_{}", name, counter));
     this->loadTexture(*location, texture);
     return location;
 }
 
-void TextureManager::tick() {
-    for (ITickableTexture *tickableTexture: this->listTickables) {
-        tickableTexture->tick();
+void TextureManager::update() {
+    for (ITickableTexture *tickableTexture : this->listTickables) {
+        tickableTexture->update();
     }
 }
 
-void TextureManager::deleteTexture(ResourceLocation &textureLocation) {
+void TextureManager::deleteTexture(const ResourceLocation &textureLocation) {
     ITextureObject *textureObj = this->getTexture(textureLocation);
 
     if (textureObj != nullptr) {
@@ -96,7 +85,8 @@ void TextureManager::deleteTexture(ResourceLocation &textureLocation) {
 }
 
 void TextureManager::onResourceManagerReload(IResourceManager &resourceManager) {
-    for (auto entry: this->mapTextureObjects) {
-        this->loadTexture(*entry.first, entry.second);
+    for (auto &[key, textureObj] : this->mapTextureObjects) {
+        ResourceLocation location(key);
+        this->loadTexture(location, textureObj);
     }
 }

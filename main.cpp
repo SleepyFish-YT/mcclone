@@ -23,12 +23,12 @@
  * @brief This is the main entry point of the application
  * @returns Exit code
  */
-int main(int arg_count, char* arg_vals[]) {
+int main(int arg_count, char *arg_vals[]) {
     if (arg_count == 0 || arg_vals[0] == nullptr) {
         return MCCLONE_ERR_ARGUMENTS;
     }
 
-    Main main_instance{};
+    std::unique_ptr<Main> main_instance = std::make_unique<Main>();
 
     // get executable path without file name
     const std::filesystem::path executable_path = std::filesystem::path(arg_vals[0]).parent_path();
@@ -46,10 +46,10 @@ int main(int arg_count, char* arg_vals[]) {
 
     // pass console window handle to main instance
 #ifdef _WIN32
-    main_instance.setConsoleWindow(::GetConsoleWindow());
+    main_instance->setConsoleWindow(::GetConsoleWindow());
 #endif //_WIN32
 
-    const int exit_code = main_instance.main(arg_count, arg_vals, executable_path);
+    const int exit_code = main_instance->main(arg_count, arg_vals, executable_path);
 
     Logger::log("Exit code: {}", MCCLONE_ERR_NAME_FUNC(exit_code));
     Logger::close();

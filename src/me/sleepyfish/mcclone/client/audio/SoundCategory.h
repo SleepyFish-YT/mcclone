@@ -52,13 +52,13 @@ inline const SoundCategoryInfo SOUND_CATEGORY_ENTRIES[] = {
         { SoundCategory::AMBIENT, "ambient", 8 }
 };
 
-inline const std::unordered_map<std::string, SoundCategory>& getSoundCategoryByName() {
+inline const std::unordered_map<std::string, SoundCategory> &getSoundCategoryByName() {
     static std::unordered_map<std::string, SoundCategory> NAME_CATEGORY_MAP;
     static std::unordered_map<int, SoundCategory> ID_CATEGORY_MAP;
     static bool initialized = false;
 
     if (!initialized) {
-        for (const auto& entry : SOUND_CATEGORY_ENTRIES) {
+        for (const auto &entry : SOUND_CATEGORY_ENTRIES) {
             if (NAME_CATEGORY_MAP.count(entry.name) || ID_CATEGORY_MAP.count(entry.id)) {
                 throw std::runtime_error("Clash in Sound Category ID & Name pools! Cannot insert " + entry.name);
             }
@@ -74,7 +74,7 @@ inline const std::unordered_map<std::string, SoundCategory>& getSoundCategoryByN
 }
 
 inline std::string getSoundCategoryName(SoundCategory category) {
-    for (const auto& entry : SOUND_CATEGORY_ENTRIES) {
+    for (const auto &entry : SOUND_CATEGORY_ENTRIES) {
         if (entry.category == category) {
             return entry.name;
         }
@@ -84,7 +84,7 @@ inline std::string getSoundCategoryName(SoundCategory category) {
 }
 
 inline int getSoundCategoryId(SoundCategory category) {
-    for (const auto& entry : SOUND_CATEGORY_ENTRIES) {
+    for (const auto &entry : SOUND_CATEGORY_ENTRIES) {
         if (entry.category == category) {
             return entry.id;
         }
@@ -93,8 +93,8 @@ inline int getSoundCategoryId(SoundCategory category) {
     throw std::runtime_error("Unknown SoundCategory");
 }
 
-inline SoundCategory* getSoundCategory(const std::string& name) {
-    auto& map = getSoundCategoryByName();
+inline SoundCategory* getSoundCategory(const std::string &name) {
+    auto &map = getSoundCategoryByName();
     auto it = map.find(name);
     if (it != map.end()) {
         return const_cast<SoundCategory*>(&it->second);

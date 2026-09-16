@@ -25,7 +25,7 @@ private:
 
 public:
 
-    RangedAttribute(IAttribute* parent, const std::string& unlocName, double defaultVal, double minVal, double maxVal) :
+    RangedAttribute(IAttribute* parent, const std::string &unlocName, double defaultVal, double minVal, double maxVal) :
         BaseAttribute(parent, unlocName, defaultVal),
         minimumValue(minVal),
         maximumValue(maxVal)
@@ -43,7 +43,7 @@ public:
         }
     }
 
-    RangedAttribute& setDescription(const std::string& descriptionIn) {
+    RangedAttribute &setDescription(const std::string &descriptionIn) {
         this->description = descriptionIn;
         return *this;
     }

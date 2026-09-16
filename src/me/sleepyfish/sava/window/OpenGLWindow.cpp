@@ -22,10 +22,10 @@
 #pragma comment(lib, "winmm.lib")
 #endif //_WIN32
 
-OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept {
+OpenGLWindow::OpenGLWindow(GameConfiguration::Display displayInfo, std::string title, std::unique_ptr<Minecraft> minecraft) noexcept {
     this->displayInfo = displayInfo;
     this->title = std::move(title);
-    this->minecraft = minecraft;
+    this->minecraft = std::move(minecraft);
 
     this->window = nullptr;
     this->fullscreen = false;
@@ -39,8 +39,6 @@ OpenGLWindow::OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, st
     this->savedWindowPosY = 0;
     this->savedWindowWidth = 0;
     this->savedWindowHeight = 0;
-
-    this->setRunning(false);
 }
 
 bool OpenGLWindow::init() {
@@ -137,7 +135,7 @@ bool OpenGLWindow::init() {
 }
 
 // this is the render thread (called by runnable(this->start))
-void OpenGLWindow::run() {
+void OpenGLWindow::run(std::stop_token st) {
 #ifdef _WIN32
     ::timeBeginPeriod(1);
 #endif //_WIN32
@@ -150,7 +148,7 @@ void OpenGLWindow::run() {
 
         this->minecraft->initializeFramebuffer();
 
-        while (this->isRunning() && !::glfwWindowShouldClose(this->window)) {
+        while (!st.stop_requested() && !::glfwWindowShouldClose(this->window)) {
             auto frameStart = std::chrono::steady_clock::now();
 
             int targetFps = this->minecraft->getLimitFramerate();
@@ -213,7 +211,7 @@ void OpenGLWindow::thread_run() {
         ::glfwPollEvents();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
-    this->setRunning(false);
+    this->stop();
 }
 
 void OpenGLWindow::setTitle(const std::string& wndTitle) {
@@ -226,7 +224,6 @@ void OpenGLWindow::onStop() {
 }
 
 void OpenGLWindow::onJoin() {
-    this->minecraft->join();
     ::glfwTerminate();
 }
 

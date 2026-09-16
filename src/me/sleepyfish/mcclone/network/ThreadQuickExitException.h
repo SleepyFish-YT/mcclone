@@ -23,7 +23,7 @@ public:
 
     // deleted to enforce singleton pattern
     ThreadQuickExitException(const ThreadQuickExitException&) = delete;
-    ThreadQuickExitException& operator=(const ThreadQuickExitException&) = delete;
+    ThreadQuickExitException &operator=(const ThreadQuickExitException&) = delete;
 
 private:
 

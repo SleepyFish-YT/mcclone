@@ -32,7 +32,7 @@ public:
 
     bool allowEdit = true;
 
-    void writeCapabilitiesToNBT(NBTTagCompound& tagCompound) {
+    void writeCapabilitiesToNBT(NBTTagCompound &tagCompound) {
         auto nbttagCompound = std::make_unique<NBTTagCompound>();
         nbttagCompound->setBoolean("invulnerable", this->disableDamage);
         nbttagCompound->setBoolean("flying", this->isFlying);
@@ -44,9 +44,9 @@ public:
         tagCompound.setTag("abilities", std::move(nbttagCompound));
     }
 
-    void readCapabilitiesFromNBT(const NBTTagCompound& tagCompound) {
+    void readCapabilitiesFromNBT(const NBTTagCompound &tagCompound) {
         if (tagCompound.hasKey("abilities", 10)) {
-            const NBTTagCompound& nbttagCompound = tagCompound.getCompoundTag("abilities");
+            const NBTTagCompound &nbttagCompound = tagCompound.getCompoundTag("abilities");
             this->disableDamage  = nbttagCompound.getBoolean("invulnerable");
             this->isFlying       = nbttagCompound.getBoolean("flying");
             this->allowFlying    = nbttagCompound.getBoolean("mayfly");

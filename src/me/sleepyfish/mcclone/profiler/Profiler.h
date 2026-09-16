@@ -30,13 +30,13 @@ public:
 
         double totalUsePercentage;
 
-        Result(const std::string& name, double usePercentage, double totalUsePercentage) {
+        Result(const std::string &name, double usePercentage, double totalUsePercentage) {
             this->name = name;
             this->usePercentage = usePercentage;
             this->totalUsePercentage = totalUsePercentage;
         }
 
-        bool operator<(const Result& other) const {
+        bool operator<(const Result &other) const {
             if (other.usePercentage != this->usePercentage) {
                 return other.usePercentage < this->usePercentage;
             }
@@ -60,17 +60,17 @@ public:
 
     void clearProfiling();
 
-    void startSection(const std::string& name);
+    void startSection(const std::string &name);
 
     void endSection();
 
-    void endStartSection(const std::string& name);
+    void endStartSection(const std::string &name);
 
     std::string getNameOfLastSection() const noexcept;
 
-    std::vector<Result> getProfilingData(const std::string& profilerName);
+    std::vector<Result> getProfilingData(const std::string &profilerName);
 
-    void printProfilerSection(const std::string& profilerName);
+    void printProfilerSection(const std::string &profilerName);
 
 private:
 
@@ -86,7 +86,7 @@ private:
 
     mutable std::mutex mutex;
 
-    void startSection_nolock(const std::string& name);
+    void startSection_nolock(const std::string &name);
 
     void endSection_nolock();
 

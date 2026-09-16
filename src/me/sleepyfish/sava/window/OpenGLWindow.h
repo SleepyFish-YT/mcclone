@@ -12,6 +12,7 @@
 
 #include <string>
 #include <chrono>
+#include <memory>
 
 #include <glm/vec2.hpp>
 #include <glad/glad.h>
@@ -31,7 +32,7 @@ class OpenGLWindow : public Runnable {
 
 private:
 
-    Minecraft* minecraft{};
+    std::unique_ptr<Minecraft> minecraft{};
 
     ::GLFWwindow* window{};
     std::string title{};
@@ -39,11 +40,11 @@ private:
     bool mouseCaptured{};
     bool focused{};
 
-    GameConfiguration::DisplayInformation displayInfo{};
+    GameConfiguration::Display displayInfo{};
     RenderInformation* renderContext{};
 
     // render thread .run();
-    void run() override;
+    void run(std::stop_token st) override;
 
     void onStop() override;
 
@@ -62,7 +63,7 @@ public:
     int savedWindowWidth{};
     int savedWindowHeight{};
 
-    OpenGLWindow(GameConfiguration::DisplayInformation displayInfo, std::string title, Minecraft* minecraft) noexcept;
+    OpenGLWindow(GameConfiguration::Display displayInfo, std::string title, std::unique_ptr<Minecraft> minecraft) noexcept;
 
     bool init();
 
@@ -70,7 +71,7 @@ public:
 
     void thread_run();
 
-    void setTitle(const std::string& wndTitle);
+    void setTitle(const std::string &wndTitle);
 
     std::string getTitle() const noexcept { return this->title; }
 

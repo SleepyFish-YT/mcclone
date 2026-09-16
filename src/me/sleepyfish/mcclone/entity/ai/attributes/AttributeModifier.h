@@ -67,7 +67,7 @@ public:
         return this->isSaved_;
     }
 
-    AttributeModifier& setSaved(bool saved) {
+    AttributeModifier &setSaved(bool saved) {
         this->isSaved_ = saved;
         return *this;
     }

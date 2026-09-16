@@ -18,8 +18,8 @@ struct BufferedImage {
 
 public:
 
-    std::vector<uint8_t> data;   // raw channel bytes (R, G, B, A per pixel)
-    std::vector<int>     pixels; // packed ARGB ints, kept in sync via syncPixels()
+    std::vector<uint8_t> data; // raw channel bytes (R, G, B, A per pixel)
+    std::vector<int>   pixels; // packed ARGB ints, kept in sync via syncPixels()
     int width    = 0;
     int height   = 0;
     int channels = 0;
@@ -31,11 +31,11 @@ public:
         pixels   = packedPixels;
         data.resize(static_cast<size_t>(w) * h * 4);
         for (int i = 0; i < w * h; ++i) {
-            int argb     = packedPixels[i];
-            data[i*4+0]  = (argb >> 16) & 0xFF; // R
-            data[i*4+1]  = (argb >>  8) & 0xFF; // G
-            data[i*4+2]  = (argb      ) & 0xFF; // B
-            data[i*4+3]  = (argb >> 24) & 0xFF; // A
+            int argb    = packedPixels[i];
+            data[i*4+0] = (argb >> 16) & 0xFF; // R
+            data[i*4+1] = (argb >>  8) & 0xFF; // G
+            data[i*4+2] = (argb      ) & 0xFF; // B
+            data[i*4+3] = (argb >> 24) & 0xFF; // A
         }
     }
 

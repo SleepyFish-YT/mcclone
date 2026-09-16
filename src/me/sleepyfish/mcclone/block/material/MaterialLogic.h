@@ -16,7 +16,7 @@ class MaterialLogic : public Material {
 
 public:
 
-    explicit MaterialLogic(const MapColor& color) :
+    explicit MaterialLogic(const MapColor &color) :
         Material(color)
     {
         this->setAdventureModeExempt();

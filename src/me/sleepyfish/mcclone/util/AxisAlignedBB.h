@@ -42,7 +42,7 @@ public:
         maxZ(std::max(z1, z2))
     {}
 
-    AxisAlignedBB(const BlockPos& pos1, const BlockPos& pos2) noexcept :
+    AxisAlignedBB(const BlockPos &pos1, const BlockPos &pos2) noexcept :
         minX(pos1.x),
         minY(pos1.y),
         minZ(pos1.z),
@@ -94,14 +94,14 @@ public:
         };
     }
 
-    AxisAlignedBB union_(const AxisAlignedBB& other) const noexcept {
+    AxisAlignedBB union_(const AxisAlignedBB &other) const noexcept {
         return {
             std::min(this->minX, other.minX), std::min(this->minY, other.minY), std::min(this->minZ, other.minZ),
             std::max(this->maxX, other.maxX), std::max(this->maxY, other.maxY), std::max(this->maxZ, other.maxZ)
         };
     }
 
-    double calculateXOffset(const AxisAlignedBB& other, double offsetX) const noexcept {
+    double calculateXOffset(const AxisAlignedBB &other, double offsetX) const noexcept {
         if (other.maxY > this->minY && other.minY < this->maxY && other.maxZ > this->minZ && other.minZ < this->maxZ) {
             if (offsetX > 0.0 && other.maxX <= this->minX) {
                 const double d1 = this->minX - other.maxX;
@@ -115,7 +115,7 @@ public:
         return offsetX;
     }
 
-    double calculateYOffset(const AxisAlignedBB& other, double offsetY) const noexcept {
+    double calculateYOffset(const AxisAlignedBB &other, double offsetY) const noexcept {
         if (other.maxX > this->minX && other.minX < this->maxX && other.maxZ > this->minZ && other.minZ < this->maxZ) {
             if (offsetY > 0.0 && other.maxY <= this->minY) {
                 const double d1 = this->minY - other.maxY;
@@ -182,7 +182,7 @@ public:
         const std::optional<Vec3> vec34 = getIfInXY(vecA.getIntermediateWithZValue(vecB, this->minZ));
         const std::optional<Vec3> vec35 = getIfInXY(vecA.getIntermediateWithZValue(vecB, this->maxZ));
 
-        const std::optional<Vec3>* closestOpt = nullptr;
+        const std::optional<Vec3> *closestOpt = nullptr;
         auto tryUpdate = [&](const std::optional<Vec3>& v) {
             if (!v) return;
             if (!closestOpt || vecA.squareDistanceTo(*v) < vecA.squareDistanceTo(**closestOpt))

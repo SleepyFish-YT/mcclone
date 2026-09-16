@@ -43,7 +43,7 @@ public:
         return it != this->m_attributes.end() ? it->second : nullptr;
     }
 
-    virtual IAttributeInstance* getAttributeInstanceByName(const std::string& attributeName) {
+    virtual IAttributeInstance* getAttributeInstanceByName(const std::string &attributeName) {
         auto it = this->m_attributesByName.find(SavaUtil::StringUtil::ToLowerCase(attributeName));
         return it != this->m_attributesByName.end() ? it->second : nullptr;
     }
@@ -69,7 +69,7 @@ public:
     std::vector<IAttributeInstance*> getAllAttributes() const {
         std::vector<IAttributeInstance*> result;
         result.reserve(this->m_attributesByName.size());
-        for (auto& [key, val] : this->m_attributesByName) {
+        for (auto &[key, val] : this->m_attributesByName) {
             result.push_back(val);
         }
         return result;
@@ -77,8 +77,8 @@ public:
 
     virtual void onAttributeModified(IAttributeInstance* instance) {}
 
-    void removeAttributeModifiers(const std::vector<std::pair<std::string, AttributeModifier>>& modifiers) {
-        for (auto& [name, modifier] : modifiers) {
+    void removeAttributeModifiers(const std::vector<std::pair<std::string, AttributeModifier>> &modifiers) {
+        for (auto &[name, modifier] : modifiers) {
             IAttributeInstance* instance = this->getAttributeInstanceByName(name);
             if (instance) {
                 instance->removeModifier(modifier);
@@ -86,8 +86,8 @@ public:
         }
     }
 
-    void applyAttributeModifiers(const std::vector<std::pair<std::string, AttributeModifier>>& modifiers) {
-        for (auto& [name, modifier] : modifiers) {
+    void applyAttributeModifiers(const std::vector<std::pair<std::string, AttributeModifier>> &modifiers) {
+        for (auto &[name, modifier] : modifiers) {
             IAttributeInstance* instance = this->getAttributeInstanceByName(name);
             if (instance) {
                 instance->removeModifier(modifier);

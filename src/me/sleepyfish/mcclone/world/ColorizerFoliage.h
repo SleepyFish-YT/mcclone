@@ -20,7 +20,7 @@ private:
 
 public:
 
-    static void setFoliageBiomeColorizer(const std::array<int, 65536>& source) {
+    static void setFoliageBiomeColorizer(const std::array<int, 65536> &source) {
         ColorizerFoliage::foliageBuffer = source;
     }
 

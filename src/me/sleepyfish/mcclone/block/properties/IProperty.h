@@ -37,7 +37,7 @@ public:
 
     virtual std::vector<T> getAllowedValues() const = 0;
 
-    virtual std::string getName(const T& value) const = 0;
+    virtual std::string getName(const T &value) const = 0;
 
 };
 

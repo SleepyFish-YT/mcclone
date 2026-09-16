@@ -6,6 +6,8 @@
 #ifndef MCCLONE_POSITIONEDSOUND_H
 #define MCCLONE_POSITIONEDSOUND_H
 
+#include <utility>
+
 #include "ISound.h"
 #include "../../util/ResourceLocation.h"
 
@@ -18,18 +20,18 @@ protected:
 
     const ResourceLocation positionedSoundLocation;
 
-    float volume = 1.0F;
-    float pitch = 1.0F;
-    float xPosF = 0.0F;
-    float yPosF = 0.0F;
-    float zPosF = 0.0F;
+    float volume = 1.0f;
+    float pitch = 1.0f;
+    float xPosF = 0.0f;
+    float yPosF = 0.0f;
+    float zPosF = 0.0f;
     bool repeat = false;
 
     int repeatDelay = 0;
     ISound::AttenuationType attenuationType = ISound::AttenuationType::LINEAR;
 
-    explicit PositionedSound(const ResourceLocation &soundResource) :
-        positionedSoundLocation(soundResource)
+    explicit PositionedSound(ResourceLocation soundResource) :
+        positionedSoundLocation(std::move(soundResource))
     {}
 
 public:

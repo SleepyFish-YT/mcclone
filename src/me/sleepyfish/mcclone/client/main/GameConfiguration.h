@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <cstdint>
 
 /**
  * @author SleepyFish
@@ -19,7 +20,7 @@ struct GameConfiguration {
     /**
      * @author SleepyFish
      */
-    struct DisplayInformation {
+    struct Display {
         int width;
         int height;
         bool fullscreen;
@@ -29,7 +30,7 @@ struct GameConfiguration {
     /**
      * @author SleepyFish
      */
-    struct FolderInformation {
+    struct Folder {
         std::filesystem::path mcDataDir;
         std::filesystem::path resourcePacksDir;
         std::filesystem::path assetsDir;
@@ -39,7 +40,7 @@ struct GameConfiguration {
     /**
      * @author SleepyFish
      */
-    struct GameInformation {
+    struct Game {
         bool isDemo;
         std::string version;
     } gameInformation{};
@@ -47,7 +48,7 @@ struct GameConfiguration {
     /**
      * @author SleepyFish
      */
-    struct ServerInformation {
+    struct Server {
         std::string serverName;
         uint16_t serverPort;
     } serverInformation{};
@@ -55,7 +56,7 @@ struct GameConfiguration {
     /**
      * @author SleepyFish
      */
-    struct UserInformation {
+    struct User {
         std::string username;
     } userInformation{};
 

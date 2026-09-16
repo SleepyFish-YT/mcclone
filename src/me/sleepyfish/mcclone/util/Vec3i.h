@@ -36,15 +36,15 @@ public:
         z(static_cast<int>(std::floor(zIn)))
     {}
 
-    bool operator==(const Vec3i& other) const = default;
+    bool operator==(const Vec3i &other) const = default;
 
-    bool operator<(const Vec3i& other) const noexcept {
+    bool operator<(const Vec3i &other) const noexcept {
         if (this->y != other.y) return this->y < other.y;
         if (this->z != other.z) return this->z < other.z;
         return this->x < other.x;
     }
 
-    Vec3i crossProduct(const Vec3i& vec) const noexcept {
+    Vec3i crossProduct(const Vec3i &vec) const noexcept {
         return {
             this->y * vec.z - this->z * vec.y,
             this->z * vec.x - this->x * vec.z,
@@ -63,7 +63,7 @@ public:
         return this->distanceSq(xIn, yIn, zIn, 0.5);
     }
 
-    double distanceSq(const Vec3i& to) const noexcept {
+    double distanceSq(const Vec3i &to) const noexcept {
         return this->distanceSq(to.x, to.y, to.z);
     }
 

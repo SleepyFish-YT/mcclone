@@ -10,6 +10,7 @@
 #include "ModelBase.h"
 #include "../../util/ResourceLocation.h"
 #include "ModelSprite.h"
+#include "ModelBox.h"
 // #include "ModelUpdater.h"
 #include "../renderer/GlStateManager.h"
 #include "../renderer/GLAllocation.h"
@@ -21,7 +22,7 @@
 #include <cmath>
 #include <utility>
 
-ModelRenderer::ModelRenderer(ModelBase& model, std::string boxNameIn) :
+ModelRenderer::ModelRenderer(ModelBase &model, std::string boxNameIn) :
     textureWidth(64.0f),
     textureHeight(32.0f),
     boxName(std::move(boxNameIn)),
@@ -32,17 +33,17 @@ ModelRenderer::ModelRenderer(ModelBase& model, std::string boxNameIn) :
     this->setTextureSize(static_cast<int>(model.textureWidth), static_cast<int>(model.textureHeight));
 }
 
-ModelRenderer::ModelRenderer(ModelBase& model) :
+ModelRenderer::ModelRenderer(ModelBase &model) :
     ModelRenderer(model, std::string())
 {}
 
-ModelRenderer::ModelRenderer(ModelBase& model, int texOffX, int texOffY) :
+ModelRenderer::ModelRenderer(ModelBase &model, int texOffX, int texOffY) :
     ModelRenderer(model)
 {
     this->setTextureOffset(texOffX, texOffY);
 }
 
-ModelRenderer& ModelRenderer::addBox(const std::string& partName, float offX, float offY, float offZ, int width, int height, int depth) {
+ModelRenderer &ModelRenderer::addBox(const std::string &partName, float offX, float offY, float offZ, int width, int height, int depth) {
     const std::string fullName = this->boxName + "." + partName;
     const TextureOffset textureoffset_ = this->baseModel.getTextureOffset(fullName);
 
@@ -62,7 +63,7 @@ ModelRenderer& ModelRenderer::addBox(const std::string& partName, float offX, fl
     return *this;
 }
 
-ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth) {
+ModelRenderer &ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth) {
 /*
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
@@ -75,7 +76,7 @@ ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int wid
     return *this;
 }
 
-ModelRenderer& ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth, bool idk) {
+ModelRenderer &ModelRenderer::addBox(float offX, float offY, float offZ, int width, int height, int depth, bool idk) {
     this->cubeList.push_back(std::make_unique<ModelBox>(
             *this,
             this->textureOffsetX, this->textureOffsetY,
@@ -145,7 +146,7 @@ void ModelRenderer::render(float scale) {
 
             GlStateManager::callList_(this->displayList);
 
-            for (ModelRenderer* child : this->childModels) {
+            for (ModelRenderer *child : this->childModels) {
                 child->render(scale);
             }
 
@@ -161,7 +162,7 @@ void ModelRenderer::render(float scale) {
 
             GlStateManager::callList_(this->displayList);
 
-            for (ModelRenderer* child : this->childModels) {
+            for (ModelRenderer *child : this->childModels) {
                 child->render(scale);
             }
 
@@ -191,7 +192,7 @@ void ModelRenderer::render(float scale) {
 
         GlStateManager::callList_(this->displayList);
 
-        for (ModelRenderer* child : this->childModels) {
+        for (ModelRenderer *child : this->childModels) {
             child->render(scale);
         }
 
@@ -248,7 +249,7 @@ void ModelRenderer::renderWithRotation(float scale) {
 
     GlStateManager::callList_(this->displayList);
 
-    for (ModelRenderer* child : this->childModels) {
+    for (ModelRenderer *child : this->childModels) {
         child->render(scale);
     }
 
@@ -297,13 +298,13 @@ void ModelRenderer::compileDisplayList(float scale) {
     }
 
     GlStateManager::glNewList_(this->displayList, GL_COMPILE);
-    WorldRenderer& renderer = Tessellator::getInstance().getWorldRenderer();
+    WorldRenderer &renderer = Tessellator::getInstance().getWorldRenderer();
 
-    for (auto& box : this->cubeList) {
+    for (auto &box : this->cubeList) {
         box->render(renderer, scale);
     }
 
-    for (auto& sprite : this->spriteList) {
+    for (auto &sprite : this->spriteList) {
         sprite->render(Tessellator::getInstance(), scale);
     }
 
@@ -329,12 +330,12 @@ void ModelRenderer::checkResetDisplayList() {
     */
 }
 
-ModelRenderer* ModelRenderer::getChild(const std::string& childName) {
+ModelRenderer *ModelRenderer::getChild(const std::string &childName) {
     if (childName.empty()) {
         return nullptr;
     }
 
-    for (ModelRenderer* child : this->childModels) {
+    for (ModelRenderer *child : this->childModels) {
         if (childName == child->getId()) {
             return child;
         }
@@ -343,17 +344,17 @@ ModelRenderer* ModelRenderer::getChild(const std::string& childName) {
     return nullptr;
 }
 
-ModelRenderer* ModelRenderer::getChildDeep(const std::string& childName) {
+ModelRenderer *ModelRenderer::getChildDeep(const std::string &childName) {
     if (childName.empty()) {
         return nullptr;
     }
 
-    if (ModelRenderer* direct = this->getChild(childName)) {
+    if (ModelRenderer *direct = this->getChild(childName)) {
         return direct;
     }
 
-    for (ModelRenderer* child : this->childModels) {
-        if (ModelRenderer* deep = child->getChildDeep(childName)) {
+    for (ModelRenderer *child : this->childModels) {
+        if (ModelRenderer *deep = child->getChildDeep(childName)) {
             return deep;
         }
     }

@@ -13,7 +13,7 @@ std::vector<KeyBinding*> KeyBinding::keybindArray {};
 std::unordered_map<uint16_t, KeyBinding*> KeyBinding::hash {};
 std::unordered_set<std::string> KeyBinding::keybindSet {};
 
-KeyBinding::KeyBinding(const std::string& description, uint16_t keyCode, const std::string& category) noexcept {
+KeyBinding::KeyBinding(const std::string &description, uint16_t keyCode, const std::string &category) noexcept {
     this->keyDescription = description;
     this->keyCode = keyCode;
     this->keyCodeDefault = keyCode;
@@ -66,7 +66,7 @@ void KeyBinding::resetKeyBindingArrayAndHash() {
     }
 }
 
-const std::unordered_set<std::string>& KeyBinding::getKeybinds() {
+const std::unordered_set<std::string> &KeyBinding::getKeybinds() {
     return KeyBinding::keybindSet;
 }
 

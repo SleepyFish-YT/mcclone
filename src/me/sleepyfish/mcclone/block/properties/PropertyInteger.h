@@ -22,7 +22,7 @@ private:
 
     const std::vector<int> allowedValues;
 
-    static std::vector<int> buildAllowedValues(const std::string& name, int min, int max) {
+    static std::vector<int> buildAllowedValues(const std::string &name, int min, int max) {
         if (min < 0)
             throw std::invalid_argument("Min value of " + name + " must be 0 or greater");
         if (max <= min)
@@ -34,14 +34,14 @@ private:
         return values;
     }
 
-    PropertyInteger(const std::string& name, int min, int max) :
+    PropertyInteger(const std::string &name, int min, int max) :
         PropertyHelper<int>(name),
         allowedValues(buildAllowedValues(name, min, max))
     {}
 
 public:
 
-    static PropertyInteger create(const std::string& name, int min, int max) {
+    static PropertyInteger create(const std::string &name, int min, int max) {
         return PropertyInteger(name, min, max);
     }
 
@@ -49,15 +49,15 @@ public:
         return this->allowedValues;
     }
 
-    std::string getName(const int& value) const override {
+    std::string getName(const int &value) const override {
         return std::to_string(value);
     }
 
-    bool operator==(const PropertyInteger& other) const {
+    bool operator==(const PropertyInteger &other) const {
         return PropertyHelper<int>::operator==(other) && this->allowedValues == other.allowedValues;
     }
 
-    bool operator!=(const PropertyInteger& other) const {
+    bool operator!=(const PropertyInteger &other) const {
         return !(*this == other);
     }
 

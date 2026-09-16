@@ -20,7 +20,7 @@ public:
     {}
 
     template<typename... Args>
-    explicit PlayerNotFoundException(const std::string& message, Args&&... args) :
+    explicit PlayerNotFoundException(const std::string &message, Args&&... args) :
         CommandException(message, std::forward<Args>(args)...)
     {}
 

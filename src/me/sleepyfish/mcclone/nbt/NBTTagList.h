@@ -38,19 +38,19 @@ public:
 
     NBTTagList() = default;
 
-    void write(std::ostream& output) const override {
+    void write(std::ostream &output) const override {
         const int8_t type = !this->tagList.empty() ? this->tagList[0]->getId() : 0;
         output.put(type);
 
         const int32_t size = static_cast<int32_t>(this->tagList.size());
         output.write(reinterpret_cast<const char*>(&size), sizeof(int32_t));
 
-        for (const auto& tag : this->tagList) {
+        for (const auto &tag : this->tagList) {
             tag->write(output);
         }
     }
 
-    void read(std::istream& input, int depth, NBTSizeTracker& sizeTracker) override {
+    void read(std::istream &input, int depth, NBTSizeTracker &sizeTracker) override {
         sizeTracker.read(296LL);
 
         if (depth > 512) {
@@ -166,7 +166,7 @@ public:
         return "";
     }
 
-    const NBTBase& get(int idx) const {
+    const NBTBase &get(int idx) const {
         if (idx >= 0 && idx < static_cast<int>(this->tagList.size()))
             return *this->tagList[idx];
         static const NBTTagEnd empty;
@@ -181,16 +181,16 @@ public:
         auto copy = std::make_unique<NBTTagList>();
         copy->tagType = this->tagType;
 
-        for (const auto& tag : this->tagList) {
+        for (const auto &tag : this->tagList) {
             copy->tagList.push_back(tag->copy());
         }
 
         return copy;
     }
 
-    bool operator==(const NBTBase& other) const override {
+    bool operator==(const NBTBase &other) const override {
         if (!NBTBase::operator==(other)) return false;
-        const auto& o = static_cast<const NBTTagList&>(other);
+        const auto &o = static_cast<const NBTTagList&>(other);
         if (this->tagType != o.tagType) return false;
         if (this->tagList.size() != o.tagList.size()) return false;
 
@@ -203,7 +203,7 @@ public:
 
     int hashCode() const override {
         int hash = NBTBase::hashCode();
-        for (const auto& tag : this->tagList) {
+        for (const auto &tag : this->tagList) {
             hash ^= tag->hashCode();
         }
         return hash;

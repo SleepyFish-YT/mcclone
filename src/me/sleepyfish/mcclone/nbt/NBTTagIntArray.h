@@ -86,7 +86,7 @@ public:
         return hash;
     }
 
-    const std::vector<int32_t>& getIntArray() const {
+    const std::vector<int32_t> &getIntArray() const {
         return this->intArray;
     }
 

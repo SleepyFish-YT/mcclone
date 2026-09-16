@@ -43,7 +43,7 @@ public:
 
     KeyBinding() noexcept : keyCode(0), keyCodeDefault(0), pressed(false), pressTime(0) {}
 
-    KeyBinding(const std::string& description, uint16_t keyCode, const std::string& category) noexcept;
+    KeyBinding(const std::string &description, uint16_t keyCode, const std::string &category) noexcept;
 
     // disable const copy
     KeyBinding(const KeyBinding&) = delete;
@@ -60,7 +60,7 @@ public:
 
     static void resetKeyBindingArrayAndHash();
 
-    static const std::unordered_set<std::string>& getKeybinds();
+    static const std::unordered_set<std::string> &getKeybinds();
 
     static size_t getRegisteredCount() noexcept;
 

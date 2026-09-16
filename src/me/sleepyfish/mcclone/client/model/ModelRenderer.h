@@ -30,12 +30,12 @@ private:
     int textureOffsetY;
     bool compiled = false;
     int displayList = 0;
-    const ModelBase& baseModel;
+    const ModelBase &baseModel;
     int countResetDisplayList = 0;
 
-    ResourceLocation* textureLocation = nullptr; // non-owning, may be null
+    ResourceLocation *textureLocation = nullptr; // non-owning, may be null
     std::string id; // empty == null
-    ModelUpdater* modelUpdater = nullptr; // non-owning, may be null
+    ModelUpdater *modelUpdater = nullptr; // non-owning, may be null
 
     void compileDisplayList(float scale);
     void checkResetDisplayList();
@@ -72,25 +72,25 @@ public:
     float scaleY = 1.0f;
     float scaleZ = 1.0f;
 
-    ModelRenderer(ModelBase& model, std::string  boxNameIn);
-    explicit ModelRenderer(ModelBase& model);
-    ModelRenderer(ModelBase& model, int texOffX, int texOffY);
+    ModelRenderer(ModelBase &model, std::string  boxNameIn);
+    explicit ModelRenderer(ModelBase &model);
+    ModelRenderer(ModelBase &model, int texOffX, int texOffY);
 
-    void addChild(ModelRenderer& renderer) {
+    void addChild(ModelRenderer &renderer) {
         this->childModels.push_back(&renderer);
     }
 
-    ModelRenderer& setTextureOffset(int x, int y) {
+    ModelRenderer &setTextureOffset(int x, int y) {
         this->textureOffsetX = x;
         this->textureOffsetY = y;
         return *this;
     }
 
-    ModelRenderer& addBox(const std::string& partName, float offX, float offY, float offZ, int width, int height, int depth);
+    ModelRenderer &addBox(const std::string &partName, float offX, float offY, float offZ, int width, int height, int depth);
 
-    ModelRenderer& addBox(float offX, float offY, float offZ, int width, int height, int depth);
+    ModelRenderer &addBox(float offX, float offY, float offZ, int width, int height, int depth);
 
-    ModelRenderer& addBox(float offX, float offY, float offZ, int width, int height, int depth, bool idk);
+    ModelRenderer &addBox(float offX, float offY, float offZ, int width, int height, int depth, bool idk);
 
     void addBox(float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor);
 
@@ -106,7 +106,7 @@ public:
     void renderWithRotation(float scale);
     void postRender(float scale);
 
-    ModelRenderer& setTextureSize(int textureWidthIn, int textureHeightIn) {
+    ModelRenderer &setTextureSize(int textureWidthIn, int textureHeightIn) {
         this->textureWidth  = static_cast<float>(textureWidthIn);
         this->textureHeight = static_cast<float>(textureHeightIn);
         return *this;
@@ -122,26 +122,26 @@ public:
         return this->displayList;
     }
 
-    ResourceLocation* getTextureLocation() const {
+    ResourceLocation *getTextureLocation() const {
         return this->textureLocation;
     }
 
-    void setTextureLocation(ResourceLocation* location) {
+    void setTextureLocation(ResourceLocation *location) {
         this->textureLocation = location;
     }
 
-    const std::string& getId() const {
+    const std::string &getId() const {
         return this->id;
     }
 
-    void setId(const std::string& name) {
+    void setId(const std::string &name) {
         this->id = name;
     }
 
-    ModelRenderer* getChild(const std::string& childName);
-    ModelRenderer* getChildDeep(const std::string& childName);
+    ModelRenderer *getChild(const std::string &childName);
+    ModelRenderer *getChildDeep(const std::string &childName);
 
-    void setModelUpdater(ModelUpdater* updater) {
+    void setModelUpdater(ModelUpdater *updater) {
         this->modelUpdater = updater;
     }
 

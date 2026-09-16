@@ -5,9 +5,9 @@
 
 #include "SoundEngine.h"
 
-#include <utility>
-
 #include "../../debug/Logger.h"
+
+#include <utility>
 
 extern "C" {
 
@@ -35,7 +35,7 @@ SoundEngine::SoundEngine(std::filesystem::path sound_dir) :
             std::filesystem::create_directory(this->soundDir);
             Logger::log("Created sound directory: " + this->soundDir.string());
         }
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         Logger::error("Failed to create sound directory: " + std::string(e.what()));
         return;
     }
@@ -71,7 +71,7 @@ SoundEngine::~SoundEngine() {
 
 void SoundEngine::destory(bool msg) {
     std::lock_guard<std::mutex> lock(this->mutex);
-    for (auto& sound : this->activeSources) {
+    for (auto &sound : this->activeSources) {
         ::alDeleteSources(1, &sound.source);
         ::alDeleteBuffers(1, &sound.buffer);
     }
@@ -86,8 +86,8 @@ void SoundEngine::destory(bool msg) {
     }
 }
 
-::ALuint SoundEngine::loadBuffer(const std::string& audio_name) {
-    std::string file_name = audio_name + ".ogg";
+::ALuint SoundEngine::loadBuffer(const std::string &audio_name) {
+    std::string file_name = audio_name; // + ".ogg";
 
     std::filesystem::path soundPath(this->soundDir / file_name);
     if (!std::filesystem::exists(soundPath)) {
@@ -124,7 +124,13 @@ void SoundEngine::setListenerPosition3D(float x, float y, float z) {
     ::alListener3f(AL_POSITION, x, y, z);
 }
 
-void SoundEngine::playSound(const std::string& name, float volume, float pitch) {
+void SoundEngine::setListenerOrientation(float atX, float atY, float atZ, float upX, float upY, float upZ) {
+    std::lock_guard<std::mutex> lock(this->mutex);
+    float orientation[6] = { atX, atY, atZ, upX, upY, upZ };
+    ::alListenerfv(AL_ORIENTATION, orientation);
+}
+
+void SoundEngine::playSound(const std::string &name, float volume, float pitch) {
     if (volume <= 0.0f || volume > 1.0f) {
         return;
     }
@@ -153,7 +159,7 @@ void SoundEngine::playSound(const std::string& name, float volume, float pitch) 
     this->activeSources.push_back({source, buffer});
 }
 
-void SoundEngine::playSound3D(const std::string& name, float x, float y, float z, float volume, float pitch) {
+void SoundEngine::playSound3D(const std::string &name, float x, float y, float z, float volume, float pitch) {
     if (volume <= 0.0f || volume > 1.0f) {
         return;
     }

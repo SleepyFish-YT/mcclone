@@ -30,17 +30,17 @@ public:
 
     NBTTagByteArray() = default;
 
-    explicit NBTTagByteArray(const std::vector<int8_t>& data) :
+    explicit NBTTagByteArray(const std::vector<int8_t> &data) :
             data(data)
     {}
 
-    void write(std::ostream& output) const override {
+    void write(std::ostream &output) const override {
         const int32_t length = static_cast<int32_t>(this->data.size());
         output.write(reinterpret_cast<const char*>(&length), sizeof(int32_t));
         output.write(reinterpret_cast<const char*>(this->data.data()), this->data.size());
     }
 
-    void read(std::istream& input, int depth, NBTSizeTracker& sizeTracker) override {
+    void read(std::istream &input, int depth, NBTSizeTracker &sizeTracker) override {
         sizeTracker.read(192ll);
 
         int32_t length = 0;
@@ -64,7 +64,7 @@ public:
         return std::make_unique<NBTTagByteArray>(this->data);
     }
 
-    bool operator==(const NBTBase& other) const override {
+    bool operator==(const NBTBase &other) const override {
         if (!NBTBase::operator==(other)) return false;
         return this->data == static_cast<const NBTTagByteArray&>(other).data;
     }
@@ -76,7 +76,7 @@ public:
         ));
     }
 
-    const std::vector<int8_t>& getByteArray() const {
+    const std::vector<int8_t> &getByteArray() const {
         return this->data;
     }
 

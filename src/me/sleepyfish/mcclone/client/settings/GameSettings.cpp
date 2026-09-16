@@ -8,14 +8,15 @@
 
 #include "../../debug/Logger.h"
 
-#include <glfw/glfw3.h>
 #include <fstream>
+
+#include <glfw/glfw3.h>
 
 GameSettings::GameSettings() {
     this->settingsFilePath = "";
 }
 
-GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
+GameSettings::GameSettings(const std::filesystem::path &settingsParentPath) {
     this->settingsFilePath = (std::filesystem::path(settingsParentPath) / "options.json");
 
     this->mouseSensitivity = 0.5f;
@@ -31,6 +32,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
     this->fullScreen = false;
     this->pauseOnLostFocus = false;
     this->showDebugInfo = false;
+    this->showDebugProfilerChart = false;
     this->hideGUI = false;
     this->heldItemTooltips = true;
     this->advancedItemTooltips = false;
@@ -168,6 +170,7 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"fullScreen", false},
             {"pauseOnLostFocus", false},
             {"showDebugInfo", false},
+            {"showDebugProfilerChart", false},
             {"hideGUI", false},
             {"heldItemTooltips", true},
             {"advancedItemTooltips", false},
@@ -187,11 +190,11 @@ GameSettings::GameSettings(const std::filesystem::path& settingsParentPath) {
             {"mipmapLevels", 4},
     };
 
-    for (auto& keybind : this->keyBinds) {
+    for (auto &keybind : this->keyBinds) {
         json[keybind->getKeyDescription()] = keybind->getKeyCode();
     }
 
-    for (auto& keybind : this->keyBindHotbar) {
+    for (auto &keybind : this->keyBindHotbar) {
         json[keybind->getKeyDescription()] = keybind->getKeyCode();
     }
 
@@ -220,6 +223,7 @@ void GameSettings::loadSettings() {
     this->fullScreen           = this->settingsJson.value("fullScreen", false);
     this->pauseOnLostFocus     = this->settingsJson.value("pauseOnLostFocus", false);
     this->showDebugInfo        = this->settingsJson.value("showDebugInfo", false);
+    this->showDebugProfilerChart = this->settingsJson.value("showDebugProfilerChart", false);
     this->hideGUI              = this->settingsJson.value("hideGUI", false);
     this->heldItemTooltips     = this->settingsJson.value("heldItemTooltips", true);
     this->advancedItemTooltips = this->settingsJson.value("advancedItemTooltips", false);
@@ -241,7 +245,7 @@ void GameSettings::loadSettings() {
     KeyBinding::resetKeyBindingArrayAndHash();
     KeyBinding::unregisterAllBinds();
 
-    for (auto& keybind : this->keyBinds) {
+    for (auto &keybind : this->keyBinds) {
         if (this->settingsJson.contains(keybind->getKeyDescription())) {
             keybind->setKeyCode(this->settingsJson[keybind->getKeyDescription()]);
         }
@@ -282,6 +286,7 @@ void GameSettings::saveSettings() {
         this->settingsJson["fullScreen"]           = this->fullScreen;
         this->settingsJson["pauseOnLostFocus"]     = this->pauseOnLostFocus;
         this->settingsJson["showDebugInfo"]        = this->showDebugInfo;
+        this->settingsJson["showDebugProfilerChart"] = this->showDebugProfilerChart;
         this->settingsJson["hideGUI"]              = this->hideGUI;
         this->settingsJson["heldItemTooltips"]     = this->heldItemTooltips;
         this->settingsJson["advancedItemTooltips"] = this->advancedItemTooltips;
@@ -315,4 +320,8 @@ void GameSettings::saveSettings() {
     if (!file.is_open()) {
         Logger::log("Settings saved to {}", this->settingsFilePath.string());
     }
+}
+
+float GameSettings::getSoundLevel(SoundCategory &category) const {
+    return 1.0f; // not yet implemented.
 }

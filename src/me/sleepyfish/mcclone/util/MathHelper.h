@@ -190,15 +190,15 @@ public:
         return dist(generator);
     }
 
-    static int getRandomIntegerInRange(std::mt19937& rand, int min, int max) noexcept {
+    static int getRandomIntegerInRange(std::mt19937 &rand, int min, int max) noexcept {
         return min >= max ? min : std::uniform_int_distribution<int>(min, max)(rand);
     }
 
-    static float randomFloatClamp(std::mt19937& rand, float min, float max) noexcept {
+    static float randomFloatClamp(std::mt19937 &rand, float min, float max) noexcept {
         return min >= max ? min : std::uniform_real_distribution<float>(min, max)(rand);
     }
 
-    static double getRandomDoubleInRange(std::mt19937& rand, double min, double max) noexcept {
+    static double getRandomDoubleInRange(std::mt19937 &rand, double min, double max) noexcept {
         return min >= max ? min : std::uniform_real_distribution<double>(min, max)(rand);
     }
 
@@ -240,21 +240,21 @@ public:
         return value;
     }
 
-    static int parseIntWithDefault(const std::string& str, int defaultVal) {
+    static int parseIntWithDefault(const std::string &str, int defaultVal) {
         try { return std::stoi(str); }
         catch (...) { return defaultVal; }
     }
 
-    static int parseIntWithDefaultAndMax(const std::string& str, int defaultVal, int max) {
+    static int parseIntWithDefaultAndMax(const std::string &str, int defaultVal, int max) {
         return std::max(max, MathHelper::parseIntWithDefault(str, defaultVal));
     }
 
-    static double parseDoubleWithDefault(const std::string& str, double defaultVal) {
+    static double parseDoubleWithDefault(const std::string &str, double defaultVal) {
         try { return std::stod(str); }
         catch (...) { return defaultVal; }
     }
 
-    static double parseDoubleWithDefaultAndMax(const std::string& str, double defaultVal, double max) {
+    static double parseDoubleWithDefaultAndMax(const std::string &str, double defaultVal, double max) {
         return std::max(max, MathHelper::parseDoubleWithDefault(str, defaultVal));
     }
 

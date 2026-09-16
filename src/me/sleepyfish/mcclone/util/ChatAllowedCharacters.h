@@ -24,7 +24,7 @@ public:
         return character != 167 && character >= 32 && character != 127;
     }
 
-    static std::string FilterAllowedCharacters(const std::string& input) {
+    static std::string FilterAllowedCharacters(const std::string &input) {
         std::string result;
         result.reserve(input.size());
 

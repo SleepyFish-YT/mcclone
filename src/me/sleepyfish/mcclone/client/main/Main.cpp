@@ -32,11 +32,13 @@ Main::Main() {
     this->patchVersion = std::to_string(MCCLONE_VERSION_PATCH);
 }
 
-int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gameDir_dir) {
+int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path &gameDir_dir) {
     this->arguments = std::vector<std::string>(arg_vals, arg_vals + arg_count);
 
 #ifdef _WIN32
     this->screenSize = { ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
+#else
+    this->screenSize = { 1920, 1080 };
 #endif //_WIN32
 
     if (this->screenSize.x <= 0 || this->screenSize.y <= 0) {
@@ -55,14 +57,14 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
     // check arguments
     {
         std::string args_str; // initializing this is useless performance waste
-        for (const std::string& arg : this->arguments) {
+        for (const std::string &arg : this->arguments) {
             args_str += arg + " ";
         }
 
         Logger::log("Arguments: " + args_str);
 
         for (int i = 0; i < this->arguments.size(); i++) {
-            const std::string& arg = this->arguments[i];
+            const std::string &arg = this->arguments[i];
 
             if (arg == "--debug") {
                 Logger::log("Debug mode enabled");
@@ -162,32 +164,30 @@ int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path& gam
         }
 
         this->gameConfiguration = new GameConfiguration(
-                GameConfiguration::DisplayInformation(windowSize.x, windowSize.y, args_isFullscreen, args_showGlErrors),
-                GameConfiguration::FolderInformation(gameDir_dir, resourcepacks_dir, assets_dir, assetIndex_file),
-                GameConfiguration::GameInformation(args_isDemo, this->getVersion()),
-                GameConfiguration::ServerInformation("testName.de", 3333),
-                GameConfiguration::UserInformation(SavaUtil::StringUtil::GetRandomPlayerName()),
+                GameConfiguration::Display(windowSize.x, windowSize.y, args_isFullscreen, args_showGlErrors),
+                GameConfiguration::Folder(gameDir_dir, resourcepacks_dir, assets_dir, assetIndex_file),
+                GameConfiguration::Game(args_isDemo, this->getVersion()),
+                GameConfiguration::Server("testName.de", 3333),
+                GameConfiguration::User(SavaUtil::StringUtil::GetRandomPlayerName()),
                 args_isDebug,
                 this->arguments
         );
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         Logger::error("Failed to create game configuration: " + std::string(e.what()));
         return MCCLONE_ERR_GAME_CONFIG;
     }
 
-    auto* minecraft = new Minecraft(this->gameConfiguration);
+    auto minecraft = std::make_unique<Minecraft>(this->gameConfiguration);
 
     // if im correct, std::move should be used here, to move it from local to OpenGLWindow, since it is not used after this.
     std::string title = "McClone [" + this->getVersion() + "] (C++20) by " + Main::AUTHOR;
-    OpenGLWindow glWindow {this->gameConfiguration->displayInformation, std::move(title), minecraft};
-    if (!glWindow.init()) {
+    auto glWindow = std::make_unique<OpenGLWindow>(this->gameConfiguration->displayInformation, std::move(title), std::move(minecraft));
+    if (!glWindow->init()) {
         return MCCLONE_ERR_OPENGL_INIT;
     }
 
-    glWindow.thread_start();
-    glWindow.thread_run();
-
-    delete minecraft;
+    glWindow->thread_start();
+    glWindow->thread_run();
 
     return MCCLONE_ERR_NONE;
 }

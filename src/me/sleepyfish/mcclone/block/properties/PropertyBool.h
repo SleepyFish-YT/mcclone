@@ -21,13 +21,13 @@ private:
 
     const std::vector<bool> allowedValues = { true, false };
 
-    explicit PropertyBool(const std::string& name) :
+    explicit PropertyBool(const std::string &name) :
         PropertyHelper<bool>(name)
     {}
 
 public:
 
-    static PropertyBool create(const std::string& name) {
+    static PropertyBool create(const std::string &name) {
         return PropertyBool(name);
     }
 
@@ -35,7 +35,7 @@ public:
         return this->allowedValues;
     }
 
-    std::string getName(const bool& value) const override {
+    std::string getName(const bool &value) const override {
         return value ? "true" : "false";
     }
 

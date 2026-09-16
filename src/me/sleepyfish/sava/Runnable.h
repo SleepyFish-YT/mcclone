@@ -6,69 +6,73 @@
 #ifndef MCCLONE_RUNNABLE_H
 #define MCCLONE_RUNNABLE_H
 
-#include "ThreadSave.h"
-
+#include <stop_token>
 #include <thread>
+
 
 /**
  * @author SleepyFish - SleepyAVA
- * @version 1.3
+ * @version 1.4
  * @brief Runnable interface class for threads
  */
 class Runnable {
 
-private:
-
-    std::thread thread;
-
-    ThreadSave<bool> running;
+    std::jthread thread;
 
 protected:
 
-    virtual void run() = 0; // subclass must implement this
-
-    virtual void onStart() {} // subclass can implement this
-
-    virtual void onJoin() {} // subclass can implement this
-
-    virtual void onStop() {} // subclass can implement this
+    virtual void run(std::stop_token st) = 0;
+    virtual void onStart() {}
+    virtual void onJoin()  {}
+    virtual void onStop()  {}
 
 public:
 
-    Runnable() noexcept :
-        running(false)
-    {}
+    Runnable() = default;
+    virtual ~Runnable() { this->stop(); }
 
-    ~Runnable() {
-        this->stop();
-        this->join();
-    }
+    // disable copy/move
+    Runnable(const Runnable&)            = delete;
+    Runnable &operator=(const Runnable&) = delete;
+    Runnable(Runnable&&)                 = delete;
+    Runnable &operator=(Runnable&&)      = delete;
 
     void start() {
-        this->setRunning(true);
-        this->onStart();
-
-        this->thread = std::thread(&Runnable::run, this);
-    }
-
-    void stop() {
-        this->setRunning(false);
-        this->onStop();
-    }
-
-    void join() {
         if (this->thread.joinable()) {
+            return;
+        }
+
+        this->thread = std::jthread([this](std::stop_token st) {
+            this->onStart();
+            this->run(std::move(st));
             this->onJoin();
+        });
+    }
+
+    void requestStop() {
+        if (this->thread.joinable()) {
+            this->thread.request_stop();
+            this->onStop();
+        }
+    }
+
+    void join() noexcept {
+        if (this->thread.joinable()) {
             this->thread.join();
         }
     }
 
-    void setRunning(bool value, std::memory_order order = std::memory_order_release) noexcept {
-        this->running.set(value, order);
+    void stop() {
+        this->requestStop();
+        this->join();
     }
 
-    bool isRunning(std::memory_order order = std::memory_order_acquire) const noexcept {
-        return this->running.get(order);
+    bool isRunning() const noexcept {
+        return this->thread.joinable() && !this->getStopToken().stop_requested();
+    }
+
+    std::stop_token getStopToken() const noexcept {
+        return this->thread.get_stop_token();
     }
 
 };
