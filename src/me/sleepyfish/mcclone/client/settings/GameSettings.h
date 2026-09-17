@@ -15,6 +15,7 @@
 #include <nlohmann/json.hpp>
 
 class KeyBinding;
+class Minecraft;
 
 /**
  * @author SleepyFish
@@ -24,9 +25,11 @@ class GameSettings {
 
 private:
 
-    std::filesystem::path settingsFilePath;
+    std::filesystem::path settingsFilePath{};
 
-    ::nlohmann::ordered_json settingsJson;
+    ::nlohmann::ordered_json settingsJson{};
+
+    Minecraft *mc{};
 
 public:
 
@@ -36,86 +39,90 @@ public:
     GameSettings(GameSettings&&) = delete;
     GameSettings &operator=(GameSettings&&) = delete;
 
-    float mouseSensitivity;
-    bool invertMouse;
-    uint16_t limitFramerate;
-    int renderDistanceChunks;
-    bool enableVsync;
-    bool fboEnable;
-    bool useVbo;
-    bool fullScreen;
-    bool pauseOnLostFocus;
-    bool showDebugInfo;
-    bool showDebugProfilerChart;
-    bool hideGUI;
-    bool heldItemTooltips;
-    bool advancedItemTooltips;
-    uint8_t thirdPersonView;
-    uint8_t fovSetting;
-    float gammaSetting;
-    float saturation;
-    int particleSetting;
-    int guiScale;
-    bool viewBobbing;
-    bool anaglyph;
-    bool fancyGraphics;
-    int ambientOcclusion;
-    bool reducedDebugInfo;
-    bool forceUnicodeFont;
-    bool snooperEnabled;
-    int mipmapLevels;
+    float mouseSensitivity{};
+    bool invertMouse{};
+    uint16_t limitFramerate{};
+    uint8_t clouds{};
+    int renderDistanceChunks{};
+    bool enableVsync{};
+    bool fboEnable{};
+    bool useVbo{};
+    bool fullScreen{};
+    bool pauseOnLostFocus{};
+    bool showDebugInfo{};
+    bool showDebugProfilerChart{};
+    bool hideGUI{};
+    bool heldItemTooltips{};
+    bool advancedItemTooltips{};
+    uint8_t thirdPersonView{};
+    uint8_t fovSetting{};
+    float gammaSetting{};
+    float saturation{};
+    int particleSetting{};
+    int guiScale{};
+    bool viewBobbing{};
+    bool anaglyph{};
+    bool fancyGraphics{};
+    int ambientOcclusion{};
+    std::vector<std::string> resourcePacks{};
+    std::vector<std::string> incompatibleResourcePacks{};
+    bool reducedDebugInfo{};
+    bool forceUnicodeFont{};
+    bool snooperEnabled{};
+    int mipmapLevels{};
+    bool useNativeTransport{};
 
     // Movement
-    KeyBinding *keyBindForward;
-    KeyBinding *keyBindLeft;
-    KeyBinding *keyBindBack;
-    KeyBinding *keyBindRight;
-    KeyBinding *keyBindJump;
-    KeyBinding *keyBindSneak;
-    KeyBinding *keyBindSprint;
+    KeyBinding *keyBindForward{};
+    KeyBinding *keyBindLeft{};
+    KeyBinding *keyBindBack{};
+    KeyBinding *keyBindRight{};
+    KeyBinding *keyBindJump{};
+    KeyBinding *keyBindSneak{};
+    KeyBinding *keyBindSprint{};
 
     // Inventory
-    KeyBinding *keyBindInventory;
-    KeyBinding *keyBindHotbar1;
-    KeyBinding *keyBindHotbar2;
-    KeyBinding *keyBindHotbar3;
-    KeyBinding *keyBindHotbar4;
-    KeyBinding *keyBindHotbar5;
-    KeyBinding *keyBindHotbar6;
-    KeyBinding *keyBindHotbar7;
-    KeyBinding *keyBindHotbar8;
-    KeyBinding *keyBindHotbar9;
+    KeyBinding *keyBindInventory{};
+    KeyBinding *keyBindHotbar1{};
+    KeyBinding *keyBindHotbar2{};
+    KeyBinding *keyBindHotbar3{};
+    KeyBinding *keyBindHotbar4{};
+    KeyBinding *keyBindHotbar5{};
+    KeyBinding *keyBindHotbar6{};
+    KeyBinding *keyBindHotbar7{};
+    KeyBinding *keyBindHotbar8{};
+    KeyBinding *keyBindHotbar9{};
 
     // Gameplay
-    KeyBinding *keyBindUseItem;
-    KeyBinding *keyBindDrop;
-    KeyBinding *keyBindAttack;
-    KeyBinding *keyBindPickItem;
-    KeyBinding *keyBindMouseBack;
-    KeyBinding *keyBindMouseForward;
+    KeyBinding *keyBindUseItem{};
+    KeyBinding *keyBindDrop{};
+    KeyBinding *keyBindAttack{};
+    KeyBinding *keyBindPickItem{};
+    KeyBinding *keyBindMouseBack{};
+    KeyBinding *keyBindMouseForward{};
 
     // Multiplayer
-    KeyBinding *keyBindChat;
-    KeyBinding *keyBindPlayerList;
-    KeyBinding *keyBindCommand;
+    KeyBinding *keyBindChat{};
+    KeyBinding *keyBindPlayerList{};
+    KeyBinding *keyBindCommand{};
 
     // Misc
-    KeyBinding *keyBindScreenshot;
-    KeyBinding *keyBindPerspective;
-    KeyBinding *keyBindSmoothCamera;
-    KeyBinding *keyBindHideGui;
-    KeyBinding *keyBindToggleDebugOverlay;
-    KeyBinding *keyBindFullscreen;
-    KeyBinding *keyBindExitGame;
-    KeyBinding *keyBindZoom;
-    KeyBinding *keyFreelook;
+    KeyBinding *keyBindScreenshot{};
+    KeyBinding *keyBindPerspective{};
+    KeyBinding *keyBindSmoothCamera{};
+    KeyBinding *keyBindHideGui{};
+    KeyBinding *keyBindToggleDebugOverlay{};
+    KeyBinding *keyBindFullscreen{};
+    KeyBinding *keyBindExitGame{};
+    KeyBinding *keyBindZoom{};
+    KeyBinding *keyFreelook{};
 
-    std::array<KeyBinding *, 9> keyBindHotbar;
-    std::vector<KeyBinding *> keyBinds;
+    std::array<KeyBinding *, 9> keyBindHotbar{};
+    std::vector<KeyBinding *> keyBinds{};
 
     GameSettings();
 
-    explicit GameSettings(const std::filesystem::path &settingsParentPath);
+    explicit GameSettings(Minecraft &mc, const std::filesystem::path &settingsParentPath);
 
     ::nlohmann::ordered_json createDefaultSettings();
 
@@ -124,6 +131,10 @@ public:
     void loadSettings();
 
     float getSoundLevel(SoundCategory &category) const;
+
+    uint8_t shouldRenderClouds() const noexcept;
+
+    void sendSettingsToServer();
 
 };
 

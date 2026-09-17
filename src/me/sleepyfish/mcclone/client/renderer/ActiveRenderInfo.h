@@ -48,7 +48,7 @@ private:
 public:
 
     /*
-    static void updateRenderInfo(EntityPlayer& player, bool thirdPerson) {
+    static void updateRenderInfo(EntityPlayer &player, bool thirdPerson) {
         ::glGetFloatv(GL_MODELVIEW_MATRIX,  MODELVIEW.data());
         ::glGetFloatv(GL_PROJECTION_MATRIX, PROJECTION.data());
         ::glGetIntegerv(GL_VIEWPORT,        VIEWPORT.data());
@@ -75,14 +75,14 @@ public:
         rotationXZ =  MathHelper::cos(f2 * (float) MathHelper::PId / 180.0f);
     }
 
-    static Vec3 projectViewFromEntity(Entity& entity, double partialTicks) {
+    static Vec3 projectViewFromEntity(Entity &entity, double partialTicks) {
         double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks;
         double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks;
         double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
         return Vec3(d0 + position.xCoord, d1 + position.yCoord, d2 + position.zCoord);
     }
 
-    static Block *getBlockAtEntityViewpoint(World& world, Entity& entity, float partialTicks) {
+    static Block *getBlockAtEntityViewpoint(World &world, Entity &entity, float partialTicks) {
         Vec3     vec3     = projectViewFromEntity(entity, partialTicks);
         BlockPos blockpos = BlockPos(vec3);
         IBlockState state = world.getBlockState(blockpos);

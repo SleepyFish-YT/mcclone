@@ -29,7 +29,7 @@ public:
     // throws std::ios_base::failure
     virtual std::unique_ptr<std::istream> getInputStream(const ResourceLocation &location) = 0;
 
-    virtual bool resourceExists(const ResourceLocation &location) const = 0;
+    virtual bool resourceExists(const ResourceLocation &location) = 0;
 
     virtual std::unordered_set<std::string> getResourceDomains() const = 0;
 

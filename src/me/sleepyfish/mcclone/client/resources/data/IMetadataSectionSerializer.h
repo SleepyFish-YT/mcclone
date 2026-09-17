@@ -23,7 +23,7 @@ public:
 
     virtual std::string getSectionName() const = 0;
 
-    virtual T deserialize(const nlohmann::json& json) const = 0;
+    virtual T deserialize(const ::nlohmann::json& json) const = 0;
 
 };
 

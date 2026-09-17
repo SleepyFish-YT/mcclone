@@ -50,6 +50,21 @@ find_package(OpenAL CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 # ======================== stb dependency ========================
 
+# ======================== miniz dependency ========================
+# used for zipping
+find_package(miniz CONFIG REQUIRED)
+# ======================== miniz dependency ========================
+
+# ======================== libcurl dependency ========================
+# used for internet
+find_package(CURL CONFIG REQUIRED)
+# ======================== libcurl dependency ========================
+
+# ======================== openssl dependency ========================
+# used for encryption
+find_package(OpenSSL REQUIRED)
+# ======================== openssl dependency ========================
+
 # ======================== json dependency ========================
 # used for configuration
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -72,12 +87,14 @@ add_executable(${PROJECT_NAME}
         ${SVA_DIR}/SavaUtil.h
         ${SVA_DIR}/ThreadSave.h
         ${SVA_DIR}/Runnable.h
+        ${SVA_DIR}/StackTraceElement.h
+        ${SVA_DIR}/Throwable.h
         ${SVA_DIR}/Tuple.h
         ${SVA_DIR}/UUID.h
         ${SVA_DIR}/FutureTaskQueue.h
         ${SVA_DIR}/BufferedImage.h
 
-        # window render
+        # sava/window
         ${SVA_DIR}/window/RenderInformation.cpp
         ${SVA_DIR}/window/RenderInformation.h
         ${SVA_DIR}/window/OpenGLWindow.cpp
@@ -227,6 +244,13 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/resources/DefaultResourcePack.h
         ${SRC_DIR}/client/resources/ResourceIndex.cpp
         ${SRC_DIR}/client/resources/ResourceIndex.h
+        ${SRC_DIR}/client/resources/ResourcePackRepository.cpp
+        ${SRC_DIR}/client/resources/ResourcePackRepository.h
+        ${SRC_DIR}/client/resources/ResourcePackFileNotFoundException.h
+        ${SRC_DIR}/client/resources/FileResourcePack.cpp
+        ${SRC_DIR}/client/resources/FileResourcePack.h
+        ${SRC_DIR}/client/resources/FolderResourcePack.cpp
+        ${SRC_DIR}/client/resources/FolderResourcePack.h
 
         # client/resources/data
         ${SRC_DIR}/client/resources/data/IMetadataSection.h
@@ -236,6 +260,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/resources/data/FontMetadataSection.h
         ${SRC_DIR}/client/resources/data/IMetadataSerializer.h
         ${SRC_DIR}/client/resources/data/IMetadataSectionSerializer.h
+        ${SRC_DIR}/client/resources/data/PackMetadataSection.h
 
         # debug
         ${SRC_DIR}/debug/Logger.cpp
@@ -243,6 +268,12 @@ add_executable(${PROJECT_NAME}
 
         # config
         ${SRC_DIR}/config/Config.h
+
+        # crash
+        ${SRC_DIR}/crash/CrashReportCategory.cpp
+        ${SRC_DIR}/crash/CrashReportCategory.h
+        ${SRC_DIR}/crash/CrashReport.cpp
+        ${SRC_DIR}/crash/CrashReport.h
 
         # block/material
         ${SRC_DIR}/block/material/MapColor.h
@@ -371,6 +402,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/util/RegistryNamespaced.h
         ${SRC_DIR}/util/ObjectIntIdentityMap.h
         ${SRC_DIR}/util/RegistryNamespacedDefaultedByKey.h
+        ${SRC_DIR}/util/HttpUtil.cpp
+        ${SRC_DIR}/util/HttpUtil.h
 
         # nbt
         ${SRC_DIR}/nbt/NBTException.h
@@ -446,7 +479,11 @@ add_executable(${PROJECT_NAME}
 
 # ======================== add inlined definitions ========================
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG)
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG_ENABLE_BREAKPOINT)
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG)
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG_TESSELLATOR)
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG_TEX_OUT_OF_BOUNDS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MCCLONE_DEBUG_MEMORY)
 
     target_compile_options(${PROJECT_NAME} PRIVATE /fsanitize=address)
 
@@ -481,6 +518,11 @@ target_link_libraries(${PROJECT_NAME}
         OpenAL::OpenAL
         nlohmann_json::nlohmann_json
         winmm
+        miniz::miniz
+        CURL::libcurl
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        ws2_32
 )
 # ======================== linking libraries ========================
 

@@ -23,14 +23,14 @@ enum class EnumPlayerModelParts {
 
 };
 
+/**
+ * @author SleepyFish
+ */
 struct PlayerModelPartInfo {
 
-    int partId;
-
+    uint8_t partId;
     int partMask;
-
     std::string partName;
-
     std::string translationKey;
 
 };

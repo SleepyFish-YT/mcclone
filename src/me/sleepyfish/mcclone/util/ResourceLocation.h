@@ -43,6 +43,8 @@ public:
 
     ResourceLocation(const std::string &resourceDomainIn, const std::string &resourcePathIn);
 
+    ~ResourceLocation() = default;
+
     std::string getResourcePath() const noexcept {
         return this->resourcePath;
     }

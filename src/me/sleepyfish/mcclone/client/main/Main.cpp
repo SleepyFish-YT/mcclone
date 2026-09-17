@@ -22,14 +22,19 @@ Main::Main() {
     // settings
     this->gameConfiguration = new GameConfiguration();
 
-    // openGL
-    this->renderContext = new RenderInformation();
+    // screen
     this->screenSize = {};
 
     // version
+#ifdef MCCLONE_VERSION
     this->majorVersion = std::to_string(MCCLONE_VERSION_MAJOR);
     this->minorVersion = std::to_string(MCCLONE_VERSION_MINOR);
     this->patchVersion = std::to_string(MCCLONE_VERSION_PATCH);
+#else
+    this->majorVersion = "-0";
+    this->minorVersion = "-0";
+    this->patchVersion = "-0";
+#endif //MCCLONE_VERSION
 }
 
 int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gameDir_dir) {
@@ -132,40 +137,37 @@ int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gam
     try {
         std::filesystem::path resourcepacks_dir(gameDir_dir / "resourcepacks");
         if (!std::filesystem::exists(resourcepacks_dir)) {
-            std::filesystem::create_directory(resourcepacks_dir);
-            Logger::log("Created resourcepacks folder");
+            if (std::filesystem::create_directory(resourcepacks_dir)) {
+                Logger::log("Created resourcepacks folder");
+            } else {
+                Logger::error("Can't create resourcepacks folder");
+                return MCCLONE_ERR_RESOURCEPACKS;
+            }
         }
 
         std::filesystem::path assets_dir(gameDir_dir / "assets");
         if (!std::filesystem::exists(assets_dir)) {
-            std::filesystem::create_directory(assets_dir);
-            Logger::log("Created assets folder");
+            if (std::filesystem::create_directory(assets_dir)) {
+                Logger::log("Created assets folder");
+            } else {
+                Logger::error("Can't create assets folder");
+                return MCCLONE_ERR_ASSETS;
+            }
         }
 
-        std::filesystem::path assetIndex_file(assets_dir / "asset_index.json");
-        {
-            if (!std::filesystem::exists(assetIndex_file)) {
-                std::ofstream file(assetIndex_file);
-                {
-                    file << "{}";
-                }
-                file.close();
-
-                if (file.fail()) {
-                    Logger::log("Failed to create asset_index.json");
-                }
-
-                if (!file.is_open()) {
-                    Logger::log("asset_index.json created");
-                }
+        std::filesystem::path assets_index_dir(assets_dir / "indexes");
+        if (!std::filesystem::exists(assets_dir)) {
+            if (std::filesystem::create_directory(assets_dir)) {
+                Logger::log("Created assets index folder");
             } else {
-                // Logger::log("asset_index.json already exists");
+                Logger::error("Can't create assets index folder");
+                return MCCLONE_ERR_ASSETS_INDEX;
             }
         }
 
         this->gameConfiguration = new GameConfiguration(
                 GameConfiguration::Display(windowSize.x, windowSize.y, args_isFullscreen, args_showGlErrors),
-                GameConfiguration::Folder(gameDir_dir, resourcepacks_dir, assets_dir, assetIndex_file),
+                GameConfiguration::Folder(gameDir_dir, resourcepacks_dir, assets_dir, (assets_index_dir / "asset_index.json")),
                 GameConfiguration::Game(args_isDemo, this->getVersion()),
                 GameConfiguration::Server("testName.de", 3333),
                 GameConfiguration::User(SavaUtil::StringUtil::GetRandomPlayerName()),
@@ -178,6 +180,8 @@ int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gam
     }
 
     auto minecraft = std::make_unique<Minecraft>(this->gameConfiguration);
+
+    Logger::log("Starting game as: {}", this->gameConfiguration->userInformation.username);
 
     // if im correct, std::move should be used here, to move it from local to OpenGLWindow, since it is not used after this.
     std::string title = "McClone [" + this->getVersion() + "] (C++20) by " + Main::AUTHOR;

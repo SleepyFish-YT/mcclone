@@ -6,6 +6,8 @@
 #ifndef MCCLONE_TESSELLATOR_H
 #define MCCLONE_TESSELLATOR_H
 
+#include <memory>
+
 class WorldRenderer;
 class WorldVertexBufferUploader;
 
@@ -17,14 +19,16 @@ class Tessellator {
 
 private:
 
-    WorldRenderer* worldRenderer;
-    WorldVertexBufferUploader* vboUploader;
+    std::unique_ptr<WorldRenderer> worldRenderer;
+    std::unique_ptr<WorldVertexBufferUploader> vboUploader;
 
 public:
 
     // disable copy
     Tessellator(const Tessellator&) = delete;
     Tessellator& operator=(const Tessellator&) = delete;
+
+    ~Tessellator();
 
     static Tessellator &getInstance() {
         static Tessellator instance(2097152);

@@ -44,8 +44,8 @@ std::any SimpleResource::getMetadata(const std::string &sectionName) {
         this->mcmetaJsonChecked = true;
 
         try {
-            this->mcmetaJson = nlohmann::json::parse(*this->mcmetaInputStream);
-        } catch (nlohmann::json::parse_error& e) {
+            this->mcmetaJson = ::nlohmann::json::parse(*this->mcmetaInputStream);
+        } catch (::nlohmann::json::parse_error& e) {
             return std::any{};
         }
     }

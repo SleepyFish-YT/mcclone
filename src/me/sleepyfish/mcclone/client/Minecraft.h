@@ -50,7 +50,7 @@ protected:
 
     void onStop() override;
 
-    SoundEngine *_soundEngine{};
+    std::unique_ptr<SoundEngine> _soundEngine{};
 
 private:
 
@@ -88,7 +88,7 @@ private:
 
     std::string launchedVersion{};
 
-    Timer *theTimer{};
+    std::unique_ptr<Timer> theTimer{};
 
     void updateFramebufferSize();
 
@@ -98,29 +98,29 @@ private:
 
     void shutdownMinecraftApplet();
 
-    Framebuffer *framebufferMc{};
+    std::unique_ptr<Framebuffer> framebufferMc{};
 
-    FutureTaskQueue<void> *scheduledTasks{};
+    std::unique_ptr<FutureTaskQueue<void>> scheduledTasks{};
 
     ThreadSave<bool> _pendingResize{false};
     ThreadSave<int> _pendingResizeW{0};
     ThreadSave<int> _pendingResizeH{0};
 
-    static Minecraft *instance;
+    static Minecraft* instance;
 
     void leftClickMouse();
 
     void rightClickMouse();
 
-    CrashReport *crashReporter{};
+    std::unique_ptr<CrashReport> crashReporter{};
 
     void middleClickMouse();
 
-    IReloadableResourceManager *mcResourceManager{};
+    std::unique_ptr<IReloadableResourceManager> mcResourceManager{};
 
-    const IMetadataSerializer *metadataSerializer_{};
+    const std::unique_ptr<IMetadataSerializer> metadataSerializer_{};
 
-    TextureManager *renderEngine{};
+    std::unique_ptr<TextureManager> renderEngine{};
 
     std::string serverName{};
 
@@ -134,27 +134,29 @@ private:
 
     std::shared_ptr<DefaultResourcePack> mcDefaultResourcePack;
 
-    std::shared_ptr<ResourcePackRepository> mcResourcePackRepository;
+    std::unique_ptr<ResourcePackRepository> mcResourcePackRepository;
+
+    void registerMetadataSerializers();
 
 public:
 
-    static ResourceLocation *locationSleepyPng;
+    static std::unique_ptr<ResourceLocation> locationSleepyPng;
 
     std::filesystem::path mcDataDir{};
 
-    Profiler *mcProfiler{};
+    std::unique_ptr<Profiler> mcProfiler{};
 
-    GameSettings *gameSettings{};
+    std::unique_ptr<GameSettings> gameSettings{};
 
-    MovingObjectPosition *objectMouseOver{};
+    std::unique_ptr<MovingObjectPosition> objectMouseOver{};
 
-    FrameTimer *frameTimer{};
+    std::unique_ptr<FrameTimer> frameTimer{};
 
-    Framebuffer *getFramebuffer() noexcept { return this->framebufferMc; }
+    Framebuffer *getFramebuffer() noexcept;
 
-    TextureMap *textureMapBlocks{};
+    std::unique_ptr<TextureMap> textureMapBlocks{};
 
-    SoundHandler *mcSoundHandler{};
+    std::unique_ptr<SoundHandler> mcSoundHandler{};
 
     int displayWidth{};
 
@@ -165,6 +167,8 @@ public:
     bool debuggerEnabled{};
 
     explicit Minecraft(GameConfiguration *gameConfig);
+
+    ~Minecraft();
 
     static Minecraft *getMinecraft() noexcept;
 
@@ -228,9 +232,7 @@ public:
 
     IResourceManager *getResourceManager() noexcept;
 
-    TextureManager *getTextureManager() noexcept {
-        return this->renderEngine;
-    }
+    TextureManager *getTextureManager() noexcept;
 
     void runTick(); // throws IOException
 

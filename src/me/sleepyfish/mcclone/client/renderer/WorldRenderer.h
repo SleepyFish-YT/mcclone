@@ -33,9 +33,9 @@ public:
 
     public:
 
-        State(std::vector<int> buffer, VertexFormat format, std::vector<TextureAtlasSprite *> quadSprites);
+        State(std::vector<int> buffer, const VertexFormat& format, std::vector<TextureAtlasSprite *> quadSprites);
 
-        State(std::vector<int> buffer, VertexFormat format);
+        State(std::vector<int> buffer, const VertexFormat& format);
 
         const std::vector<int> &getRawBuffer() const { return stateRawBuffer; }
 

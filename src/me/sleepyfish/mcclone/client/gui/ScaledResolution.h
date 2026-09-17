@@ -27,6 +27,8 @@ public:
 
     explicit ScaledResolution(const Minecraft &mcIn) noexcept;
 
+    void updateResolution(const Minecraft &mcIn) noexcept;
+
     int getScaledWidth() const noexcept {
         return this->scaledWidth;
     }

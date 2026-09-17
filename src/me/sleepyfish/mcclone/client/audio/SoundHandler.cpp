@@ -60,7 +60,7 @@ void SoundHandler::onResourceManagerReload(IResourceManager &manager) {
 }
 
 std::map<std::string, SoundList *> SoundHandler::getSoundMap(std::istream &stream) {
-    nlohmann::json j = nlohmann::json::parse(stream);
+    ::nlohmann::json j = ::nlohmann::json::parse(stream);
     std::map<std::string, SoundList *> result;
 
     for (auto &[key, value]: j.items()) {

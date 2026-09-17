@@ -32,7 +32,7 @@ private:
     std::istream *mcmetaInputStream;
     const IMetadataSerializer *srMetadataSerializer;
     bool mcmetaJsonChecked = false;
-    nlohmann::json mcmetaJson;
+    ::nlohmann::json mcmetaJson;
 
 public:
 

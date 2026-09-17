@@ -39,7 +39,7 @@ public:
         const auto maxZf = static_cast<float>(maxZ);
 
         // check negative vertex (closest to plane). if outside, the whole box is outside.
-        const auto isOutside = [&](const auto& plane) {
+        const auto isOutside = [&](const auto &plane) {
             const float a = plane[0], b = plane[1], c = plane[2], d = plane[3];
 
             const float px = (a >= 0.0f) ? maxXf : minXf;
@@ -63,7 +63,7 @@ public:
         const auto maxZf = static_cast<float>(maxZ);
 
         // check negative vertex (furthest from plane). if outside, the box is partially outside.
-        const auto isPartiallyOutside = [&](const auto& plane) {
+        const auto isPartiallyOutside = [&](const auto &plane) {
             const float a = plane[0], b = plane[1], c = plane[2], d = plane[3];
 
             const float nx = (a >= 0.0f) ? minXf : maxXf;

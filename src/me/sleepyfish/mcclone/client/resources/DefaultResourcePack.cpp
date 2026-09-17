@@ -11,7 +11,7 @@
 #include <fstream>
 #include <stdexcept>
 
-const std::unordered_set<std::string> DefaultResourcePack::defaultResourceDomains = { "minecraft", "realms" };
+const std::unordered_set<std::string> DefaultResourcePack::defaultResourceDomains = { "mcclone", "realms" };
 
 DefaultResourcePack::DefaultResourcePack(std::unordered_map<std::string, std::filesystem::path> mapAssets) :
     AbstractResourcePack(""),
@@ -51,7 +51,7 @@ std::unique_ptr<std::istream> DefaultResourcePack::getResourceStream(const Resou
     return stream;
 }
 
-bool DefaultResourcePack::resourceExists(const ResourceLocation& location) const {
+bool DefaultResourcePack::resourceExists(const ResourceLocation& location) {
     return this->getResourceStream(location) != nullptr || this->mapAssets.count(location.toString()) > 0;
 }
 
@@ -90,6 +90,6 @@ std::unique_ptr<std::istream> DefaultResourcePack::getInputStreamByName(const st
     return stream;
 }
 
-bool DefaultResourcePack::hasResourceName(const std::string& name) const {
+bool DefaultResourcePack::hasResourceName(const std::string& name) {
     return std::filesystem::exists(std::filesystem::path(name));
 }

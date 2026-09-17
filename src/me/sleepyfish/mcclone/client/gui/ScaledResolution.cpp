@@ -9,19 +9,23 @@
 #include "../../client/Minecraft.h"
 #include "../../client/settings/GameSettings.h"
 
-ScaledResolution::ScaledResolution(const Minecraft& mcIn) noexcept {
+ScaledResolution::ScaledResolution(const Minecraft &mcIn) noexcept {
     this->scaledWidth = mcIn.displayWidth;
     this->scaledHeight = mcIn.displayHeight;
-
     this->scaleFactor = 1;
-    const bool unicode = mcIn.isUnicode();
-    int i = mcIn.gameSettings->guiScale;
 
-    if (i == 0) {
-        i = 1000;
+    this->updateResolution(mcIn);
+}
+
+void ScaledResolution::updateResolution(const Minecraft &mcIn) noexcept {
+    const bool unicode = mcIn.isUnicode();
+    int scaleSetting = mcIn.gameSettings->guiScale;
+
+    if (scaleSetting == 0) {
+        scaleSetting = 1000;
     }
 
-    while (this->scaleFactor < i && std::min(this->scaledWidth, this->scaledHeight) / (this->scaleFactor + 1) >= 240) {
+    while (this->scaleFactor < scaleSetting && std::min(this->scaledWidth, this->scaledHeight) / (this->scaleFactor + 1) >= 240) {
         ++this->scaleFactor;
     }
 

@@ -20,6 +20,8 @@
 #ifdef _WIN32
 #include <windows.h>
 #pragma comment(lib, "winmm.lib")
+#include <psapi.h>
+#pragma comment(lib, "psapi.lib")
 #endif //_WIN32
 
 OpenGLWindow::OpenGLWindow(GameConfiguration::Display displayInfo, std::string title, std::unique_ptr<Minecraft> minecraft) noexcept {
@@ -30,7 +32,7 @@ OpenGLWindow::OpenGLWindow(GameConfiguration::Display displayInfo, std::string t
     this->window = nullptr;
     this->fullscreen = false;
     this->mouseCaptured = false;
-    this->renderContext = new RenderInformation();
+    this->renderContext = std::make_unique<RenderInformation>();
 
     this->renderFps = 0;
     this->lastSecond = std::chrono::steady_clock::now();
@@ -39,6 +41,11 @@ OpenGLWindow::OpenGLWindow(GameConfiguration::Display displayInfo, std::string t
     this->savedWindowPosY = 0;
     this->savedWindowWidth = 0;
     this->savedWindowHeight = 0;
+}
+
+OpenGLWindow::~OpenGLWindow() {
+    if (this->window)
+        ::glfwDestroyWindow(this->window);
 }
 
 bool OpenGLWindow::init() {
@@ -105,27 +112,33 @@ bool OpenGLWindow::init() {
 
         ::glfwSetKeyCallback(this->window, [](::GLFWwindow *window, int key, int scancode, int action, int mods) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
-            self->handleKeypress(window, key, scancode, action, mods);
+            if (self)
+                self->handleKeypress(window, key, scancode, action, mods);
         });
         ::glfwSetMouseButtonCallback(this->window, [](::GLFWwindow *window, int button, int action, int mods) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
-            self->handleMouseButton(window, button, action, mods);
+            if (self)
+                self->handleMouseButton(window, button, action, mods);
         });
         ::glfwSetCursorPosCallback(this->window, [](::GLFWwindow *window, double x, double y) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
-            self->handleMouseMove(window, x, y);
+            if (self)
+                self->handleMouseMove(window, x, y);
         });
         ::glfwSetScrollCallback(this->window, [](::GLFWwindow *window, double xOffset, double yOffset) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
-            self->handleMouseScroll(window, xOffset, yOffset);
+            if (self)
+                self->handleMouseScroll(window, xOffset, yOffset);
         });
         ::glfwSetFramebufferSizeCallback(this->window, [](::GLFWwindow *window, int width, int height) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
-            self->handleFramebufferResize(window, width, height);
+            if (self)
+                self->handleFramebufferResize(window, width, height);
         });
         ::glfwSetWindowFocusCallback(this->window, [](::GLFWwindow *window, int focused) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
-            self->handleWindowFocus(window, focused);
+            if (self)
+                self->handleWindowFocus(window, focused);
         });
     }
     ::glfwMakeContextCurrent(nullptr);
@@ -149,6 +162,18 @@ void OpenGLWindow::run(std::stop_token st) {
         this->minecraft->initializeFramebuffer();
 
         while (!st.stop_requested() && !::glfwWindowShouldClose(this->window)) {
+
+#ifdef MCCLONE_DEBUG_MEMORY
+#ifdef _WIN32
+            static int memFrame = 0;
+            if (++memFrame % 300 == 0) {
+                ::PROCESS_MEMORY_COUNTERS pmc;
+                ::K32GetProcessMemoryInfo(::GetCurrentProcess(), &pmc, sizeof(pmc));
+                Logger::log("WorkingSet: {:.1f} MiB", pmc.WorkingSetSize / 1048576.0);
+            }
+#endif //_WIN32
+#endif //MCCLONE_DEBUG_MEMORY
+
             auto frameStart = std::chrono::steady_clock::now();
 
             int targetFps = this->minecraft->getLimitFramerate();
@@ -182,7 +207,6 @@ void OpenGLWindow::run(std::stop_token st) {
             auto sleepUntil = frameStart + frameTime;
             auto spinStart = sleepUntil - std::chrono::milliseconds(2);
             std::this_thread::sleep_until(spinStart);
-
             while (std::chrono::steady_clock::now() < sleepUntil) {} // spin
         }
 
@@ -315,5 +339,5 @@ MCCLONE_GLFW_CALLBACK OpenGLWindow::handleWindowFocus(::GLFWwindow *window, int 
 }
 
 RenderInformation *OpenGLWindow::getRenderContext() noexcept {
-    return this->renderContext;
+    return this->renderContext.get();
 }

@@ -34,14 +34,14 @@ private:
 
     std::unique_ptr<Minecraft> minecraft{};
 
-    ::GLFWwindow* window{};
+    ::GLFWwindow *window{};
     std::string title{};
     bool fullscreen{};
     bool mouseCaptured{};
     bool focused{};
 
     GameConfiguration::Display displayInfo{};
-    RenderInformation* renderContext{};
+    std::unique_ptr<RenderInformation> renderContext{};
 
     // render thread .run();
     void run(std::stop_token st) override;
@@ -64,6 +64,8 @@ public:
     int savedWindowHeight{};
 
     OpenGLWindow(GameConfiguration::Display displayInfo, std::string title, std::unique_ptr<Minecraft> minecraft) noexcept;
+
+    ~OpenGLWindow() override;
 
     bool init();
 

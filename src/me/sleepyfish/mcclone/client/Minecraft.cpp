@@ -20,10 +20,11 @@
 #include "renderer/Tessellator.h"
 #include "renderer/WorldRenderer.h"
 #include "resources/SimpleReloadableResourceManager.h"
-#include "resources/data/IMetadataSerializer.h"
+#include "resources/ResourcePackRepository.h"
 #include "resources/IResourcePack.h"
 #include "resources/DefaultResourcePack.h"
 #include "resources/ResourceIndex.h"
+#include "resources/data/IMetadataSerializer.h"
 #include "shader/Framebuffer.h"
 #include "gui/ScaledResolution.h"
 #include "../debug/Logger.h"
@@ -34,6 +35,7 @@
 #include "../util/FrameTimer.h"
 #include "../util/MovingObjectPosition.h"
 #include "../util/McCloneError.h"
+#include "../crash/CrashReport.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -43,14 +45,14 @@
 
 #include <glfw/glfw3.h>
 
-Minecraft *Minecraft::instance = nullptr;
-ResourceLocation *Minecraft::locationSleepyPng = new ResourceLocation("textures/gui/title/sleepy.png");
+Minecraft*  Minecraft::instance = nullptr;
+std::unique_ptr<ResourceLocation> Minecraft::locationSleepyPng = std::make_unique<ResourceLocation>("textures/gui/title/sleepy.png");
 
 Minecraft::Minecraft(GameConfiguration *gameConfig) :
     Runnable(),
     isDemo_(gameConfig->gameInformation.isDemo),
-    metadataSerializer_(new IMetadataSerializer()),
-    _soundEngine(new SoundEngine(std::filesystem::path(gameConfig->folderInformation.mcDataDir / "sounds")))
+    metadataSerializer_(std::make_unique<IMetadataSerializer>()),
+    _soundEngine(std::make_unique<SoundEngine>(std::filesystem::path(gameConfig->folderInformation.mcDataDir / "sounds")))
 {
     this->mcDataDir = gameConfig->folderInformation.mcDataDir;
     this->fileAssets = gameConfig->folderInformation.assetsDir;
@@ -75,7 +77,7 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->enableGLErrorChecking = gameConfig->displayInformation.showGlErrors;
     this->debuggerEnabled = gameConfig->debugMode;
 
-    this->scheduledTasks = new FutureTaskQueue<void>();
+    this->scheduledTasks = std::make_unique<FutureTaskQueue<void>>();
 
     this->hasCrashed = false;
     this->connectedToRealms = false;
@@ -88,18 +90,18 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->tpsCounter = 0;
     this->prevFrameTime = Minecraft::getHighResTime();
 
-    this->mcProfiler = new Profiler();
+    this->mcProfiler = std::make_unique<Profiler>();
     this->mcProfiler->profilingEnabled = true;
 
-    this->gameSettings = new GameSettings(this->mcDataDir);
+    this->gameSettings = std::make_unique<GameSettings>(*this, this->mcDataDir);
     this->defaultResourcePacks.push_back(this->mcDefaultResourcePack);
 
-    this->objectMouseOver = new MovingObjectPosition();
+    this->objectMouseOver = std::make_unique<MovingObjectPosition>();
 
-    this->theTimer = new Timer(20.0f);
-    this->frameTimer = new FrameTimer();
+    this->theTimer = std::make_unique<Timer>(20.0f);
+    this->frameTimer = std::make_unique<FrameTimer>();
 
-    this->textureMapBlocks = new TextureMap("textures");
+    this->textureMapBlocks = std::make_unique<TextureMap>("textures");
     this->textureMapBlocks->setMipmapLevels(this->gameSettings->mipmapLevels);
 
     Minecraft::debugFPS = 0;
@@ -111,6 +113,8 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
 
     Minecraft::instance = this;
 }
+
+Minecraft::~Minecraft() = default;
 
 Minecraft *Minecraft::getMinecraft() noexcept {
     return Minecraft::instance;
@@ -173,28 +177,40 @@ void Minecraft::run(std::stop_token st) {
 }
 
 void Minecraft::onStop() {
-    this->mcSoundHandler->unloadSounds();
+    if (this->mcSoundHandler)
+        this->mcSoundHandler->unloadSounds();
 }
 
 void Minecraft::initializeFramebuffer() {
     OpenGlHelper::initializeTextures();
     TextureUtil::init();
 
-    this->framebufferMc = new Framebuffer(this->displayWidth, this->displayHeight, true);
+    this->framebufferMc = std::make_unique<Framebuffer>(this->displayWidth, this->displayHeight, true);
     this->framebufferMc->setFramebufferColor_(0.53f, 0.41f, 0.72f, 1.0f);
 
-    this->mcResourceManager = new SimpleReloadableResourceManager(this->metadataSerializer_);
-    this->renderEngine = new TextureManager(this->mcResourceManager);
+    this->registerMetadataSerializers();
 
-    this->mcSoundHandler = new SoundHandler(this->mcResourceManager, this->gameSettings, this->_soundEngine);
-    this->mcResourceManager->registerReloadListener(*this->mcSoundHandler);
+    this->mcResourcePackRepository = std::make_unique<ResourcePackRepository>(
+            this->fileResourcepacks,
+            (this->mcDataDir / "server-resource-packs"),
+            this->mcDefaultResourcePack.get(),
+            this->metadataSerializer_.get(),
+            this->gameSettings.get()
+    );
+    this->mcResourceManager = std::make_unique<SimpleReloadableResourceManager>(this->metadataSerializer_.get());
+
+    this->mcResourceManager = std::make_unique<SimpleReloadableResourceManager>(this->metadataSerializer_.get());
+    this->renderEngine = std::make_unique<TextureManager>(this->mcResourceManager.get());
+
+    this->mcSoundHandler = std::make_unique<SoundHandler>(this->mcResourceManager.get(), this->gameSettings.get(), this->_soundEngine.get());
+    this->mcResourceManager->registerReloadListener(*this->mcSoundHandler.get());
 
     if (this->textureMapBlocks == nullptr) {
         Logger::fatal("Minecraft::initializeFramebuffer: TextureMapBlocks is null!");
         return;
     }
 
-    this->renderEngine->loadTickableTexture(TextureMap::LOCATION_BLOCKS_TEXTURE, this->textureMapBlocks);
+    this->renderEngine->loadTickableTexture(TextureMap::LOCATION_BLOCKS_TEXTURE, this->textureMapBlocks.get());
     this->renderEngine->bindTexture(TextureMap::LOCATION_BLOCKS_TEXTURE);
     this->textureMapBlocks->setBlurMipmapDirect(false, this->gameSettings->mipmapLevels > 0);
     /*
@@ -351,25 +367,22 @@ void Minecraft::renderGameLoop(bool hasFocus) {
                 this->mcProfiler->startSection("gameRenderer");
                 {
                     ScaledResolution scaledRes(*this);
-                    int k = scaledRes.getScaledWidth();
-                    int l = scaledRes.getScaledHeight();
-                    float f = 32.0f;
-                    int x = 40;
-                    int y = 40;
+                    double k = scaledRes.getScaledWidth_double();
+                    double l = scaledRes.getScaledHeight_double();
+                    double f = 32.0;
+                    double x = 40.0;
+                    double y = 40.0;
 
                     static Tessellator &tess = Tessellator::getInstance();
                     WorldRenderer &renderer = tess.getWorldRenderer();
-
-                    GlStateManager::bindTexture_(this->textureMapBlocks->getGlTextureId());
                     {
-                        renderer.begin(7, DefaultVertexFormats::POSITION_TEX_NORMAL);
-                        renderer.pos(x, l, 0).tex((float) x / f, (float) l / f).color(64, 64, 128, 255).endVertex();
-                        renderer.pos(k, l, 0).tex((float) k / f, (float) l / f).color(64, 64, 128, 255).endVertex();
-                        renderer.pos(k, y, 0).tex((float) k / f, (float) y / f).color(64, 64, 128, 255).endVertex();
-                        renderer.pos(x, y, 0).tex((float) x / f, (float) y / f).color(64, 64, 128, 255).endVertex();
+                        renderer.begin(7, DefaultVertexFormats::POSITION_TEX_COLOR);
+                        renderer.pos(x, l, 0).tex(x / f, l / f).color(160, 250, 160, 255).endVertex();
+                        renderer.pos(k, l, 0).tex(k / f, l / f).color(160, 250, 160, 255).endVertex();
+                        renderer.pos(k, y, 0).tex(k / f, y / f).color(160, 250, 160, 255).endVertex();
+                        renderer.pos(x, y, 0).tex(x / f, y / f).color(160, 250, 160, 255).endVertex();
                     }
                     tess.draw();
-                    GlStateManager::bindTexture_(0);
                 }
                 this->mcProfiler->endSection();
             }
@@ -429,7 +442,7 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
 
                 if (this->debuggerEnabled) {
                     Logger::log("base: {}", (void*) this);
-                    Logger::log("loc: {}", (void*) Minecraft::locationSleepyPng);
+                    Logger::log("loc: {}", (void*) Minecraft::locationSleepyPng.get());
                 }
             }
 
@@ -734,7 +747,7 @@ void Minecraft::displayInGameMenu() {
 
 void Minecraft::crashed(CrashReport *crash) {
     this->hasCrashed = true;
-    this->crashReporter = crash;
+    this->crashReporter.reset(crash);
 }
 
 bool Minecraft::isGuiEnabled() {
@@ -776,7 +789,11 @@ bool Minecraft::isSnooperEnabled() {
 }
 
 IResourceManager *Minecraft::getResourceManager() noexcept {
-    return this->mcResourceManager;
+    return this->mcResourceManager.get();
+}
+
+TextureManager *Minecraft::getTextureManager() noexcept {
+    return this->renderEngine.get();
 }
 
 void Minecraft::runTick() {
@@ -892,4 +909,16 @@ void Minecraft::displayDebugInfo(long long int elapsedTicksTime) {
     if (this->mcProfiler->profilingEnabled) {
         // later...
     }
+}
+
+Framebuffer *Minecraft::getFramebuffer() noexcept {
+    return this->framebufferMc.get();
+}
+
+void Minecraft::registerMetadataSerializers() {
+    // this->metadataSerializer_->registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
+    // this->metadataSerializer_->registerMetadataSectionType(new FontMetadataSectionSerializer(), FontMetadataSection.class);
+    // this->metadataSerializer_->registerMetadataSectionType(new AnimationMetadataSectionSerializer(), AnimationMetadataSection.class);
+    // this->metadataSerializer_->registerMetadataSectionType(new PackMetadataSectionSerializer(), PackMetadataSection.class);
+    // this->metadataSerializer_->registerMetadataSectionType(new LanguageMetadataSectionSerializer(), LanguageMetadataSection.class);
 }

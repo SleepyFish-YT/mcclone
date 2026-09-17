@@ -29,7 +29,7 @@ private:
 
         virtual ~IRegistration() = default;
 
-        virtual std::any parse(const nlohmann::json &json) const = 0;
+        virtual std::any parse(const ::nlohmann::json &json) const = 0;
 
     };
 
@@ -42,7 +42,7 @@ private:
             serializer(serializer)
         {}
 
-        std::any parse(const nlohmann::json &json) const override {
+        std::any parse(const ::nlohmann::json &json) const override {
             return serializer->deserialize(json);
         }
 
@@ -62,7 +62,7 @@ public:
         this->registry[sectionName] = std::make_unique<Registration<T>>(serializer);
     }
 
-    std::any parseMetadataSection(const std::string &sectionName, const nlohmann::json &json) const {
+    std::any parseMetadataSection(const std::string &sectionName, const ::nlohmann::json &json) const {
         if (sectionName.empty()) {
             throw std::invalid_argument("Metadata section name cannot be empty");
         }

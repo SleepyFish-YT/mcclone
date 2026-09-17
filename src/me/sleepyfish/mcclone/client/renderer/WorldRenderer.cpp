@@ -49,15 +49,15 @@ namespace {
 
 }
 
-WorldRenderer::State::State(std::vector<int> buffer, VertexFormat format, std::vector<TextureAtlasSprite*> quadSprites) :
-    stateRawBuffer(std::move(buffer)),
-    stateVertexFormat(std::move(format)),
-    stateQuadSprites(std::move(quadSprites))
+WorldRenderer::State::State(std::vector<int> buffer, const VertexFormat &format, std::vector<TextureAtlasSprite*> quadSprites) :
+        stateRawBuffer(std::move(buffer)),
+        stateVertexFormat(format),
+        stateQuadSprites(std::move(quadSprites))
 {}
 
-WorldRenderer::State::State(std::vector<int> buffer, VertexFormat format) :
+WorldRenderer::State::State(std::vector<int> buffer, const VertexFormat &format) :
     stateRawBuffer(std::move(buffer)),
-    stateVertexFormat(std::move(format))
+    stateVertexFormat(format)
 {}
 
 int WorldRenderer::State::getVertexCount() const {
@@ -77,7 +77,7 @@ void WorldRenderer::growBuffer(int needed) {
     if (needed <= remaining)
         return;
 
-    constexpr int CHUNK = 2097152;
+    constexpr int CHUNK = 524288; // 512 KiB
     int oldBytes = static_cast<int>(m_byteBuffer.size());
     int neededBytes = (usedInts + needed) * 4;
     int base = oldBytes % CHUNK;
@@ -107,16 +107,25 @@ void WorldRenderer::reset() {
     m_modeTriangles       = false;
     animatedSprites.clear();
 
-    constexpr size_t INITIAL_SIZE = 2097152;
-    if (m_byteBuffer.size() > INITIAL_SIZE * 4) {
-        m_byteBuffer.resize(INITIAL_SIZE * 4);
+    // release triangle buffer back to OS
+    m_byteBufferTriangles.clear();
+    m_byteBufferTriangles.shrink_to_fit();
+
+    // shrink main buffers when idle (256 KiB is enough for a fresh start)
+    constexpr size_t IDLE_BYTES = 262144; // 256 KiB
+    constexpr size_t IDLE_INTS  = IDLE_BYTES / 4;
+
+    if (m_byteBuffer.size() > IDLE_BYTES) {
+        m_byteBuffer.resize(IDLE_BYTES);
         m_byteBuffer.shrink_to_fit();
-        rawIntBuffer.resize(INITIAL_SIZE);
+    }
+    if (rawIntBuffer.size() > IDLE_INTS) {
+        rawIntBuffer.resize(IDLE_INTS);
         rawIntBuffer.shrink_to_fit();
     }
 }
 
-void WorldRenderer::begin(int glMode, const VertexFormat& format) {
+void WorldRenderer::begin(int glMode, const VertexFormat &format) {
     if (m_isDrawing)
         throw std::runtime_error("Already building!");
 
@@ -153,10 +162,10 @@ void WorldRenderer::finishDrawing() {
     }
 }
 
-WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
+WorldRenderer &WorldRenderer::pos(double x, double y, double z) {
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
-#ifdef MCCLONE_DEBUG
+#ifdef MCCLONE_DEBUG_TEX_OUT_OF_BOUNDS
     if (i < 0 || i + 4 >= static_cast<int>(m_byteBuffer.size())) {
         fprintf(stderr, "tex() out of bounds: i=%d bufsize=%zu vertexCount=%d nextOffset=%d formatOffset=%d formatIndex=%d\n",
                 i,
@@ -167,9 +176,15 @@ WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
                 m_vertexFormatIndex
         );
         fflush(stderr);
+#ifdef MCCLONE_DEBUG_ENABLE_BREAKPOINT
         __debugbreak();
+#endif //MCCLONE_DEBUG_ENABLE_BREAKPOINT
     }
-#endif //MCCLONE_DEBUG
+#else
+    if (i < 0 || i + 4 >= static_cast<int>(m_byteBuffer.size())) {
+        return *this;
+    }
+#endif //MCCLONE_DEBUG_TEX_OUT_OF_BOUNDS
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
@@ -216,14 +231,14 @@ WorldRenderer& WorldRenderer::pos(double x, double y, double z) {
     return *this;
 }
 
-WorldRenderer& WorldRenderer::color(float red, float green, float blue, float alpha) {
+WorldRenderer &WorldRenderer::color(float red, float green, float blue, float alpha) {
     return color(static_cast<int>(red   * 255.0f),
                  static_cast<int>(green * 255.0f),
                  static_cast<int>(blue  * 255.0f),
                  static_cast<int>(alpha * 255.0f));
 }
 
-WorldRenderer& WorldRenderer::color(int red, int green, int blue, int alpha) {
+WorldRenderer &WorldRenderer::color(int red, int green, int blue, int alpha) {
     if (m_noColor) return *this;
 
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
@@ -280,12 +295,13 @@ WorldRenderer& WorldRenderer::color(int red, int green, int blue, int alpha) {
     return *this;
 }
 
-WorldRenderer& WorldRenderer::tex(double u, double v) {
+WorldRenderer &WorldRenderer::tex(double u, double v) {
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
     using T = VertexFormatElement::EnumType;
 
+#ifdef MCCLONE_DEBUG_TEX_OUT_OF_BOUNDS
     if (i < 0 || i + 4 >= static_cast<int>(m_byteBuffer.size())) {
         fprintf(stderr, "tex() out of bounds: i=%d bufsize=%zu vertexCount=%d nextOffset=%d formatOffset=%d formatIndex=%d\n",
                 i,
@@ -296,8 +312,15 @@ WorldRenderer& WorldRenderer::tex(double u, double v) {
                 m_vertexFormatIndex
         );
         fflush(stderr);
+#ifdef MCCLONE_DEBUG_ENABLE_BREAKPOINT
         __debugbreak();
+#endif //MCCLONE_DEBUG_ENABLE_BREAKPOINT
     }
+#else
+    if (i < 0 || i + 4 >= static_cast<int>(m_byteBuffer.size())) {
+        return *this;
+    }
+#endif //MCCLONE_DEBUG_TEX_OUT_OF_BOUNDS
 
     switch (type) {
         case T::FLOAT: {
@@ -331,7 +354,7 @@ WorldRenderer& WorldRenderer::tex(double u, double v) {
     return *this;
 }
 
-WorldRenderer& WorldRenderer::lightmap(int s, int t) {
+WorldRenderer &WorldRenderer::lightmap(int s, int t) {
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
@@ -367,7 +390,7 @@ WorldRenderer& WorldRenderer::lightmap(int s, int t) {
     return *this;
 }
 
-WorldRenderer& WorldRenderer::normal(float x, float y, float z) {
+WorldRenderer &WorldRenderer::normal(float x, float y, float z) {
     int i = vertexCount * m_vertexFormat.getNextOffset() + m_vertexFormat.getOffset(m_vertexFormatIndex);
 
     auto type = m_vertexFormatElement->getType();
@@ -416,7 +439,7 @@ void WorldRenderer::endVertex() {
     m_vertexFormatElement = &m_vertexFormat.getElement(m_vertexFormatIndex);
 }
 
-void WorldRenderer::addVertexData(const std::vector<int>& vertexData) {
+void WorldRenderer::addVertexData(const std::vector<int> &vertexData) {
     growBuffer(static_cast<int>(vertexData.size()));
     int pos = getBufferSize();
     std::copy(vertexData.begin(), vertexData.end(), rawIntBuffer.begin() + pos);
@@ -552,7 +575,7 @@ void WorldRenderer::setTranslation(double x, double y, double z) {
     m_zOffset = z;
 }
 
-float WorldRenderer::getDistanceSq(const std::vector<float>& fb,
+float WorldRenderer::getDistanceSq(const std::vector<float> &fb,
                                    float cx, float cy, float cz,
                                    int intSize, int offset) {
     float x0 = fb[offset],              y0 = fb[offset + 1],             z0 = fb[offset + 2];
@@ -569,8 +592,9 @@ float WorldRenderer::getDistanceSq(const std::vector<float>& fb,
 void WorldRenderer::sortVertexData(float camX, float camY, float camZ) {
     int quadCount = vertexCount / 4;
 
-    std::vector<float> floatView(rawIntBuffer.size());
-    for (size_t n = 0; n < rawIntBuffer.size(); ++n)
+    int usedInts = this->getBufferSize(); // only the portion that actually has data
+    std::vector<float> floatView(static_cast<size_t>(usedInts));
+    for (int n = 0; n < usedInts; ++n)
         floatView[n] = intBitsToFloat(rawIntBuffer[n]);
 
     std::vector<float> distances(quadCount);
@@ -616,7 +640,7 @@ void WorldRenderer::sortVertexData(float camX, float camY, float camZ) {
     }
 
     if (m_quadSprites) {
-        auto& qs = *m_quadSprites;
+        auto &qs = *m_quadSprites;
         std::vector<TextureAtlasSprite*> sorted(quadCount);
         for (int q = 0; q < quadCount; ++q)
             sorted[q] = qs[order[q]];
@@ -636,18 +660,18 @@ WorldRenderer::State WorldRenderer::getVertexState() const {
 
     return {
         std::move(buf),
-        VertexFormat(m_vertexFormat),
+        m_vertexFormat,
         std::move(sprites)
     };
 }
 
-void WorldRenderer::setVertexState(const State& state) {
+void WorldRenderer::setVertexState(const State &state) {
     int needed = static_cast<int>(state.getRawBuffer().size());
     growBuffer(needed);
 
     std::copy(state.getRawBuffer().begin(), state.getRawBuffer().end(), rawIntBuffer.begin());
     vertexCount    = state.getVertexCount();
-    m_vertexFormat = VertexFormat(state.getVertexFormat());
+    m_vertexFormat = state.getVertexFormat();
 
     if (!state.stateQuadSprites.empty()) {
         if (!m_quadSprites)
@@ -668,7 +692,7 @@ void WorldRenderer::setVertexState(const State& state) {
 }
 
 /*
-void WorldRenderer::setSprite(TextureAtlasSprite* sprite) {
+void WorldRenderer::setSprite(TextureAtlasSprite *sprite) {
     if (!animatedSprites.empty() && sprite && sprite->getAnimationIndex() >= 0)
         animatedSprites[sprite->getAnimationIndex()] = true;
 
@@ -676,7 +700,7 @@ void WorldRenderer::setSprite(TextureAtlasSprite* sprite) {
         m_quadSprite = sprite;
 }
 
-void WorldRenderer::putSprite(TextureAtlasSprite* sprite) {
+void WorldRenderer::putSprite(TextureAtlasSprite *sprite) {
     if (!animatedSprites.empty() && sprite && sprite->getAnimationIndex() >= 0)
         animatedSprites[sprite->getAnimationIndex()] = true;
 
@@ -707,7 +731,7 @@ void WorldRenderer::drawMultiTexture() {
     int grassOverlayFirst = -1;
 
     for (int i = 0; i < quadCount; ++i) {
-        TextureAtlasSprite* sprite = (*m_quadSprites)[i];
+        TextureAtlasSprite *sprite = (*m_quadSprites)[i];
         if (!sprite) continue;
 
         int idx = sprite->getIndexInMap();
@@ -732,7 +756,7 @@ void WorldRenderer::drawMultiTexture() {
     }
 }
 
-int WorldRenderer::drawForIcon(TextureAtlasSprite* target, int startQuad) {
+int WorldRenderer::drawForIcon(TextureAtlasSprite *target, int startQuad) {
     ::glBindTexture(GL_TEXTURE_2D, target->glSpriteTextureId);
 
     int firstNotDrawn = -1;
@@ -740,7 +764,7 @@ int WorldRenderer::drawForIcon(TextureAtlasSprite* target, int startQuad) {
     int quadCount     = vertexCount / 4;
 
     for (int q = startQuad; q < quadCount; ++q) {
-        TextureAtlasSprite* sprite = (*m_quadSprites)[q];
+        TextureAtlasSprite *sprite = (*m_quadSprites)[q];
 
         if (sprite == target) {
             if (runStart < 0) runStart = q;
@@ -789,7 +813,7 @@ void WorldRenderer::quadsToTriangles() {
     m_modeTriangles = true;
 }
 
-const std::vector<uint8_t>& WorldRenderer::getByteBuffer() const {
+const std::vector<uint8_t> &WorldRenderer::getByteBuffer() const {
     return m_modeTriangles ? m_byteBufferTriangles : m_byteBuffer;
 }
 
@@ -819,7 +843,7 @@ void WorldRenderer::nextVertexFormatIndex() {
     }
 }
 
-RenderEnv* WorldRenderer::getRenderEnv(const IBlockState& blockState, const BlockPos& pos) {
+RenderEnv *WorldRenderer::getRenderEnv(const IBlockState &blockState, const BlockPos &pos) {
     /*if (!renderEnv) {
         renderEnv = new RenderEnv(blockState, pos);
     } else {

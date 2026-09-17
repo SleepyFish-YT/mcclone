@@ -468,4 +468,3 @@ int GlStateManager::_getGLMaximumTextureSize() {
     }
     return -1;
 }
-

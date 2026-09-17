@@ -20,15 +20,35 @@ void Framebuffer::createBindFramebuffer_(int width, int height) {
     if (!OpenGlHelper::isFramebufferEnabled_()) {
         this->m_framebufferWidth  = width;
         this->m_framebufferHeight = height;
-    } else {
-        GlStateManager::enableDepth_();
-        if (this->m_framebufferObject >= 0) {
-            this->deleteFramebuffer_();
-        }
+        return;
+    }
+
+    if (this->m_framebufferObject < 0) {
+        // First time only
         this->createFramebuffer_(width, height);
         this->checkFramebufferComplete_();
-        OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
+    } else {
+        // Resize: reuse existing GL objects, just reallocate storage
+        this->m_framebufferWidth         = width;
+        this->m_framebufferHeight        = height;
+        this->m_framebufferTextureWidth  = width;
+        this->m_framebufferTextureHeight = height;
+
+        GlStateManager::bindTexture_(this->m_framebufferTexture);
+        GlStateManager::glTexImage2D_(GL_TEXTURE_2D, 0, GL_RGBA8,
+                                      width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        if (this->m_useDepth && this->m_depthBuffer > -1) {
+            OpenGlHelper::glBindRenderbuffer_(OpenGlHelper::GL_RENDERBUFFER_, this->m_depthBuffer);
+            OpenGlHelper::glRenderbufferStorage_(OpenGlHelper::GL_RENDERBUFFER_,
+                                                 GL_DEPTH_COMPONENT24, width, height);
+        }
+
+        this->framebufferClear_();
+        GlStateManager::bindTexture_(0);
     }
+
+    OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
 }
 
 void Framebuffer::createFramebuffer_(int width, int height) {
@@ -82,23 +102,37 @@ void Framebuffer::setFramebufferFilter_(int filter) {
 }
 
 void Framebuffer::deleteFramebuffer_() {
-    if (!OpenGlHelper::isFramebufferEnabled_()) {
-        return;
-    }
+    if (!OpenGlHelper::isFramebufferEnabled_()) return;
 
-    this->unbindFramebufferTexture_();
-    this->unbindFramebuffer_();
+    // 1. Bind the FBO so we can detach its attachments
+    OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, this->m_framebufferObject);
 
+    // 2. Explicitly detach texture from the FBO BEFORE deleting
+    OpenGlHelper::glFramebufferTexture2D_(
+            OpenGlHelper::GL_FRAMEBUFFER_,
+            OpenGlHelper::GL_COLOR_ATTACHMENT0_,
+            GL_TEXTURE_2D, 0, 0);
+
+    // 3. Explicitly detach renderbuffer BEFORE deleting
     if (this->m_depthBuffer > -1) {
+        OpenGlHelper::glFramebufferRenderbuffer_(
+                OpenGlHelper::GL_FRAMEBUFFER_,
+                OpenGlHelper::GL_DEPTH_ATTACHMENT_,
+                OpenGlHelper::GL_RENDERBUFFER_, 0);
         OpenGlHelper::glDeleteRenderbuffers_(this->m_depthBuffer);
         this->m_depthBuffer = -1;
     }
+
+    // 4. Now unbind and delete the texture
+    GlStateManager::bindTexture_(0);
     if (this->m_framebufferTexture > -1) {
         TextureUtil::deleteTexture_(this->m_framebufferTexture);
         this->m_framebufferTexture = -1;
     }
+
+    // 5. Unbind and delete the FBO
+    OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
     if (this->m_framebufferObject > -1) {
-        OpenGlHelper::glBindFramebuffer_(OpenGlHelper::GL_FRAMEBUFFER_, 0);
         OpenGlHelper::glDeleteFramebuffers_(this->m_framebufferObject);
         this->m_framebufferObject = -1;
     }

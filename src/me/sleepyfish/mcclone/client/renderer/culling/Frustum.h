@@ -54,7 +54,7 @@ public:
         );
     }
 
-    bool isBoundingBoxInFrustum(const AxisAlignedBB& aabb) override {
+    bool isBoundingBoxInFrustum(const AxisAlignedBB &aabb) override {
         return this->isBoxInFrustum(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
     }
 

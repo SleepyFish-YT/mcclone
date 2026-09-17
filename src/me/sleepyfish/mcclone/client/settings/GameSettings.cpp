@@ -6,7 +6,9 @@
 #include "GameSettings.h"
 #include "KeyBinding.h"
 
+#include "../Minecraft.h"
 #include "../../debug/Logger.h"
+#include "../../entity/player/EnumPlayerModelParts.h"
 
 #include <fstream>
 
@@ -16,14 +18,14 @@ GameSettings::GameSettings() {
     this->settingsFilePath = "";
 }
 
-GameSettings::GameSettings(const std::filesystem::path &settingsParentPath) {
+GameSettings::GameSettings(Minecraft &mc, const std::filesystem::path &settingsParentPath) :
+    mc(&mc)
+{
     this->settingsFilePath = (std::filesystem::path(settingsParentPath) / "options.json");
-
     this->mouseSensitivity = 0.5f;
     this->invertMouse = false;
-
     this->limitFramerate = 240;
-
+    this->clouds = 2;
     this->renderDistanceChunks = 12;
     this->enableVsync = true;
     this->fboEnable = true;
@@ -53,6 +55,9 @@ GameSettings::GameSettings(const std::filesystem::path &settingsParentPath) {
     this->forceUnicodeFont = false;
     this->snooperEnabled = false;
     this->mipmapLevels = 4;
+    this->useNativeTransport = true;
+    this->resourcePacks = std::vector<std::string>();
+    this->incompatibleResourcePacks = std::vector<std::string>();
 
     // Keybinds
     {
@@ -163,6 +168,7 @@ GameSettings::GameSettings(const std::filesystem::path &settingsParentPath) {
             {"mouseSensitivity", 0.5f},
             {"invertMouse", false},
             {"limitFramerate", 240},
+            {"clouds", 2},
             {"renderDistanceChunks", 12},
             {"enableVsync", true},
             {"fboEnable", true},
@@ -188,6 +194,9 @@ GameSettings::GameSettings(const std::filesystem::path &settingsParentPath) {
             {"forceUnicodeFont", false},
             {"snooperEnabled", false},
             {"mipmapLevels", 4},
+            {"useNativeTransport", true},
+            {"resourcePacks", std::vector<std::string>()},
+            {"incompatibleResourcePacks", std::vector<std::string>()},
     };
 
     for (auto &keybind : this->keyBinds) {
@@ -216,6 +225,7 @@ void GameSettings::loadSettings() {
     this->mouseSensitivity     = this->settingsJson.value("mouseSensitivity", 0.5f);
     this->invertMouse          = this->settingsJson.value("invertMouse", false);
     this->limitFramerate       = this->settingsJson.value("limitFramerate", 240);
+    this->clouds               = this->settingsJson.value("limitFramerate", 2);
     this->renderDistanceChunks = this->settingsJson.value("renderDistanceChunks", 12);
     this->enableVsync          = this->settingsJson.value("enableVsync", true);
     this->fboEnable            = this->settingsJson.value("fboEnable", true);
@@ -241,6 +251,19 @@ void GameSettings::loadSettings() {
     this->forceUnicodeFont     = this->settingsJson.value("forceUnicodeFont", false);
     this->snooperEnabled       = this->settingsJson.value("snooperEnabled", false);
     this->mipmapLevels         = this->settingsJson.value("mipmapLevels", 4);
+    this->useNativeTransport   = this->settingsJson.value("mipmapLevels", true);
+
+    if (this->settingsJson.contains("resourcePacks") && this->settingsJson["resourcePacks"].is_array()) {
+        for (auto &pack: this->settingsJson["resourcePacks"]) {
+            this->resourcePacks.push_back(pack.get<std::string>());
+        }
+    }
+
+    if (this->settingsJson.contains("incompatibleResourcePacks") && this->settingsJson["incompatibleResourcePacks"].is_array()) {
+        for (auto &pack: this->settingsJson["incompatibleResourcePacks"]) {
+            this->incompatibleResourcePacks.push_back(pack.get<std::string>());
+        }
+    }
 
     KeyBinding::resetKeyBindingArrayAndHash();
     KeyBinding::unregisterAllBinds();
@@ -279,6 +302,7 @@ void GameSettings::saveSettings() {
         this->settingsJson["mouseSensitivity"]     = this->mouseSensitivity;
         this->settingsJson["invertMouse"]          = this->invertMouse;
         this->settingsJson["limitFramerate"]       = this->limitFramerate;
+        this->settingsJson["clouds"]               = this->clouds;
         this->settingsJson["renderDistanceChunks"] = this->renderDistanceChunks;
         this->settingsJson["enableVsync"]          = this->enableVsync;
         this->settingsJson["fboEnable"]            = this->fboEnable;
@@ -303,7 +327,21 @@ void GameSettings::saveSettings() {
         this->settingsJson["reducedDebugInfo"]     = this->reducedDebugInfo;
         this->settingsJson["forceUnicodeFont"]     = this->forceUnicodeFont;
         this->settingsJson["snooperEnabled"]       = this->snooperEnabled;
-        this->settingsJson["mipmapLevels"]         = 4;
+        this->settingsJson["mipmapLevels"]         = this->mipmapLevels;
+        this->settingsJson["useNativeTransport"]   = this->useNativeTransport;
+        this->settingsJson["resourcePacks"]        = this->resourcePacks;
+        this->settingsJson["incompatibleResourcePacks"] = this->incompatibleResourcePacks;
+    }
+
+    // keybinds
+    {
+        for (auto& keybind : this->keyBinds) {
+            this->settingsJson[keybind->getKeyDescription()] = keybind->getKeyCode();
+        }
+
+        for (auto& keybind : this->keyBindHotbar) {
+            this->settingsJson[keybind->getKeyDescription()] = keybind->getKeyCode();
+        }
     }
 
     std::ofstream file(this->settingsFilePath);
@@ -317,11 +355,27 @@ void GameSettings::saveSettings() {
         return;
     }
 
-    if (!file.is_open()) {
-        Logger::log("Settings saved to {}", this->settingsFilePath.string());
-    }
+    Logger::log("Settings saved to {}", this->settingsFilePath.string());
 }
 
 float GameSettings::getSoundLevel(SoundCategory &category) const {
     return 1.0f; // not yet implemented.
+}
+
+uint8_t GameSettings::shouldRenderClouds() const noexcept {
+    return this->renderDistanceChunks >= 4 ? this->clouds : 0;
+}
+
+void GameSettings::sendSettingsToServer() {
+    /*
+    if (this->mc->thePlayer != nullptr) {
+        int settingMask = 0;
+
+        for (const EnumPlayerModelParts &parts : this->setModelParts) {
+            settingMask |= getPlayerModelPartInfo(parts).partMask;
+        }
+
+        this->mc->thePlayer->sendQueue->addToSendQueue(new C15PacketClientSettings(this->language, this->renderDistanceChunks, this->chatVisibility, this->chatColors, settingMask));
+    }
+    */
 }

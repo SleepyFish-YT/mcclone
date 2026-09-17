@@ -17,7 +17,6 @@
 
 #include <glm/ext/vector_int2.hpp>
 
-class RenderInformation;
 class GameConfiguration;
 
 /**
@@ -41,12 +40,6 @@ private:
     std::vector<std::string> arguments;
 
     GameConfiguration *gameConfiguration;
-
-    RenderInformation* renderContext;
-
-    std::thread updateThread;
-
-    std::thread renderThread;
 
 public:
 

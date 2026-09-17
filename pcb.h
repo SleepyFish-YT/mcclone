@@ -14,8 +14,11 @@
     X(RESOLUTION, -4) \
     X(DIMENSIONS, -5) \
     X(GAME_CONFIG, -6)\
-    X(OPENGL_INIT, -7)
-#define MCCLONE_ERR_SIZE (-7)
+    X(OPENGL_INIT, -7) \
+    X(RESOURCEPACKS, -8) \
+    X(ASSETS, -9) \
+    X(ASSETS_INDEX, -10)
+#define MCCLONE_ERR_SIZE (-10)
 
 #define X(name, value) MCCLONE_ERR_##name = value,
 enum { ERROR_CODES };

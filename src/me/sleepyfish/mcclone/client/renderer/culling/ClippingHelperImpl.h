@@ -35,7 +35,7 @@ private:
         clippingMatrixBuffer(GLAllocation::createDirectFloatBuffer(16))
     {}
 
-    void normalize(float* plane) noexcept {
+    void normalize(float *plane) noexcept {
         float f = std::sqrt(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
         plane[0] /= f;
         plane[1] /= f;
@@ -43,7 +43,7 @@ private:
         plane[3] /= f;
     }
 
-    static ClippingHelperImpl& getInstance_() {
+    static ClippingHelperImpl &getInstance_() {
         static ClippingHelperImpl instance{};
         return instance;
     }
@@ -51,7 +51,7 @@ private:
 public:
 
     static ClippingHelper *getInstance() {
-        ClippingHelperImpl& inst = ClippingHelperImpl::getInstance_();
+        ClippingHelperImpl &inst = ClippingHelperImpl::getInstance_();
         inst.init();
         return &inst;
     }
@@ -64,7 +64,7 @@ public:
         GlStateManager::getFloat_(GL_PROJECTION_MATRIX, this->projectionMatrixBuffer.data());
         GlStateManager::getFloat_(GL_MODELVIEW_MATRIX,  this->modelviewMatrixBuffer.data());
 
-        const float* p = this->projectionMatrixBuffer.data();
+        const float *p = this->projectionMatrixBuffer.data();
         const float *m = this->modelviewMatrixBuffer.data();
         float *c = this->clippingMatrix;
 
@@ -86,43 +86,43 @@ public:
         c[15] = m[12] * p[3]  + m[13] * p[7]  + m[14] * p[11] + m[15] * p[15];
 
         // right
-        this->frustum[0][0] = c[3]  - c[0];
-        this->frustum[0][1] = c[7]  - c[4];
+        this->frustum[0][0] = c[3] - c[0];
+        this->frustum[0][1] = c[7] - c[4];
         this->frustum[0][2] = c[11] - c[8];
         this->frustum[0][3] = c[15] - c[12];
         this->normalize(this->frustum[0]);
 
         // left
-        this->frustum[1][0] = c[3]  + c[0];
-        this->frustum[1][1] = c[7]  + c[4];
+        this->frustum[1][0] = c[3] + c[0];
+        this->frustum[1][1] = c[7] + c[4];
         this->frustum[1][2] = c[11] + c[8];
         this->frustum[1][3] = c[15] + c[12];
         this->normalize(this->frustum[1]);
 
         // bottom
-        this->frustum[2][0] = c[3]  + c[1];
-        this->frustum[2][1] = c[7]  + c[5];
+        this->frustum[2][0] = c[3] + c[1];
+        this->frustum[2][1] = c[7] + c[5];
         this->frustum[2][2] = c[11] + c[9];
         this->frustum[2][3] = c[15] + c[13];
         this->normalize(this->frustum[2]);
 
         // top
-        this->frustum[3][0] = c[3]  - c[1];
-        this->frustum[3][1] = c[7]  - c[5];
+        this->frustum[3][0] = c[3] - c[1];
+        this->frustum[3][1] = c[7] - c[5];
         this->frustum[3][2] = c[11] - c[9];
         this->frustum[3][3] = c[15] - c[13];
         this->normalize(this->frustum[3]);
 
         // far
-        this->frustum[4][0] = c[3]  - c[2];
-        this->frustum[4][1] = c[7]  - c[6];
+        this->frustum[4][0] = c[3] - c[2];
+        this->frustum[4][1] = c[7] - c[6];
         this->frustum[4][2] = c[11] - c[10];
         this->frustum[4][3] = c[15] - c[14];
         this->normalize(this->frustum[4]);
 
         // near
-        this->frustum[5][0] = c[3]  + c[2];
-        this->frustum[5][1] = c[7]  + c[6];
+        this->frustum[5][0] = c[3] + c[2];
+        this->frustum[5][1] = c[7] + c[6];
         this->frustum[5][2] = c[11] + c[10];
         this->frustum[5][3] = c[15] + c[14];
         this->normalize(this->frustum[5]);

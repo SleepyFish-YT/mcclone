@@ -23,7 +23,7 @@ std::unique_ptr<std::istream> AbstractResourcePack::getInputStream(const Resourc
     return this->getInputStreamByName(locationToName(location));
 }
 
-bool AbstractResourcePack::resourceExists(const ResourceLocation &location) const {
+bool AbstractResourcePack::resourceExists(const ResourceLocation &location) {
     return this->hasResourceName(locationToName(location));
 }
 
@@ -35,7 +35,7 @@ std::any AbstractResourcePack::getPackMetadata(IMetadataSerializer &metadataSeri
 
 std::any AbstractResourcePack::readMetadata(IMetadataSerializer &metadataSerializer, std::istream &stream, const std::string &sectionName) {
     try {
-        nlohmann::json j = nlohmann::json::parse(stream);
+        ::nlohmann::json j = ::nlohmann::json::parse(stream);
         return metadataSerializer.parseMetadataSection(sectionName, j);
     } catch (const std::exception &e) {
         throw std::runtime_error(std::string("Failed to parse pack metadata: ") + e.what());

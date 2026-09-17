@@ -31,7 +31,7 @@ public:
     virtual ~AbstractResourcePack() = default;
 
     std::unique_ptr<std::istream> getInputStream(const ResourceLocation &location) override;
-    bool resourceExists(const ResourceLocation &location) const override;
+    bool resourceExists(const ResourceLocation &location) override;
     std::any getPackMetadata(IMetadataSerializer &metadataSerializer, const std::string &metadataSectionName) override;
     BufferedImage &getPackImage() override;
     std::string getPackName() const override;
@@ -43,7 +43,7 @@ protected:
     std::filesystem::path resourcePackFile;
 
     virtual std::unique_ptr<std::istream> getInputStreamByName(const std::string &name) = 0;
-    virtual bool hasResourceName(const std::string &name) const = 0;
+    virtual bool hasResourceName(const std::string &name) = 0;
 
     void logNameNotLowercase(const std::string &name) const;
 

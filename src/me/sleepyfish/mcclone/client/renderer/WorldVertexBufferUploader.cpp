@@ -18,20 +18,20 @@ void WorldVertexBufferUploader::draw(WorldRenderer &renderer) {
         return;
     }
 
-    bool flag0 = false; // Reflector.ForgeVertexFormatElementEnumUseage_preDraw.exists()
-    bool flag1 = false; // Reflector.ForgeVertexFormatElementEnumUseage_postDraw.exists()
+    bool flag0 = false; // Reflector::ForgeVertexFormatElementEnumUseage_preDraw->exists()
+    bool flag1 = false; // Reflector::ForgeVertexFormatElementEnumUseage_postDraw->exists()
 
-    if (renderer.getDrawMode() == 7 /* && Config.isQuadsToTriangles() */) {
+    if (renderer.getDrawMode() == 7 /* && Config::isQuadsToTriangles() */) {
         renderer.quadsToTriangles();
     }
 
-    const VertexFormat vertexFormat = renderer.getVertexFormat();
+    const VertexFormat &vertexFormat = renderer.getVertexFormat();
     const int stride = vertexFormat.getNextOffset();
-    const auto& bytebuffer = renderer.getByteBuffer();
-    const auto& list = vertexFormat.getElements();
+    const auto &bytebuffer = renderer.getByteBuffer();
+    const auto &list = vertexFormat.getElements();
 
     for (size_t j = 0; j < list.size(); ++j) {
-        const VertexFormatElement& vertexFormatElement = list.at(j);
+        const VertexFormatElement &vertexFormatElement = list.at(j);
         const VertexFormatElement::EnumUsage usage = vertexFormatElement.getUsage();
 
         if (flag0) {
@@ -43,7 +43,7 @@ void WorldVertexBufferUploader::draw(WorldRenderer &renderer) {
         const int index = vertexFormatElement.getIndex();
         const int offset = vertexFormat.getOffset((int) j);
 
-        const void* ptr = static_cast<const void*>(bytebuffer.data() + offset);
+        const void *ptr = static_cast<const void *>(bytebuffer.data() + offset);
 
         switch (usage) {
             case VertexFormatElement::EnumUsage::POSITION:
@@ -73,12 +73,12 @@ void WorldVertexBufferUploader::draw(WorldRenderer &renderer) {
     if (renderer.isMultiTexture()) {
         renderer.drawMultiTexture();
     } else if (false /*Config::isShaders()*/) {
-        // SVertexBuilder.drawArrays(renderer.getDrawMode(), 0, renderer.getVertexCount(), renderer);
+        // SVertexBuilder::drawArrays(renderer.getDrawMode(), 0, renderer.getVertexCount(), renderer);
     } else {
         GlStateManager::glDrawArrays_(renderer.getDrawMode(), 0, renderer.getVertexCount());
     }
 
-    for (auto vertexFormatElement : list) {
+    for (auto &vertexFormatElement : list) {
         const VertexFormatElement::EnumUsage usage = vertexFormatElement.getUsage();
 
         if (flag1) {
