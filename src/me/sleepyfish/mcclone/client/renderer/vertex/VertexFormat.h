@@ -45,12 +45,7 @@ public:
         normalElementOffset(-1)
     {}
 
-    VertexFormat(const VertexFormat& other) :
-        VertexFormat()
-    {
-        for (int i = 0; i < other.getElementCount(); ++i) {
-            this->addElement(other.getElement(i));
-        }
+    VertexFormat(const VertexFormat &other) = default;
 
         this->nextOffset = other.nextOffset;
     }
