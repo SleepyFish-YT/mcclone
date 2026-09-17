@@ -771,7 +771,7 @@ void WorldRenderer::quadsToTriangles() {
     if (drawMode != 7) return;
 
     int stride = m_vertexFormat.getNextOffset();
-    int needed = static_cast<int>(m_byteBuffer.size()) * 2;
+    int needed = (vertexCount / 4) * 6 * stride;
 
     if (static_cast<int>(m_byteBufferTriangles.size()) < needed)
         m_byteBufferTriangles.resize(static_cast<size_t>(needed), 0);
