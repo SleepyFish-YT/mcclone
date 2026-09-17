@@ -19,7 +19,7 @@ class Frustum : public ICamera {
 
 private:
 
-    ClippingHelper* clippingHelper;
+    ClippingHelper *clippingHelper;
     double xPosition;
     double yPosition;
     double zPosition;
@@ -34,7 +34,7 @@ public:
         zPosition(0.0)
     {}
 
-    explicit Frustum(ClippingHelper* clippingHelper) noexcept :
+    explicit Frustum(ClippingHelper *clippingHelper) noexcept :
         clippingHelper(clippingHelper),
         xPosition(0.0),
         yPosition(0.0),

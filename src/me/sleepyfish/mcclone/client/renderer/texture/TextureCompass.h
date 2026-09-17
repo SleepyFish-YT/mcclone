@@ -23,7 +23,7 @@ private:
 
 public:
 
-    TextureCompass(const std::string& iconName) :
+    TextureCompass(const std::string &iconName) :
         TextureAtlasSprite(iconName)
     {}
 

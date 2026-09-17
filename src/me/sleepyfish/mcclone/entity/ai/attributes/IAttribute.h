@@ -26,7 +26,7 @@ public:
 
     virtual bool getShouldWatch() const noexcept = 0;
 
-    virtual IAttribute* func_180372_d() const noexcept = 0;
+    virtual IAttribute *func_180372_d() const noexcept = 0;
 
 };
 

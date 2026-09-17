@@ -93,11 +93,11 @@ inline int getSoundCategoryId(SoundCategory category) {
     throw std::runtime_error("Unknown SoundCategory");
 }
 
-inline SoundCategory* getSoundCategory(const std::string &name) {
+inline SoundCategory *getSoundCategory(const std::string &name) {
     auto &map = getSoundCategoryByName();
     auto it = map.find(name);
     if (it != map.end()) {
-        return const_cast<SoundCategory*>(&it->second);
+        return const_cast<SoundCategory *>(&it->second);
     }
 
     return nullptr;

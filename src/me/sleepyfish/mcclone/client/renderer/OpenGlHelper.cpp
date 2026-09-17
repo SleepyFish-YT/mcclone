@@ -167,7 +167,7 @@ void OpenGlHelper::glDeleteProgram_(int program)             { ::glDeleteProgram
 void OpenGlHelper::glLinkProgram_(int program)               { ::glLinkProgram(program);          }
 void OpenGlHelper::glUniform1i_(int location, int v0)        { ::glUniform1i(location, v0);       }
 
-void OpenGlHelper::glShaderSource_(int shader, const std::string& source) {
+void OpenGlHelper::glShaderSource_(int shader, const std::string &source) {
     const char* src = source.c_str();
     ::glShaderSource(shader, 1, &src, nullptr);
 }
@@ -192,11 +192,11 @@ std::string OpenGlHelper::glGetProgramInfoLog_(int program) {
     return log;
 }
 
-int OpenGlHelper::glGetUniformLocation_(int program, const std::string& name) {
+int OpenGlHelper::glGetUniformLocation_(int program, const std::string &name) {
     return ::glGetUniformLocation(program, name.c_str());
 }
 
-int OpenGlHelper::glGetAttribLocation_(int program, const std::string& name) {
+int OpenGlHelper::glGetAttribLocation_(int program, const std::string &name) {
     return ::glGetAttribLocation(program, name.c_str());
 }
 
@@ -209,9 +209,9 @@ void OpenGlHelper::glUniform3_(int loc, const float* v, int n) { ::glUniform3fv(
 void OpenGlHelper::glUniform4_(int loc, const int*   v, int n) { ::glUniform4iv(loc, n, v); }
 void OpenGlHelper::glUniform4_(int loc, const float* v, int n) { ::glUniform4fv(loc, n, v); }
 
-void OpenGlHelper::glUniformMatrix2_(int loc, bool t, const float* m, int n) { ::glUniformMatrix2fv(loc, n, t, m); }
-void OpenGlHelper::glUniformMatrix3_(int loc, bool t, const float* m, int n) { ::glUniformMatrix3fv(loc, n, t, m); }
-void OpenGlHelper::glUniformMatrix4_(int loc, bool t, const float* m, int n) { ::glUniformMatrix4fv(loc, n, t, m); }
+void OpenGlHelper::glUniformMatrix2_(int loc, bool t, const float *m, int n) { ::glUniformMatrix2fv(loc, n, t, m); }
+void OpenGlHelper::glUniformMatrix3_(int loc, bool t, const float *m, int n) { ::glUniformMatrix3fv(loc, n, t, m); }
+void OpenGlHelper::glUniformMatrix4_(int loc, bool t, const float *m, int n) { ::glUniformMatrix4fv(loc, n, t, m); }
 
 // -------------------------------------------------------------------------
 // VBO
@@ -220,9 +220,9 @@ void OpenGlHelper::glUniformMatrix4_(int loc, bool t, const float* m, int n) { :
 int  OpenGlHelper::glGenBuffers_()                                                          { GLuint b; ::glGenBuffers(1, &b); return b;      }
 void OpenGlHelper::glBindBuffer_(int target, int buffer)                                    { ::glBindBuffer(target, buffer);                 }
 void OpenGlHelper::glDeleteBuffers_(int buffer)                                             { GLuint b = buffer; ::glDeleteBuffers(1, &b);    }
-void OpenGlHelper::glBufferData_(int target, const void* data, size_t size, int usage)      { ::glBufferData(target, size, data, usage);      }
+void OpenGlHelper::glBufferData_(int target, const void *data, size_t size, int usage)      { ::glBufferData(target, size, data, usage);      }
 void OpenGlHelper::glBufferData_(int target, size_t size, int usage)                        { ::glBufferData(target, size, nullptr, usage);   }
-void OpenGlHelper::glBufferSubData_(int target, intptr_t offset, const void* data, size_t size) { ::glBufferSubData(target, offset, size, data); }
+void OpenGlHelper::glBufferSubData_(int target, intptr_t offset, const void *data, size_t size) { ::glBufferSubData(target, offset, size, data); }
 
 void OpenGlHelper::glCopyBufferSubData_(int read, int write, intptr_t readOff, intptr_t writeOff, size_t size) {
     ::glCopyBufferSubData(read, write, readOff, writeOff, size);

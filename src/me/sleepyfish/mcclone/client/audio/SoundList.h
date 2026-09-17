@@ -30,7 +30,7 @@ public:
 
         };
 
-        static const char* getTypeName(SoundEntry::Type type) {
+        static const char *getTypeName(SoundEntry::Type type) {
             switch (type) {
                 case SoundEntry::Type::FILE: return "file";
                 case SoundEntry::Type::SOUND_EVENT: return "event";
@@ -38,7 +38,7 @@ public:
             }
         }
 
-        static SoundEntry::Type* getType(const std::string &name) {
+        static SoundEntry::Type *getType(const std::string &name) {
             static SoundEntry::Type FILE_TYPE = Type::FILE;
             static SoundEntry::Type SOUND_EVENT_TYPE = Type::SOUND_EVENT;
 

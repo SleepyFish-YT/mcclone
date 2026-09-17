@@ -115,13 +115,13 @@ inline std::string toString(EnumChatFormatting fmt) {
     return getChatFormattingInfo(fmt).controlString;
 }
 
-inline std::string getTextWithoutFormattingCodes(const std::string& text) {
+inline std::string getTextWithoutFormattingCodes(const std::string &text) {
     // might need to change back to 'pattern("(?i)\u00a7[0-9A-FK-OR]", std::regex::icase)'
     static const std::regex pattern("(?i)" + CHAT_FORMATTING_SECTION + "[0-9A-FK-OR]", std::regex::icase);
     return std::regex_replace(text, pattern, "");
 }
 
-inline std::optional<EnumChatFormatting> getValueByName(const std::string& friendlyName) {
+inline std::optional<EnumChatFormatting> getValueByName(const std::string &friendlyName) {
     std::string key;
     for (char c : friendlyName) {
         if (std::isalpha(c)) {

@@ -26,7 +26,7 @@ class BaseAttributeMap {
 
 protected:
 
-    virtual IAttributeInstance* createInstance(IAttribute* attribute) = 0;
+    virtual IAttributeInstance *createInstance(IAttribute *attribute) = 0;
 
     // key: parent attribute, value: child attributes that depend on it
     std::unordered_multimap<IAttribute*, IAttribute*> m_parentToChildren;
@@ -38,24 +38,24 @@ public:
 
     virtual ~BaseAttributeMap() = default;
 
-    virtual IAttributeInstance* getAttributeInstance(IAttribute* attribute) {
+    virtual IAttributeInstance *getAttributeInstance(IAttribute *attribute) {
         auto it = this->m_attributes.find(attribute);
         return it != this->m_attributes.end() ? it->second : nullptr;
     }
 
-    virtual IAttributeInstance* getAttributeInstanceByName(const std::string &attributeName) {
+    virtual IAttributeInstance *getAttributeInstanceByName(const std::string &attributeName) {
         auto it = this->m_attributesByName.find(SavaUtil::StringUtil::ToLowerCase(attributeName));
         return it != this->m_attributesByName.end() ? it->second : nullptr;
     }
 
-    virtual IAttributeInstance* registerAttribute(IAttribute* attribute) {
+    virtual IAttributeInstance* registerAttribute(IAttribute *attribute) {
         const std::string key = SavaUtil::StringUtil::ToLowerCase(attribute->getAttributeUnlocalizedName());
 
         if (this->m_attributesByName.count(key)) {
             throw std::invalid_argument("Attribute is already registered!");
         }
 
-        IAttributeInstance* instance = this->createInstance(attribute);
+        IAttributeInstance *instance = this->createInstance(attribute);
         this->m_attributesByName[key] = instance;
         this->m_attributes[attribute] = instance;
 
@@ -75,11 +75,11 @@ public:
         return result;
     }
 
-    virtual void onAttributeModified(IAttributeInstance* instance) {}
+    virtual void onAttributeModified(IAttributeInstance *instance) {}
 
     void removeAttributeModifiers(const std::vector<std::pair<std::string, AttributeModifier>> &modifiers) {
         for (auto &[name, modifier] : modifiers) {
-            IAttributeInstance* instance = this->getAttributeInstanceByName(name);
+            IAttributeInstance *instance = this->getAttributeInstanceByName(name);
             if (instance) {
                 instance->removeModifier(modifier);
             }
@@ -88,7 +88,7 @@ public:
 
     void applyAttributeModifiers(const std::vector<std::pair<std::string, AttributeModifier>> &modifiers) {
         for (auto &[name, modifier] : modifiers) {
-            IAttributeInstance* instance = this->getAttributeInstanceByName(name);
+            IAttributeInstance *instance = this->getAttributeInstanceByName(name);
             if (instance) {
                 instance->removeModifier(modifier);
                 instance->applyModifier(modifier);

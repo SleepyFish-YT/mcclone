@@ -41,7 +41,7 @@ inline bool canEnchantItem(EnumEnchantmentType type, const Item& item) {
     if (type == EnumEnchantmentType::BREAKABLE && item.isDamageable())
         return true;
 
-    const ItemArmor* armor = dynamic_cast<const ItemArmor*>(&item);
+    const ItemArmor *armor = dynamic_cast<const ItemArmor*>(&item);
     if (armor) {
         if (type == EnumEnchantmentType::ARMOR)
             return true;

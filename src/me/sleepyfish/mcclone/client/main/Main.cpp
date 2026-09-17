@@ -32,7 +32,7 @@ Main::Main() {
     this->patchVersion = std::to_string(MCCLONE_VERSION_PATCH);
 }
 
-int Main::main(int arg_count, char* arg_vals[], const std::filesystem::path &gameDir_dir) {
+int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gameDir_dir) {
     this->arguments = std::vector<std::string>(arg_vals, arg_vals + arg_count);
 
 #ifdef _WIN32

@@ -25,7 +25,7 @@ private:
 
 public:
 
-    void put(T* key, int value) {
+    void put(T *key, int value) {
         this->identityMap[key] = value;
 
         while (static_cast<int>(this->objectList.size()) <= value) {
@@ -35,12 +35,12 @@ public:
         this->objectList[value] = key;
     }
 
-    int get(T* key) const {
+    int get(T *key) const {
         auto it = this->identityMap.find(key);
         return it == this->identityMap.end() ? -1 : it->second;
     }
 
-    T* getByValue(int value) const {
+    T *getByValue(int value) const {
         if (value < 0 || value >= static_cast<int>(this->objectList.size())) {
             return nullptr;
         }
@@ -60,10 +60,10 @@ public:
         using reference = T*&;
         using difference_type = std::ptrdiff_t;
 
-        const std::vector<T*>* list;
+        const std::vector<T*> *list;
         size_t index;
 
-        iterator(const std::vector<T*>* list, size_t index) :
+        iterator(const std::vector<T*> *list, size_t index) :
             list(list),
             index(index)
         {
@@ -76,7 +76,7 @@ public:
             }
         }
 
-        T* operator*() const {
+        T *operator*() const {
             return (*this->list)[this->index];
         }
 

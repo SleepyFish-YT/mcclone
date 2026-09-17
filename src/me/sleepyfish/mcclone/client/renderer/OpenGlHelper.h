@@ -124,7 +124,7 @@ public:
     static void        glAttachShader_(int program, int shader);
     static void        glDeleteShader_(int shader);
     static int         glCreateShader_(int type);
-    static void        glShaderSource_(int shader, const std::string& source);
+    static void        glShaderSource_(int shader, const std::string &source);
     static void        glCompileShader_(int shader);
     static int         glGetShaderi_(int shader, int pname);
     static std::string glGetShaderInfoLog_(int shader);
@@ -133,7 +133,7 @@ public:
     static int         glCreateProgram_();
     static void        glDeleteProgram_(int program);
     static void        glLinkProgram_(int program);
-    static int         glGetUniformLocation_(int program, const std::string& name);
+    static int         glGetUniformLocation_(int program, const std::string &name);
     static void        glUniform1i_(int location, int v0);
     static void        glUniform1_(int location, const int*   values, int count);
     static void        glUniform1_(int location, const float* values, int count);
@@ -143,19 +143,19 @@ public:
     static void        glUniform3_(int location, const float* values, int count);
     static void        glUniform4_(int location, const int*   values, int count);
     static void        glUniform4_(int location, const float* values, int count);
-    static void        glUniformMatrix2_(int location, bool transpose, const float* matrices, int count);
-    static void        glUniformMatrix3_(int location, bool transpose, const float* matrices, int count);
-    static void        glUniformMatrix4_(int location, bool transpose, const float* matrices, int count);
-    static int         glGetAttribLocation_(int program, const std::string& name);
+    static void        glUniformMatrix2_(int location, bool transpose, const float *matrices, int count);
+    static void        glUniformMatrix3_(int location, bool transpose, const float *matrices, int count);
+    static void        glUniformMatrix4_(int location, bool transpose, const float *matrices, int count);
+    static int         glGetAttribLocation_(int program, const std::string &name);
 
     // -------------------------------------------------------------------------
     // VBO
     // -------------------------------------------------------------------------
     static int  glGenBuffers_();
     static void glBindBuffer_(int target, int buffer);
-    static void glBufferData_(int target, const void* data, size_t size, int usage);
+    static void glBufferData_(int target, const void *data, size_t size, int usage);
     static void glBufferData_(int target, size_t size, int usage);
-    static void glBufferSubData_(int target, intptr_t offset, const void* data, size_t size);
+    static void glBufferSubData_(int target, intptr_t offset, const void *data, size_t size);
     static void glDeleteBuffers_(int buffer);
     static void glCopyBufferSubData_(int readTarget, int writeTarget, intptr_t readOffset, intptr_t writeOffset, size_t size);
 

@@ -45,7 +45,7 @@ private:
 
     std::array<uint8_t, 65536> glyphWidth{};
     std::array<int, 32> colorCode{};
-    ResourceLocation* locationFontTexture{};
+    ResourceLocation *locationFontTexture{};
     TextureManager* renderEngine{};
 
     float posX{};
@@ -67,7 +67,7 @@ private:
 
 public:
 
-    FontRenderer(GameSettings* gameSettingsIn, ResourceLocation* location, TextureManager* textureManagerIn, bool unicode);
+    FontRenderer(GameSettings *gameSettingsIn, ResourceLocation *location, TextureManager* textureManagerIn, bool unicode);
 
     void onResourceManagerReload(IResourceManager* resourceManager);
 
@@ -79,32 +79,32 @@ private:
     float renderChar(wchar_t ch, bool italic);
     float renderDefaultChar(int ch, bool italic);
 
-    ResourceLocation* getUnicodePageLocation(int page);
+    ResourceLocation *getUnicodePageLocation(int page);
     void loadGlyphTexture(int page);
 
     float renderUnicodeChar(wchar_t ch, bool italic);
 
 public:
 
-    int drawStringWithShadow(const std::string& text, float x, float y, int color);
-    int drawString(const std::string& text, int x, int y, int color);
-    int drawString(const std::string& text, float x, float y, int color, bool dropShadow);
+    int drawStringWithShadow(const std::string &text, float x, float y, int color);
+    int drawString(const std::string &text, int x, int y, int color);
+    int drawString(const std::string &text, float x, float y, int color, bool dropShadow);
 
 private:
 
-    std::string bidiReorder(const std::string& text);
+    std::string bidiReorder(const std::string &text);
 
     void resetStyles();
-    void renderStringAtPos(const std::string& text, bool shadow);
-    int renderStringAligned(const std::string& text, int x, int y, int width, int color, bool dropShadow);
-    int renderString(const std::string& text, float x, float y, int color, bool dropShadow);
+    void renderStringAtPos(const std::string &text, bool shadow);
+    int renderStringAligned(const std::string &text, int x, int y, int width, int color, bool dropShadow);
+    int renderString(const std::string &text, float x, float y, int color, bool dropShadow);
 
 public:
-    int getStringWidth(const std::string& text);
+    int getStringWidth(const std::string &text);
     int getCharWidth(wchar_t character);
 
-    std::string trimStringToWidth(const std::string& text, int width);
-    std::string trimStringToWidth(const std::string& text, int width, bool reverse);
+    std::string trimStringToWidth(const std::string &text, int width);
+    std::string trimStringToWidth(const std::string &text, int width, bool reverse);
 
 private:
 
@@ -112,15 +112,15 @@ private:
 
 public:
 
-    void drawSplitString(const std::string& str, int x, int y, int wrapWidth, int textColor);
+    void drawSplitString(const std::string &str, int x, int y, int wrapWidth, int textColor);
 
 private:
 
-    void renderSplitString(const std::string& str, int x, int y, int wrapWidth, bool addShadow);
+    void renderSplitString(const std::string &str, int x, int y, int wrapWidth, bool addShadow);
 
 public:
 
-    int splitStringWidth(const std::string& str, int maxLength);
+    int splitStringWidth(const std::string &str, int maxLength);
 
     void setUnicodeFlag(bool unicodeFlagIn);
     bool getUnicodeFlag() const;
@@ -128,19 +128,19 @@ public:
     void setBidiFlag(bool bidiFlagIn);
     bool getBidiFlag() const;
 
-    std::vector<std::string> listFormattedStringToWidth(const std::string& str, int wrapWidth);
+    std::vector<std::string> listFormattedStringToWidth(const std::string &str, int wrapWidth);
 
 private:
 
-    std::string wrapFormattedStringToWidth(const std::string& str, int wrapWidth);
-    int sizeStringToWidth(const std::string& str, int wrapWidth);
+    std::string wrapFormattedStringToWidth(const std::string &str, int wrapWidth);
+    int sizeStringToWidth(const std::string &str, int wrapWidth);
 
     static bool isFormatColor(char colorChar);
     static bool isFormatSpecial(char formatChar);
 
 public:
 
-    static std::string getFormatFromString(const std::string& text);
+    static std::string getFormatFromString(const std::string &text);
     int getColorCode(char character) const;
 
 };

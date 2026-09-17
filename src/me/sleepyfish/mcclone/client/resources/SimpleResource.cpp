@@ -11,7 +11,7 @@ SimpleResource::SimpleResource(
         std::string resourcePackName,
         ResourceLocation srResourceLocation,
         std::istream* resourceInputStream,
-        std::istream* mcmetaInputStream,
+        std::istream *mcmetaInputStream,
         const IMetadataSerializer* srMetadataSerializer
 ) :
         resourcePackName(std::move(resourcePackName)),
@@ -34,7 +34,7 @@ bool SimpleResource::hasMetadata() const {
     return this->mcmetaInputStream != nullptr;
 }
 
-std::any SimpleResource::getMetadata(const std::string& sectionName) {
+std::any SimpleResource::getMetadata(const std::string &sectionName) {
     if (!this->hasMetadata()) {
         return std::any{};
     }
@@ -62,7 +62,7 @@ std::any SimpleResource::getMetadata(const std::string& sectionName) {
     return section;
 }
 
-const std::string& SimpleResource::getResourcePackName() const {
+const std::string &SimpleResource::getResourcePackName() const {
     return this->resourcePackName;
 }
 

@@ -24,8 +24,8 @@ class ModifiableAttributeInstance : public IAttributeInstance {
 
 private:
 
-    BaseAttributeMap* attributeMap;
-    IAttribute* genericAttribute;
+    BaseAttributeMap *attributeMap;
+    IAttribute *genericAttribute;
     double baseValue;
     mutable bool needsUpdate;
     mutable double cachedValue;
@@ -77,7 +77,7 @@ private:
 
 public:
 
-    ModifiableAttributeInstance(BaseAttributeMap* attributeMap, IAttribute* attribute) :
+    ModifiableAttributeInstance(BaseAttributeMap *attributeMap, IAttribute *attribute) :
         attributeMap(attributeMap),
         genericAttribute(attribute),
         baseValue(attribute->getDefaultValue()),
@@ -132,7 +132,7 @@ public:
         return result;
     }
 
-    AttributeModifier* getModifier(const UUID& uuid) override {
+    AttributeModifier *getModifier(const UUID& uuid) override {
         auto it = this->mapByUUID.find(uuid);
         return it != this->mapByUUID.end() ? &it->second : nullptr;
     }

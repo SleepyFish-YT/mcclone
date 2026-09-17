@@ -63,7 +63,7 @@ public:
         return *this;
     }
 
-    virtual IAttribute* func_180372_d() const noexcept override {
+    virtual IAttribute *func_180372_d() const noexcept override {
         return this->field_180373_a;
     }
 

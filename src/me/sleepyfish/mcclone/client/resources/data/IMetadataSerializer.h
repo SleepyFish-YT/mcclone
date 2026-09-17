@@ -8,13 +8,14 @@
 
 #include "IMetadataSectionSerializer.h"
 
-#include <nlohmann/json.hpp>
 #include <unordered_map>
 #include <string>
 #include <any>
 #include <memory>
 #include <functional>
 #include <stdexcept>
+
+#include <nlohmann/json.hpp>
 
 /**
  * @author SleepyFish
@@ -37,7 +38,9 @@ private:
 
         IMetadataSectionSerializer<T> *serializer;
 
-        explicit Registration(IMetadataSectionSerializer<T> *serializer) : serializer(serializer) {}
+        explicit Registration(IMetadataSectionSerializer<T> *serializer) :
+            serializer(serializer)
+        {}
 
         std::any parse(const nlohmann::json &json) const override {
             return serializer->deserialize(json);

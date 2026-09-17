@@ -57,7 +57,7 @@ public:
         return this->underlyingIntegerMap.get(value);
     }
 
-    V* getObjectById(int id) const {
+    V *getObjectById(int id) const {
         return this->underlyingIntegerMap.getByValue(id);
     }
 

@@ -70,8 +70,8 @@ public:
 
         rotationX  =  MathHelper::cos(f3 * (float) MathHelper::PId / 180.0f) * (float)(1 - i * 2);
         rotationZ  =  MathHelper::sin(f3 * (float) MathHelper::PId / 180.0f) * (float)(1 - i * 2);
-        rotationYZ = -rotationZ  * MathHelper::sin(f2 * (float) MathHelper::PId / 180.0f) * (float)(1 - i * 2);
-        rotationXY =  rotationX  * MathHelper::sin(f2 * (float) MathHelper::PId / 180.0f) * (float)(1 - i * 2);
+        rotationYZ = -rotationZ * MathHelper::sin(f2 * (float) MathHelper::PId / 180.0f) * (float)(1 - i * 2);
+        rotationXY =  rotationX * MathHelper::sin(f2 * (float) MathHelper::PId / 180.0f) * (float)(1 - i * 2);
         rotationXZ =  MathHelper::cos(f2 * (float) MathHelper::PId / 180.0f);
     }
 
@@ -82,16 +82,16 @@ public:
         return Vec3(d0 + position.xCoord, d1 + position.yCoord, d2 + position.zCoord);
     }
 
-    static Block* getBlockAtEntityViewpoint(World& world, Entity& entity, float partialTicks) {
+    static Block *getBlockAtEntityViewpoint(World& world, Entity& entity, float partialTicks) {
         Vec3     vec3     = projectViewFromEntity(entity, partialTicks);
         BlockPos blockpos = BlockPos(vec3);
         IBlockState state = world.getBlockState(blockpos);
-        Block* block      = state.getBlock();
+        Block *block      = state.getBlock();
 
         if (block->getMaterial().isLiquid()) {
             float f = 0.0f;
 
-            BlockLiquid* liquid = dynamic_cast<BlockLiquid*>(block);
+            BlockLiquid *liquid = dynamic_cast<BlockLiquid*>(block);
             if (liquid)
                 f = BlockLiquid::getLiquidHeightPercent(state.getValue(BlockLiquid::LEVEL)) - 0.11111111f;
 

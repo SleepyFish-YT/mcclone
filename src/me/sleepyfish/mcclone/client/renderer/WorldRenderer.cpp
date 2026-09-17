@@ -773,8 +773,8 @@ void WorldRenderer::quadsToTriangles() {
     int stride = m_vertexFormat.getNextOffset();
     int needed = (vertexCount / 4) * 6 * stride;
 
-    if (static_cast<int>(m_byteBufferTriangles.size()) < needed)
-        m_byteBufferTriangles.resize(static_cast<size_t>(needed), 0);
+    if (static_cast<int>(m_byteBufferTriangles.capacity()) < needed)
+        m_byteBufferTriangles.reserve(static_cast<size_t>(needed));
 
     m_byteBufferTriangles.clear();
 

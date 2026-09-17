@@ -22,7 +22,7 @@ KeyBinding::KeyBinding(const std::string &description, uint16_t keyCode, const s
     this->pressTime = 0;
 }
 
-void KeyBinding::registerBinding(KeyBinding* binding) {
+void KeyBinding::registerBinding(KeyBinding *binding) {
     KeyBinding::keybindArray.push_back(binding);
     KeyBinding::hash[binding->keyCode] = binding;
     KeyBinding::keybindSet.insert(binding->keyCategory);
@@ -53,7 +53,7 @@ void KeyBinding::setKeyBindState(uint16_t keyCode, bool pressed) {
 }
 
 void KeyBinding::unPressAllKeys() {
-    for (KeyBinding* keybinding : KeyBinding::keybindArray) {
+    for (KeyBinding *keybinding : KeyBinding::keybindArray) {
         keybinding->unpressKey();
     }
 }
@@ -61,7 +61,7 @@ void KeyBinding::unPressAllKeys() {
 void KeyBinding::resetKeyBindingArrayAndHash() {
     KeyBinding::hash.clear();
 
-    for (KeyBinding* keybinding : KeyBinding::keybindArray) {
+    for (KeyBinding *keybinding : KeyBinding::keybindArray) {
         KeyBinding::hash[keybinding->keyCode] = keybinding;
     }
 }
@@ -105,7 +105,7 @@ std::string KeyBinding::getKeyCategory() const noexcept {
 }
 
 std::string KeyBinding::getKeyName() const {
-    const char* name = ::glfwGetKeyName(this->keyCode, 0);
+    const char *name = ::glfwGetKeyName(this->keyCode, 0);
     return name ? std::string(name) : "UNKNOWN";
 }
 

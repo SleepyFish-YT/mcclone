@@ -121,7 +121,7 @@ void Profiler::printProfilerSection(const std::string &section) {
     }
 }
 
-void Profiler::startSection_nolock(const std::string& name) {
+void Profiler::startSection_nolock(const std::string &name) {
     if (!this->profilerLocalEnabled) return;
     if (!this->profilingEnabled) return;
 

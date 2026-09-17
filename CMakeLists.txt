@@ -221,6 +221,12 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/resources/SimpleReloadableResourceManager.h
         ${SRC_DIR}/client/resources/SimpleResource.cpp
         ${SRC_DIR}/client/resources/SimpleResource.h
+        ${SRC_DIR}/client/resources/AbstractResourcePack.cpp
+        ${SRC_DIR}/client/resources/AbstractResourcePack.h
+        ${SRC_DIR}/client/resources/DefaultResourcePack.cpp
+        ${SRC_DIR}/client/resources/DefaultResourcePack.h
+        ${SRC_DIR}/client/resources/ResourceIndex.cpp
+        ${SRC_DIR}/client/resources/ResourceIndex.h
 
         # client/resources/data
         ${SRC_DIR}/client/resources/data/IMetadataSection.h

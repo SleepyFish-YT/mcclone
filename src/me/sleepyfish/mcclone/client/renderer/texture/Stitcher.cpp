@@ -33,11 +33,11 @@ void Stitcher::doStitch() {
     for (Holder& h : this->setStitchHolders)
         sorted.push_back(&h);
 
-    std::sort(sorted.begin(), sorted.end(), [](const Holder* a, const Holder* b) {
+    std::sort(sorted.begin(), sorted.end(), [](const Holder *a, const Holder *b) {
         return *b < *a; // descending - largest first
     });
 
-    for (Holder* holder : sorted) {
+    for (Holder *holder : sorted) {
         if (!this->allocateSlot(*holder)) {
             throw StitcherException(
                     "Unable to fit: " + holder->getAtlasSprite()->getIconName() +
@@ -61,7 +61,7 @@ std::vector<TextureAtlasSprite*> Stitcher::getStitchSlots() {
 
     std::vector<TextureAtlasSprite*> result;
     for (Slot* slot : slots) {
-        Holder* holder = slot->getStitchHolder();
+        Holder *holder = slot->getStitchHolder();
         TextureAtlasSprite* sprite = holder->getAtlasSprite();
         sprite->initSprite(
                 this->currentWidth,
@@ -181,12 +181,12 @@ bool Stitcher::Holder::operator<(const Holder& other) const {
         return this->getHeight() < other.getHeight();
     if (this->getWidth() != other.getWidth())
         return this->getWidth() < other.getWidth();
-    const std::string& a = this->theTexture->getIconName();
-    const std::string& b = other.theTexture->getIconName();
+    const std::string &a = this->theTexture->getIconName();
+    const std::string &b = other.theTexture->getIconName();
     return a < b;
 }
 
-bool Stitcher::Slot::addSlot(Holder* holderIn) {
+bool Stitcher::Slot::addSlot(Holder *holderIn) {
     if (this->holder != nullptr)
         return false;
 

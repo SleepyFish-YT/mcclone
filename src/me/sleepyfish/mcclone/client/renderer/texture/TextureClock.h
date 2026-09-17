@@ -21,7 +21,7 @@ private:
 
 public:
 
-    TextureClock(const std::string& iconName) :
+    TextureClock(const std::string &iconName) :
         TextureAtlasSprite(iconName)
     {}
 

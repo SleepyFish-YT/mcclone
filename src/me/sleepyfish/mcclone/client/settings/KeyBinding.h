@@ -48,7 +48,7 @@ public:
     // disable const copy
     KeyBinding(const KeyBinding&) = delete;
 
-    static void registerBinding(KeyBinding* binding);
+    static void registerBinding(KeyBinding *binding);
 
     static void unregisterAllBinds() noexcept;
 

@@ -21,6 +21,9 @@
 #include "renderer/WorldRenderer.h"
 #include "resources/SimpleReloadableResourceManager.h"
 #include "resources/data/IMetadataSerializer.h"
+#include "resources/IResourcePack.h"
+#include "resources/DefaultResourcePack.h"
+#include "resources/ResourceIndex.h"
 #include "shader/Framebuffer.h"
 #include "gui/ScaledResolution.h"
 #include "../debug/Logger.h"
@@ -41,7 +44,7 @@
 #include <glfw/glfw3.h>
 
 Minecraft *Minecraft::instance = nullptr;
-ResourceLocation *Minecraft::locationMojangPng = new ResourceLocation("textures/gui/title/mojang.png");
+ResourceLocation *Minecraft::locationSleepyPng = new ResourceLocation("textures/gui/title/sleepy.png");
 
 Minecraft::Minecraft(GameConfiguration *gameConfig) :
     Runnable(),
@@ -52,10 +55,18 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->mcDataDir = gameConfig->folderInformation.mcDataDir;
     this->fileAssets = gameConfig->folderInformation.assetsDir;
     this->fileResourcepacks = gameConfig->folderInformation.resourcePacksDir;
+
+    {
+        auto resIndex = ResourceIndex(
+                gameConfig->folderInformation.assetsDir,
+                gameConfig->folderInformation.assetIndexFile.stem().string()
+        );
+
+        this->mcDefaultResourcePack = std::make_unique<DefaultResourcePack>(resIndex.getResourceMap());
+    }
+
     this->launchedVersion = gameConfig->gameInformation.version;
     // this->profileProperties = gameConfig->userInformation.profileProperties;
-    // this->mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig->folderInformation.assetsDir, gameConfig->folderInformation.assetIndex)).getResourceMap());
-
     this->displayWidth = gameConfig->displayInformation.width > 0 ? gameConfig->displayInformation.width : 1;
     this->displayHeight = gameConfig->displayInformation.height > 0 ? gameConfig->displayInformation.height : 1;
     this->tempDisplayWidth = gameConfig->displayInformation.width;
@@ -81,6 +92,7 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->mcProfiler->profilingEnabled = true;
 
     this->gameSettings = new GameSettings(this->mcDataDir);
+    this->defaultResourcePacks.push_back(this->mcDefaultResourcePack);
 
     this->objectMouseOver = new MovingObjectPosition();
 
@@ -417,7 +429,7 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
 
                 if (this->debuggerEnabled) {
                     Logger::log("base: {}", (void*) this);
-                    Logger::log("loc: {}", (void*) Minecraft::locationMojangPng);
+                    Logger::log("loc: {}", (void*) Minecraft::locationSleepyPng);
                 }
             }
 
@@ -864,7 +876,7 @@ void Minecraft::runTick() {
     this->mcProfiler->endSection();
 }
 
-void Minecraft::checkGLError(const std::string& message) {
+void Minecraft::checkGLError(const std::string &message) {
     if (this->enableGLErrorChecking) {
         unsigned int i = GlStateManager::glGetError_();
         if (i != 0) {

@@ -305,7 +305,7 @@ public:
     static void scale_(double x, double y, double z);
     static void translate_(float x, float y, float z);
     static void translate_(double x, double y, double z);
-    static void multMatrix_(const float* matrix);
+    static void multMatrix_(const float *matrix);
 
     static void color_(float r, float g, float b, float a);
     static void color_(float r, float g, float b);
@@ -342,7 +342,7 @@ public:
     static void glTexParameteri_(int target, int pname, int param);
     static int  glGetTexLevelParameteri_(int target, int level, int pname);
 
-    static void glMultiDrawArrays_(int mode, const int* first, const int* count, int drawCount);
+    static void glMultiDrawArrays_(int mode, const int *first, const int *count, int drawCount);
 
     static int _getGLMaximumTextureSize();
 

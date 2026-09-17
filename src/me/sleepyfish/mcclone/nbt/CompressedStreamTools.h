@@ -20,7 +20,7 @@ public:
 
     static NBTTagCompound* read(std::filesystem::path path);
 
-    static void safeWrite(NBTTagCompound* nbt, std::filesystem::path path);
+    static void safeWrite(NBTTagCompound *nbt, std::filesystem::path path);
 
 };
 

@@ -32,7 +32,7 @@ public:
         return this->lock.empty();
     }
 
-    const std::string& getLock() const noexcept {
+    const std::string &getLock() const noexcept {
         return this->lock;
     }
 

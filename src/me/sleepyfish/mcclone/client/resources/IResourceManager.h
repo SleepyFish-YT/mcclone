@@ -25,7 +25,7 @@ public:
 
     virtual const std::unordered_set<std::string>& getResourceDomains() const = 0;
 
-    virtual IResource* getResource(const ResourceLocation& location) = 0;
+    virtual IResource *getResource(const ResourceLocation& location) = 0;
 
     virtual std::vector<IResource*> getAllResources(const ResourceLocation& location) = 0;
 

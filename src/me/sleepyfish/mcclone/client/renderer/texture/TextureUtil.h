@@ -55,8 +55,8 @@ private:
 
 public:
 
-    static inline DynamicTexture* missingTexture;
-    static inline int* missingTextureData;
+    static inline DynamicTexture *missingTexture;
+    static inline int *missingTextureData;
 
     static void init();
 
@@ -96,7 +96,7 @@ public:
     // -------------------------------------------------------------------------
     // Image loading (stb_image)
     // -------------------------------------------------------------------------
-    static std::vector<int> readImageData_(const std::string& path, int& widthOut, int& heightOut);
+    static std::vector<int> readImageData_(const std::string &path, int& widthOut, int& heightOut);
     static std::vector<int> readImageData_(std::istream& stream, int& widthOut, int& heightOut);
 
     // -------------------------------------------------------------------------

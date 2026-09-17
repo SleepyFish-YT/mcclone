@@ -33,7 +33,7 @@ public:
 
     virtual bool hasModifier(const AttributeModifier &modifier) const = 0;
 
-    virtual AttributeModifier* getModifier(const UUID &uuid) = 0;
+    virtual AttributeModifier *getModifier(const UUID &uuid) = 0;
 
     virtual void applyModifier(const AttributeModifier &modifier) = 0;
 

@@ -7,7 +7,7 @@
 
 #include "../../sava/SavaUtil.h"
 
-ResourceLocation::ResourceLocation(const std::string& resourceName) {
+ResourceLocation::ResourceLocation(const std::string &resourceName) {
     auto [domain, path] = ResourceLocation::SplitObjectName(resourceName);
     this->resourceDomain = domain.empty() ? std::string(MCCLONE_NAME) : SavaUtil::StringUtil::ToLowerCase(domain);
     this->resourcePath = path;
@@ -17,7 +17,7 @@ ResourceLocation::ResourceLocation(const std::string& resourceName) {
     }
 }
 
-ResourceLocation::ResourceLocation(const std::string& resourceDomainIn, const std::string& resourcePathIn) {
+ResourceLocation::ResourceLocation(const std::string &resourceDomainIn, const std::string &resourcePathIn) {
     this->resourceDomain = resourceDomainIn.empty() ? std::string(MCCLONE_NAME) : SavaUtil::StringUtil::ToLowerCase(resourceDomainIn);
     this->resourcePath = resourcePathIn;
 

@@ -49,7 +49,7 @@ public:
 
     std::any getMetadata(const std::string &sectionName) override;
 
-    const std::string& getResourcePackName() const override;
+    const std::string &getResourcePackName() const override;
 
     bool operator==(const SimpleResource &other) const;
 

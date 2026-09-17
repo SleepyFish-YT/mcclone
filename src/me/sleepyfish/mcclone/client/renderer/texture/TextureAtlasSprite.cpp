@@ -23,21 +23,21 @@
 std::string TextureAtlasSprite::locationNameClock   = "builtin/clock";
 std::string TextureAtlasSprite::locationNameCompass = "builtin/compass";
 
-TextureAtlasSprite::TextureAtlasSprite(const std::string& spriteName) :
+TextureAtlasSprite::TextureAtlasSprite(const std::string &spriteName) :
     iconName(spriteName)
 {}
 
-TextureAtlasSprite* TextureAtlasSprite::makeAtlasSprite(const ResourceLocation& loc) {
+TextureAtlasSprite *TextureAtlasSprite::makeAtlasSprite(const ResourceLocation &loc) {
     std::string s = loc.toString();
     if (s == locationNameClock)   return new TextureClock(s);
     if (s == locationNameCompass) return new TextureCompass(s);
     return new TextureAtlasSprite(s);
 }
 
-void TextureAtlasSprite::setLocationNameClock(const std::string& clockName) {
+void TextureAtlasSprite::setLocationNameClock(const std::string &clockName) {
     locationNameClock = clockName;
 }
-void TextureAtlasSprite::setLocationNameCompass(const std::string& compassName) {
+void TextureAtlasSprite::setLocationNameCompass(const std::string &compassName) {
     locationNameCompass = compassName;
 }
 
@@ -55,7 +55,7 @@ void TextureAtlasSprite::initSprite(int inX, int inY, int originInX, int originI
     maxV = static_cast<float>(originInY + height) / static_cast<float>(inY) - f1;
 }
 
-void TextureAtlasSprite::copyFrom(const TextureAtlasSprite& a) {
+void TextureAtlasSprite::copyFrom(const TextureAtlasSprite &a) {
     originX = a.originX;
     originY = a.originY;
     width = a.width;
@@ -98,8 +98,8 @@ void TextureAtlasSprite::updateAnimationInterpolated() {
     if (i == k || k < 0 || k >= static_cast<int>(framesTextureData.size()))
         return;
 
-    const FrameData& aint  = framesTextureData[i];
-    const FrameData& aint1 = framesTextureData[k];
+    const FrameData &aint  = framesTextureData[i];
+    const FrameData &aint1 = framesTextureData[k];
 
     // if (interpolatedFrameData == null || length mismatch) new int[aint.length][]
     if (!interpolatedFrameDataValid || interpolatedFrameData.size() != aint.size()) {
@@ -129,7 +129,7 @@ void TextureAtlasSprite::updateAnimationInterpolated() {
     TextureUtil::uploadTextureMipmap_(interpolatedFrameData, width, height, originX, originY, false, false);
 }
 
-void TextureAtlasSprite::loadSprite(BufferedImage* const* images, int imageCount, const AnimationMetadataSection* meta) {
+void TextureAtlasSprite::loadSprite(BufferedImage *const *images, int imageCount, const AnimationMetadataSection *meta) {
     resetSprite();
 
     const int i = images[0]->width;
@@ -140,7 +140,7 @@ void TextureAtlasSprite::loadSprite(BufferedImage* const* images, int imageCount
     FrameData aint(static_cast<size_t>(imageCount));
 
     for (int k = 0; k < imageCount; ++k) {
-        BufferedImage* img = images[k];
+        BufferedImage *img = images[k];
         if (img == nullptr) continue;
 
         if (k > 0 && (img->width != (i >> k) || img->height != (j >> k))) {
@@ -192,12 +192,12 @@ void TextureAtlasSprite::generateMipmaps(int level) {
     FrameList list;
 
     for (size_t i = 0; i < framesTextureData.size(); ++i) {
-        const FrameData& aint = framesTextureData[i];
+        const FrameData &aint = framesTextureData[i];
         if (aint.empty()) continue; // "null" frame
 
         try {
             list.push_back(TextureUtil::generateMipmapData_(level, width, aint));
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             throw std::runtime_error(
                     std::string("Generating mipmaps for frame ") +
                     std::to_string(i) + ": " + e.what());
@@ -215,14 +215,14 @@ void TextureAtlasSprite::allocateFrameTextureData(int index) {
     }
 }
 
-FrameData TextureAtlasSprite::getFrameTextureData(const FrameData& data, int rows, int columns, int frameIndex) {
+FrameData TextureAtlasSprite::getFrameTextureData(const FrameData &data, int rows, int columns, int frameIndex) {
     FrameData aint(data.size());
 
     for (size_t i = 0; i < data.size(); ++i) {
-        const MipmapLevel& aint1 = data[i];
+        const MipmapLevel &aint1 = data[i];
         if (aint1.empty()) continue;
 
-        const size_t len = static_cast<size_t>((rows >> i) * (columns >> i));
+        const auto len = static_cast<size_t>((rows >> i) * (columns >> i));
         aint[i].resize(len);
         std::copy_n(aint1.begin() + static_cast<ptrdiff_t>(frameIndex * len), len, aint[i].begin());
     }

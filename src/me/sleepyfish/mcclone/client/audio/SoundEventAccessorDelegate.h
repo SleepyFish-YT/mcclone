@@ -26,19 +26,19 @@ private:
 
 public:
 
-    SoundEventAccessorDelegate(SoundRegistry* registry, const ResourceLocation& target, SoundPoolEntry* missingSound) :
+    SoundEventAccessorDelegate(SoundRegistry* registry, const ResourceLocation& target, SoundPoolEntry *missingSound) :
             registry(registry),
             target(target),
             missingSound(missingSound)
     {}
 
     int getWeight() override {
-        auto* composite = this->registry->getObject(this->target);
+        auto *composite = this->registry->getObject(this->target);
         return composite == nullptr ? 0 : composite->getWeight();
     }
 
     SoundPoolEntry cloneEntry() override {
-        auto* composite = this->registry->getObject(this->target);
+        auto *composite = this->registry->getObject(this->target);
         return composite == nullptr ? *this->missingSound : composite->cloneEntry();
     }
 

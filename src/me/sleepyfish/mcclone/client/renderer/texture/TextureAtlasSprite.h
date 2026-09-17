@@ -32,7 +32,7 @@ protected:
     FrameData interpolatedFrameData;
     bool interpolatedFrameDataValid = false;
 
-    AnimationMetadataSection* animationMetadata = nullptr;
+    AnimationMetadataSection *animationMetadata = nullptr;
 
     bool rotated = false;
     int originX = 0;
@@ -55,17 +55,17 @@ protected:
 
 public:
 
-    explicit TextureAtlasSprite(const std::string& spriteName);
+    explicit TextureAtlasSprite(const std::string &spriteName);
     virtual ~TextureAtlasSprite() = default;
 
-    static TextureAtlasSprite* makeAtlasSprite(const ResourceLocation& loc);
+    static TextureAtlasSprite *makeAtlasSprite(const ResourceLocation &loc);
 
-    static void setLocationNameClock(const std::string& clockName);
-    static void setLocationNameCompass(const std::string& compassName);
+    static void setLocationNameClock(const std::string &clockName);
+    static void setLocationNameCompass(const std::string &compassName);
 
     void initSprite(int inX, int inY, int originInX, int originInY, bool rotatedIn);
 
-    void copyFrom(const TextureAtlasSprite& atlasSpirit);
+    void copyFrom(const TextureAtlasSprite &atlasSpirit);
 
     int getOriginX() const { return originX; }
     int getOriginY() const { return originY; }
@@ -91,10 +91,10 @@ public:
     virtual void updateAnimation();
     void updateAnimationInterpolated();
 
-    const FrameData& getFrameTextureData(int index) const {
+    const FrameData &getFrameTextureData(int index) const {
         return framesTextureData.at(index);
     }
-    FrameData& getFrameTextureData(int index) {
+    FrameData &getFrameTextureData(int index) {
         return framesTextureData.at(index);
     }
 
@@ -105,7 +105,7 @@ public:
     void setIconWidth(int newWidth) { width  = newWidth; }
     void setIconHeight(int newHeight) { height = newHeight; }
 
-    void loadSprite(BufferedImage* const* images, int imageCount, const AnimationMetadataSection* meta);
+    void loadSprite(BufferedImage *const *images, int imageCount, const AnimationMetadataSection *meta);
 
     void generateMipmaps(int level);
 
@@ -113,7 +113,7 @@ public:
 
     bool hasAnimationMetadata() const { return animationMetadata != nullptr; }
 
-    void setFramesTextureData(const FrameList& newFramesTextureData) {
+    void setFramesTextureData(const FrameList &newFramesTextureData) {
         framesTextureData = newFramesTextureData;
     }
 
@@ -127,7 +127,7 @@ protected:
 
     void allocateFrameTextureData(int index);
 
-    static FrameData getFrameTextureData(const FrameData& data, int rows, int columns, int frameIndex);
+    static FrameData getFrameTextureData(const FrameData &data, int rows, int columns, int frameIndex);
 
 private:
 

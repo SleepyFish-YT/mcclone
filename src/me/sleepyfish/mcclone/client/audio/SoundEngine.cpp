@@ -102,7 +102,7 @@ void SoundEngine::destory(bool msg) {
 
     std::string path = soundPath.string();
     int channels, sampleRate;
-    short* output;
+    short *output;
     int samples = ::stb_vorbis_decode_filename(path.c_str(), &channels, &sampleRate, &output);
 
     if (samples < 0 || output == nullptr) {
@@ -113,7 +113,7 @@ void SoundEngine::destory(bool msg) {
     ::ALuint buffer;
     ::alGenBuffers(1, &buffer);
     ::ALenum format = (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-    ::alBufferData(buffer, format, output, samples * channels * sizeof(short), sampleRate);
+    ::alBufferData(buffer, format, output, samples  *channels * sizeof(short), sampleRate);
 
     std::free(output);
     return buffer;

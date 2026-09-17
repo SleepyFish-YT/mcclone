@@ -33,6 +33,9 @@ class IResourceManager;
 class IReloadableResourceManager;
 class IMetadataSerializer;
 class SoundEngine;
+class IResourcePack;
+class DefaultResourcePack;
+class ResourcePackRepository;
 
 /**
  * @author SleepyFish
@@ -127,9 +130,15 @@ private:
 
     void displayDebugInfo(long long elapsedTicksTime);
 
+    std::vector<std::shared_ptr<IResourcePack>> defaultResourcePacks;
+
+    std::shared_ptr<DefaultResourcePack> mcDefaultResourcePack;
+
+    std::shared_ptr<ResourcePackRepository> mcResourcePackRepository;
+
 public:
 
-    static ResourceLocation *locationMojangPng;
+    static ResourceLocation *locationSleepyPng;
 
     std::filesystem::path mcDataDir{};
 

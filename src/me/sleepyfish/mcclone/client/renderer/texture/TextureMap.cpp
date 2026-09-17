@@ -30,11 +30,11 @@
 const ResourceLocation TextureMap::LOCATION_MISSING_TEXTURE("missingno");
 const ResourceLocation TextureMap::LOCATION_BLOCKS_TEXTURE("textures/atlas/blocks.png");
 
-TextureMap::TextureMap(const std::string& basePath) :
+TextureMap::TextureMap(const std::string &basePath) :
     TextureMap(basePath, nullptr)
 {}
 
-TextureMap::TextureMap(const std::string& basePath, IIconCreator* iconCreator) :
+TextureMap::TextureMap(const std::string &basePath, IIconCreator *iconCreator) :
     basePath(basePath),
     iconCreator(iconCreator),
     missingImage(new TextureAtlasSprite("missingno"))
@@ -78,7 +78,7 @@ void TextureMap::loadTexture(IResourceManager& resourceManager) {
     }
 }
 
-void TextureMap::loadSprites(IResourceManager& resourceManager, IIconCreator* iconCreator) {
+void TextureMap::loadSprites(IResourceManager& resourceManager, IIconCreator *iconCreator) {
     this->mapRegisteredSprites.clear();
     iconCreator->registerSprites(*this);
     this->initMissingImage();
@@ -139,7 +139,7 @@ void TextureMap::loadTextureAtlas(IResourceManager& resourceManager) {
 
             // animation metadata
             std::any animMeta = iResource->getMetadata("animation");
-            AnimationMetadataSection* animSection = nullptr;
+            AnimationMetadataSection *animSection = nullptr;
             if (animMeta.has_value())
                 animSection = std::any_cast<AnimationMetadataSection>(&animMeta);
 
@@ -226,7 +226,7 @@ void TextureMap::loadTextureAtlas(IResourceManager& resourceManager) {
     std::unordered_map<std::string, TextureAtlasSprite*> remaining = this->mapRegisteredSprites;
 
     for (TextureAtlasSprite* sprite : stitcher.getStitchSlots()) {
-        const std::string& spriteName = sprite->getIconName();
+        const std::string &spriteName = sprite->getIconName();
         remaining.erase(spriteName);
         this->mapUploadedSprites[spriteName] = sprite;
 
@@ -256,7 +256,7 @@ void TextureMap::loadTextureAtlas(IResourceManager& resourceManager) {
     }
 }
 
-TextureAtlasSprite* TextureMap::getAtlasSprite(const std::string& iconName) {
+TextureAtlasSprite* TextureMap::getAtlasSprite(const std::string &iconName) {
     auto it = this->mapUploadedSprites.find(iconName);
     return it != this->mapUploadedSprites.end() ? it->second : this->missingImage;
 }

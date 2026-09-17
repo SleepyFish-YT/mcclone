@@ -20,10 +20,10 @@ void LayeredTexture::loadTexture(IResourceManager &resourceManager) {
     std::vector<int> composited;
 
     try {
-        for (const std::string& name : this->layeredTextureNames) {
+        for (const std::string &name : this->layeredTextureNames) {
             if (name.empty()) continue;
 
-            IResource* iResource = resourceManager.getResource(ResourceLocation(name));
+            IResource *iResource = resourceManager.getResource(ResourceLocation(name));
             auto inputStream = iResource->getInputStream();
 
             if (!inputStream || !*inputStream) {

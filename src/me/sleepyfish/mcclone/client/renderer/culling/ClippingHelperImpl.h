@@ -50,7 +50,7 @@ private:
 
 public:
 
-    static ClippingHelper* getInstance() {
+    static ClippingHelper *getInstance() {
         ClippingHelperImpl& inst = ClippingHelperImpl::getInstance_();
         inst.init();
         return &inst;
@@ -65,8 +65,8 @@ public:
         GlStateManager::getFloat_(GL_MODELVIEW_MATRIX,  this->modelviewMatrixBuffer.data());
 
         const float* p = this->projectionMatrixBuffer.data();
-        const float* m = this->modelviewMatrixBuffer.data();
-        float* c = this->clippingMatrix;
+        const float *m = this->modelviewMatrixBuffer.data();
+        float *c = this->clippingMatrix;
 
         c[0]  = m[0]  * p[0]  + m[1]  * p[4]  + m[2]  * p[8]  + m[3]  * p[12];
         c[1]  = m[0]  * p[1]  + m[1]  * p[5]  + m[2]  * p[9]  + m[3]  * p[13];

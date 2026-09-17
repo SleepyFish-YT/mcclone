@@ -20,7 +20,7 @@ class ServerList {
 
 public:
 
-    explicit ServerList(Minecraft* mc);
+    explicit ServerList(Minecraft *mc);
 
     void loadServerList();
     void saveServerList();
@@ -36,7 +36,7 @@ public:
 
 private:
 
-    Minecraft* mc;
+    Minecraft *mc;
     std::vector<ServerData> servers;
 
 };

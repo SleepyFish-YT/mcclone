@@ -91,9 +91,9 @@ public:
 
     MCCLONE_GLFW_CALLBACK handleWindowFocus(::GLFWwindow* window, int focused);
 
-    RenderInformation* getRenderContext() noexcept;
+    RenderInformation *getRenderContext() noexcept;
 
-    ::GLFWwindow* getWindow() noexcept;
+    ::GLFWwindow *getWindow() noexcept;
 
 };
 

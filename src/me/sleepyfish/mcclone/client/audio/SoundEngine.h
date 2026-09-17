@@ -50,8 +50,8 @@ private:
 
     ::ALuint loadBuffer(const std::string &name);
 
-    ::ALCdevice* device;
-    ::ALCcontext* context;
+    ::ALCdevice *device;
+    ::ALCcontext *context;
     const std::filesystem::path soundDir;
     std::vector<ActiveSound> activeSources;
     std::mutex mutex;

@@ -21,7 +21,7 @@ class ServersideAttributeMap : public BaseAttributeMap {
 
 protected:
 
-    virtual IAttributeInstance* createInstance(IAttribute* attribute) override {
+    virtual IAttributeInstance *createInstance(IAttribute *attribute) override {
         return new ModifiableAttributeInstance(this, attribute);
     }
 
@@ -32,12 +32,12 @@ private:
 
 public:
 
-    virtual ModifiableAttributeInstance* getAttributeInstance(IAttribute* attribute) override {
+    virtual ModifiableAttributeInstance *getAttributeInstance(IAttribute *attribute) override {
         return dynamic_cast<ModifiableAttributeInstance*>(BaseAttributeMap::getAttributeInstance(attribute));
     }
 
-    virtual ModifiableAttributeInstance* getAttributeInstanceByName(const std::string &attributeName) override {
-        IAttributeInstance* instance = BaseAttributeMap::getAttributeInstanceByName(attributeName);
+    virtual ModifiableAttributeInstance *getAttributeInstanceByName(const std::string &attributeName) override {
+        IAttributeInstance *instance = BaseAttributeMap::getAttributeInstanceByName(attributeName);
 
         if (!instance) {
             auto it = this->m_descriptionToInstance.find(SavaUtil::StringUtil::ToLowerCase(attributeName));
@@ -49,8 +49,8 @@ public:
         return dynamic_cast<ModifiableAttributeInstance*>(instance);
     }
 
-    virtual IAttributeInstance* registerAttribute(IAttribute* attribute) override {
-        IAttributeInstance* instance = BaseAttributeMap::registerAttribute(attribute);
+    virtual IAttributeInstance* registerAttribute(IAttribute *attribute) override {
+        IAttributeInstance *instance = BaseAttributeMap::registerAttribute(attribute);
 
         auto* ranged = dynamic_cast<RangedAttribute*>(attribute);
         if (ranged && !ranged->getDescription().empty()) {
@@ -60,14 +60,14 @@ public:
         return instance;
     }
 
-    virtual void onAttributeModified(IAttributeInstance* instance) override {
+    virtual void onAttributeModified(IAttributeInstance *instance) override {
         if (instance->getAttribute().getShouldWatch()) {
             this->m_dirtyInstances.insert(instance);
         }
 
         for (auto &[parent, child] : this->m_parentToChildren) {
             if (parent == &instance->getAttribute()) {
-                ModifiableAttributeInstance* modifiable = getAttributeInstance(child);
+                ModifiableAttributeInstance *modifiable = getAttributeInstance(child);
                 if (modifiable) {
                     modifiable->flagForUpdate();
                 }
@@ -85,7 +85,7 @@ public:
 
     std::vector<IAttributeInstance*> getWatchedAttributes() const {
         std::vector<IAttributeInstance*> result;
-        for (auto* instance : getAllAttributes()) {
+        for (auto *instance : getAllAttributes()) {
             if (instance->getAttribute().getShouldWatch()) {
                 result.push_back(instance);
             }

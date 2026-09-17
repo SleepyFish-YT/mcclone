@@ -64,7 +64,7 @@ public:
         return PropertyEnum<T>(name, filtered);
     }
 
-    const T* getValueByName(const std::string &name) const {
+    const T *getValueByName(const std::string &name) const {
         auto it = this->nameToValue.find(name);
         return it != this->nameToValue.end() ? &it->second : nullptr;
     }

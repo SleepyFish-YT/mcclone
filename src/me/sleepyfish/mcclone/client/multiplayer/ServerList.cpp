@@ -17,7 +17,7 @@
 
 //TODO: CHECK IMPLEMENTATION THIS MIGHT CAUSE CRASHES
 
-ServerList::ServerList(Minecraft* mc) :
+ServerList::ServerList(Minecraft *mc) :
     mc(mc)
 {
     this->loadServerList();
@@ -28,7 +28,7 @@ void ServerList::loadServerList() {
         this->servers.clear();
 
         std::filesystem::path path = std::filesystem::path(this->mc->mcDataDir) / "servers.dat";
-        NBTTagCompound* nbt = CompressedStreamTools::read(path);
+        NBTTagCompound *nbt = CompressedStreamTools::read(path);
 
         if (nbt == nullptr) return;
 
@@ -45,12 +45,12 @@ void ServerList::loadServerList() {
 
 void ServerList::saveServerList() {
     try {
-        NBTTagList* list = new NBTTagList();
+        NBTTagList *list = new NBTTagList();
 
          for (const ServerData& server : this->servers)
              list->appendTag(std::unique_ptr<NBTBase>(server.getNBTCompound()));
 
-        NBTTagCompound* nbt = new NBTTagCompound();
+        NBTTagCompound *nbt = new NBTTagCompound();
         nbt->setTag("servers", std::unique_ptr<NBTBase>(list));
 
         std::filesystem::path path = std::filesystem::path(this->mc->mcDataDir) / "servers.dat";

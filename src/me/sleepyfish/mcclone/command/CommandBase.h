@@ -312,7 +312,7 @@ public:
         );
     }
     */
-    static bool parseBoolean(const std::string& input) {
+    static bool parseBoolean(const std::string &input) {
         if (input == "true" || input == "1") {
             return true;
         }
@@ -331,7 +331,7 @@ public:
         return *player;
     }
 
-    static EntityPlayerMP& getPlayer(ICommandSender& sender, const std::string& username) {
+    static EntityPlayerMP& getPlayer(ICommandSender& sender, const std::string &username) {
         EntityPlayerMP* player = PlayerSelector::matchOnePlayer(sender, username);
 
         if (!player) {
@@ -348,16 +348,16 @@ public:
         return *player;
     }
 
-    static Entity& getEntity(ICommandSender& sender, const std::string& name) {
+    static Entity& getEntity(ICommandSender& sender, const std::string &name) {
         return getEntity<Entity>(sender, name);
     }
 
     template<typename T>
-    static T& getEntity(ICommandSender& sender, const std::string& name) {
+    static T& getEntity(ICommandSender& sender, const std::string &name) {
         static_assert(std::is_base_of<Entity, T>::value, "T must derive from Entity");
 
-        Entity* entity = PlayerSelector::matchOneEntity(sender, name);
-        auto& server   = MinecraftServer::getServer();
+        Entity *entity = PlayerSelector::matchOneEntity(sender, name);
+        auto &server   = MinecraftServer::getServer();
 
         if (!entity)
             entity = server.getConfigurationManager().getPlayerByUsername(name);
@@ -378,13 +378,13 @@ public:
         return *typed;
     }
 
-    static std::vector<Entity*> getEntities(ICommandSender& sender, const std::string& name) {
+    static std::vector<Entity*> getEntities(ICommandSender& sender, const std::string &name) {
         if (PlayerSelector::hasArguments(name))
             return PlayerSelector::matchEntities(sender, name);
         return { &getEntity(sender, name) };
     }
 
-    static std::string getPlayerName(ICommandSender& sender, const std::string& query) {
+    static std::string getPlayerName(ICommandSender& sender, const std::string &query) {
         try {
             return getPlayer(sender, query).getName();
         } catch (const PlayerNotFoundException&) {
@@ -393,7 +393,7 @@ public:
         }
     }
 
-    static std::string getEntityName(ICommandSender& sender, const std::string& query) {
+    static std::string getEntityName(ICommandSender& sender, const std::string &query) {
         try {
             return getPlayer(sender, query).getName();
         } catch (const PlayerNotFoundException&) {
@@ -456,19 +456,19 @@ public:
     }
 
     /*
-    static Item& getItemByText(ICommandSender& sender, const std::string& id) {
+    static Item& getItemByText(ICommandSender& sender, const std::string &id) {
         ResourceLocation loc(id);
-        Item* item = Item::itemRegistry.getObject(loc);
+        Item *item = Item::itemRegistry.getObject(loc);
         if (!item)
             throw NumberInvalidException("commands.give.item.notFound", { id });
         return *item;
     }
 
-    static Block& getBlockByText(ICommandSender& sender, const std::string& id) {
+    static Block& getBlockByText(ICommandSender& sender, const std::string &id) {
         ResourceLocation loc(id);
         if (!Block::blockRegistry.containsKey(loc))
             throw NumberInvalidException("commands.give.block.notFound", { id });
-        Block* block = Block::blockRegistry.getObject(loc);
+        Block *block = Block::blockRegistry.getObject(loc);
         if (!block)
             throw NumberInvalidException("commands.give.block.notFound", { id });
         return *block;
@@ -503,7 +503,7 @@ public:
     }
     */
 
-    static bool doesStringStartWith(const std::string& original, const std::string& candidate) {
+    static bool doesStringStartWith(const std::string &original, const std::string &candidate) {
         return SavaUtil::StringUtil::StartsWith(original, candidate, true);
     }
 
@@ -511,7 +511,7 @@ public:
             const std::vector<std::string>& args,
             const std::vector<std::string>& possibilities
     ) {
-        const std::string& last = args.back();
+        const std::string &last = args.back();
         std::vector<std::string> result;
 
         for (const auto& s : possibilities) {
@@ -572,7 +572,7 @@ public:
     static void notifyOperators(
             ICommandSender& sender,
             const ICommand& command,
-            const std::string& msgFormat,
+            const std::string &msgFormat,
             const std::vector<std::string>& msgParams = {}
     ) {
         notifyOperators(sender, command, 0, msgFormat, msgParams);
@@ -582,7 +582,7 @@ public:
             const ICommandSender& sender,
             const ICommand& command,
             const int flags,
-            const std::string& msgFormat,
+            const std::string &msgFormat,
             const std::vector<std::string>& msgParams = {}
     ) {
         if (CommandBase::s_admin) {
@@ -590,7 +590,7 @@ public:
         }
     }
 
-    static void setAdminCommander(IAdminCommand* command) {
+    static void setAdminCommander(IAdminCommand *command) {
         CommandBase::s_admin = command;
     }
 

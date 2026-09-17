@@ -30,7 +30,7 @@ private:
 
 protected:
 
-    void setTextureOffset(const std::string& partName, int x, int y) {
+    void setTextureOffset(const std::string &partName, int x, int y) {
         this->modelTextureMap[partName] = TextureOffset(x, y);
     }
 
@@ -53,7 +53,7 @@ public:
 
     virtual void setLivingAnimations(EntityLivingBase& entitylivingbaseIn, float x, float y, float partialTicks) {}
 
-    ModelRenderer* getRandomModelBox(std::mt19937& rand) {
+    ModelRenderer *getRandomModelBox(std::mt19937& rand) {
         std::uniform_int_distribution<std::size_t> dist(0, this->boxList.size() - 1);
         return this->boxList[dist(rand)];
     }
@@ -73,7 +73,7 @@ public:
         this->isChild = model.isChild;
     }
 
-    TextureOffset getTextureOffset(const std::string& partName) const {
+    TextureOffset getTextureOffset(const std::string &partName) const {
         auto it = this->modelTextureMap.find(partName);
         return (it != this->modelTextureMap.end()) ? it->second : TextureOffset(0, 0);
     }

@@ -24,7 +24,7 @@ public:
     int height   = 0;
     int channels = 0;
 
-    BufferedImage(const std::vector<int>& packedPixels, int w, int h) {
+    BufferedImage(const std::vector<int> &packedPixels, int w, int h) {
         width    = w;
         height   = h;
         channels = 4;
@@ -44,7 +44,7 @@ public:
         getRGB(0, 0, width, height, pixels.data(), 0, width);
     }
 
-    void getRGB(int x, int y, int w, int h, int* dest, int offset, int scanSize) const {
+    void getRGB(int x, int y, int w, int h, int *dest, int offset, int scanSize) const {
         for (int row = 0; row < h; ++row) {
             for (int col = 0; col < w; ++col) {
                 const int sx  = x + col;

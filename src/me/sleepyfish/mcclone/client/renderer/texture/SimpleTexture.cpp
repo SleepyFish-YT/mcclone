@@ -22,7 +22,7 @@ void SimpleTexture::loadTexture(IResourceManager& resourceManager) {
     this->deleteGlTexture();
 
     try {
-        IResource* iResource = resourceManager.getResource(this->textureLocation);
+        IResource *iResource = resourceManager.getResource(this->textureLocation);
         auto inputStream = iResource->getInputStream();
 
         if (!inputStream || !*inputStream) {

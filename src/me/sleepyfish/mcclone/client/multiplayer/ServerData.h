@@ -35,19 +35,19 @@ public:
     bool        field_78841_f = false;
     std::string playerList;
 
-    ServerData(const std::string& name, const std::string& ip, bool isLan);
+    ServerData(const std::string &name, const std::string &ip, bool isLan);
 
     ServerResourceMode getResourceMode() const;
     void setResourceMode(ServerResourceMode mode);
 
     std::string getBase64EncodedIconData() const;
-    void        setBase64EncodedIconData(const std::string& icon);
+    void        setBase64EncodedIconData(const std::string &icon);
 
     bool isOnLAN() const;
     void copyFrom(const ServerData& other);
 
     // NBT
-    NBTTagCompound* getNBTCompound() const;
+    NBTTagCompound *getNBTCompound() const;
     static ServerData getServerDataFromNBTCompound(const NBTTagCompound& nbt);
 
 private:

@@ -7,7 +7,7 @@
 
 #include "../../nbt/NBTTagCompound.h"
 
-ServerData::ServerData(const std::string& name, const std::string& ip, bool isLan) :
+ServerData::ServerData(const std::string &name, const std::string &ip, bool isLan) :
     serverName(name),
     serverIP(ip),
     lanServer(isLan)
@@ -25,7 +25,7 @@ std::string ServerData::getBase64EncodedIconData() const {
     return this->serverIcon.value_or("");
 }
 
-void ServerData::setBase64EncodedIconData(const std::string& icon) {
+void ServerData::setBase64EncodedIconData(const std::string &icon) {
     this->serverIcon = icon;
 }
 
@@ -42,7 +42,7 @@ void ServerData::copyFrom(const ServerData& other) {
 }
 
 NBTTagCompound* ServerData::getNBTCompound() const {
-    NBTTagCompound* nbt = new NBTTagCompound();
+    NBTTagCompound *nbt = new NBTTagCompound();
     nbt->setString("name", this->serverName);
     nbt->setString("ip", this->serverIP);
 

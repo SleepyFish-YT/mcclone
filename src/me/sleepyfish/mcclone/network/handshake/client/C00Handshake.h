@@ -51,7 +51,7 @@ public:
     C00Handshake() = default;
 
     /*
-    C00Handshake(uint8_t protocolVersion, const std::string& ip, uint16_t port, EnumConnectionState requestedState) :
+    C00Handshake(uint8_t protocolVersion, const std::string &ip, uint16_t port, EnumConnectionState requestedState) :
         protocolVersion(protocolVersion),
         ip(ip),
         port(port),

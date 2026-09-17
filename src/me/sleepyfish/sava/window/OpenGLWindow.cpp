@@ -52,13 +52,13 @@ bool OpenGLWindow::init() {
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     ::glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); // for backwards compatibility
 
-    ::GLFWmonitor* monitor = nullptr;
+    ::GLFWmonitor *monitor = nullptr;
     int width  = this->displayInfo.width;
     int height = this->displayInfo.height;
 
     if (this->displayInfo.fullscreen) {
         monitor = ::glfwGetPrimaryMonitor();
-        const ::GLFWvidmode* mode = ::glfwGetVideoMode(monitor);
+        const ::GLFWvidmode *mode = ::glfwGetVideoMode(monitor);
 
         ::glfwWindowHint(GLFW_RED_BITS,     mode->redBits);
         ::glfwWindowHint(GLFW_GREEN_BITS,   mode->greenBits);
@@ -103,27 +103,27 @@ bool OpenGLWindow::init() {
 
         ::glfwSetWindowUserPointer(this->window, this);
 
-        ::glfwSetKeyCallback(this->window, [](::GLFWwindow* window, int key, int scancode, int action, int mods) {
+        ::glfwSetKeyCallback(this->window, [](::GLFWwindow *window, int key, int scancode, int action, int mods) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleKeypress(window, key, scancode, action, mods);
         });
-        ::glfwSetMouseButtonCallback(this->window, [](::GLFWwindow* window, int button, int action, int mods) {
+        ::glfwSetMouseButtonCallback(this->window, [](::GLFWwindow *window, int button, int action, int mods) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseButton(window, button, action, mods);
         });
-        ::glfwSetCursorPosCallback(this->window, [](::GLFWwindow* window, double x, double y) {
+        ::glfwSetCursorPosCallback(this->window, [](::GLFWwindow *window, double x, double y) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseMove(window, x, y);
         });
-        ::glfwSetScrollCallback(this->window, [](::GLFWwindow* window, double xOffset, double yOffset) {
+        ::glfwSetScrollCallback(this->window, [](::GLFWwindow *window, double xOffset, double yOffset) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleMouseScroll(window, xOffset, yOffset);
         });
-        ::glfwSetFramebufferSizeCallback(this->window, [](::GLFWwindow* window, int width, int height) {
+        ::glfwSetFramebufferSizeCallback(this->window, [](::GLFWwindow *window, int width, int height) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleFramebufferResize(window, width, height);
         });
-        ::glfwSetWindowFocusCallback(this->window, [](::GLFWwindow* window, int focused) {
+        ::glfwSetWindowFocusCallback(this->window, [](::GLFWwindow *window, int focused) {
             auto* self = static_cast<OpenGLWindow*>(::glfwGetWindowUserPointer(window));
             self->handleWindowFocus(window, focused);
         });
@@ -214,7 +214,7 @@ void OpenGLWindow::thread_run() {
     this->stop();
 }
 
-void OpenGLWindow::setTitle(const std::string& wndTitle) {
+void OpenGLWindow::setTitle(const std::string &wndTitle) {
     this->title = wndTitle;
     ::glfwSetWindowTitle(this->window, this->title.c_str());
 }
@@ -252,7 +252,7 @@ void OpenGLWindow::toggleFullscreen() {
         ::glfwGetWindowSize(this->window, &this->savedWindowWidth, &this->savedWindowHeight);
 
         // go fullscreen
-        const GLFWvidmode* mode = ::glfwGetVideoMode(::glfwGetPrimaryMonitor());
+        const GLFWvidmode *mode = ::glfwGetVideoMode(::glfwGetPrimaryMonitor());
         ::glfwSetWindowMonitor(
                 this->window,
                 ::glfwGetPrimaryMonitor(),
@@ -276,7 +276,7 @@ void OpenGLWindow::toggleCaptureMouse() {
     ::glfwSetInputMode(this->window, GLFW_CURSOR, this->mouseCaptured ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleKeypress(::GLFWwindow* window, int key, int scancode, int action, int mods) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleKeypress(::GLFWwindow *window, int key, int scancode, int action, int mods) {
     this->minecraft->handleKeypress(key, scancode, action, mods);
 
     if (action == GLFW_PRESS) {
@@ -290,30 +290,30 @@ MCCLONE_GLFW_CALLBACK OpenGLWindow::handleKeypress(::GLFWwindow* window, int key
     }
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseButton(::GLFWwindow* window, int button, int action, int mods) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseButton(::GLFWwindow *window, int button, int action, int mods) {
     this->minecraft->handleMouseButton(button, action, mods);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseMove(::GLFWwindow* window, double xpos, double ypos) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseMove(::GLFWwindow *window, double xpos, double ypos) {
     this->minecraft->handleMouseMove(xpos, ypos);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseScroll(::GLFWwindow* window, double xoffset, double yoffset) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleMouseScroll(::GLFWwindow *window, double xoffset, double yoffset) {
     this->minecraft->handleMouseScroll(xoffset, yoffset);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleFramebufferResize(::GLFWwindow* window, int width, int height) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleFramebufferResize(::GLFWwindow *window, int width, int height) {
     this->minecraft->resizeWindow(width, height);
 }
 
-MCCLONE_GLFW_CALLBACK OpenGLWindow::handleWindowFocus(::GLFWwindow* window, int focused) {
+MCCLONE_GLFW_CALLBACK OpenGLWindow::handleWindowFocus(::GLFWwindow *window, int focused) {
     this->focused = (focused == GLFW_TRUE);
 }
 
-::GLFWwindow* OpenGLWindow::getWindow() noexcept {
+::GLFWwindow *OpenGLWindow::getWindow() noexcept {
     return this->window;
 }
 
-RenderInformation* OpenGLWindow::getRenderContext() noexcept {
+RenderInformation *OpenGLWindow::getRenderContext() noexcept {
     return this->renderContext;
 }

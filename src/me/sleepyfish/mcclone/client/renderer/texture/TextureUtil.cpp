@@ -259,10 +259,10 @@ void TextureUtil::copyToBufferPos_(const int* pixels, int offset, int count) {
 // Image loading (stb_image replaces ImageIO)
 // -------------------------------------------------------------------------
 
-std::vector<int> TextureUtil::readImageData_(const std::string& path, int& widthOut, int& heightOut) {
+std::vector<int> TextureUtil::readImageData_(const std::string &path, int& widthOut, int& heightOut) {
     int channels;
     // force RGBA
-    uint8_t* data = stbi_load(path.c_str(), &widthOut, &heightOut, &channels, 4);
+    uint8_t *data = stbi_load(path.c_str(), &widthOut, &heightOut, &channels, 4);
     if (!data)
         throw std::runtime_error("Failed to load image: " + path);
 
@@ -285,7 +285,7 @@ std::vector<int> TextureUtil::readImageData_(const std::string& path, int& width
 std::vector<int> TextureUtil::readImageData_(std::istream& stream, int& widthOut, int& heightOut) {
     // stb_image stream callbacks
     stbi_io_callbacks callbacks;
-    callbacks.read = [](void* user, char* data, int size) -> int {
+    callbacks.read = [](void* user, char *data, int size) -> int {
         auto& s = *static_cast<std::istream*>(user);
         s.read(data, size);
         return static_cast<int>(s.gcount());
@@ -298,7 +298,7 @@ std::vector<int> TextureUtil::readImageData_(std::istream& stream, int& widthOut
     };
 
     int channels;
-    uint8_t* data = stbi_load_from_callbacks(&callbacks, &stream, &widthOut, &heightOut, &channels, 4);
+    uint8_t *data = stbi_load_from_callbacks(&callbacks, &stream, &widthOut, &heightOut, &channels, 4);
     if (!data)
         throw std::runtime_error("Failed to load image from stream");
 

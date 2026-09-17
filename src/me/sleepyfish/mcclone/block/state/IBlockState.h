@@ -33,15 +33,15 @@ public:
     // <T extends Comparable<T>> T getValue(IProperty<T> property)
     // since c++ can not express this generically in a virtual method,
     // we use a type erased approach via void* - cast at call site
-    virtual const void* getValue(const IPropertyBase* property) const = 0;
+    virtual const void *getValue(const IPropertyBase* property) const = 0;
 
     virtual IBlockState* withProperty(const IPropertyBase* property, const void* value) = 0;
 
-    virtual IBlockState* cycleProperty(const IPropertyBase* property) = 0;
+    virtual IBlockState *cycleProperty(const IPropertyBase* property) = 0;
 
     virtual std::unordered_map<const IPropertyBase*, const void*> getProperties() const = 0;
 
-    // virtual Block* getBlock() const = 0;
+    // virtual Block *getBlock() const = 0;
 
 };
 

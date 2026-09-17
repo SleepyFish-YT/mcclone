@@ -25,11 +25,11 @@ SimpleReloadableResourceManager::~SimpleReloadableResourceManager() {
 }
 
 void SimpleReloadableResourceManager::reloadResourcePack(IResourcePack* resourcePack) {
-    for (const std::string& domain : resourcePack->getResourceDomains()) {
+    for (const std::string &domain : resourcePack->getResourceDomains()) {
         this->setResourceDomains.insert(domain);
 
         auto it = this->domainResourceManagers.find(domain);
-        FallbackResourceManager* fallbackManager = nullptr;
+        FallbackResourceManager *fallbackManager = nullptr;
 
         if (it == this->domainResourceManagers.end()) {
             fallbackManager = new FallbackResourceManager(this->rmMetadataSerializer);
@@ -95,7 +95,7 @@ void SimpleReloadableResourceManager::registerReloadListener(IResourceManagerRel
 }
 
 void SimpleReloadableResourceManager::notifyReloadListeners() {
-    for (IResourceManagerReloadListener* listener : this->reloadListeners) {
+    for (IResourceManagerReloadListener *listener : this->reloadListeners) {
         listener->onResourceManagerReload(*this);
     }
 }
