@@ -5,6 +5,8 @@
 
 #include "HttpUtil.h"
 
+#include "IProgressUpdate.h"
+
 #include <fstream>
 #include <sstream>
 #include <iomanip>
