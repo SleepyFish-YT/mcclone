@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
-          C:/vcpkg/vcpkg install glfw3 glad glm openal-soft stb nlohmann-json --triplet x64-windows
+          C:/vcpkg/vcpkg install glfw3 glad glm openal-soft stb nlohmann-json miniz curl openssl --triplet x64-windows
 
       - name: Configure CMake
         shell: pwsh
