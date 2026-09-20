@@ -24,19 +24,6 @@ class HttpUtil {
 
 public:
 
-    class IProgressUpdate {
-
-    public:
-
-        virtual ~IProgressUpdate() = default;
-
-        virtual void resetProgressAndMessage(const std::string &message) = 0;
-        virtual void displayLoadingString(const std::string &message) = 0;
-        virtual void setLoadingProgress(int progress) = 0;
-        virtual void setDoneWorking() = 0;
-
-    };
-
     static std::atomic<int> downloadThreadsStarted;
 
     static std::string buildPostString(const std::map<std::string, std::string> &data);
