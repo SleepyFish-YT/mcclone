@@ -202,13 +202,14 @@ std::future<void> HttpUtil::downloadResourcePack(
 
         std::atomic<bool> cancelled{false};
 
-        DownloadContext ctx;
-        ctx.file           = &outFile;
-        ctx.maxSize        = maxSize;
-        ctx.downloaded     = 0;
-        ctx.contentLength  = 0.0f;
-        ctx.progressUpdate = progressUpdate;
-        ctx.cancelled      = &cancelled;
+        DownloadContext ctx{
+                .file           = &outFile,
+                .maxSize        = maxSize,
+                .downloaded     = 0,
+                .contentLength  = 0.0f,
+                .progressUpdate = progressUpdate,
+                .cancelled      = &cancelled,
+        };
 
         ::CURL *curl = ::curl_easy_init();
         if (!curl) {
@@ -238,7 +239,9 @@ std::future<void> HttpUtil::downloadResourcePack(
         ::curl_easy_setopt(curl, CURLOPT_XFERINFODATA,     &ctx);
         ::curl_easy_setopt(curl, CURLOPT_NOPROGRESS,       0L);
         ::curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,   1L);
-        ::curl_easy_setopt(curl, CURLOPT_USERAGENT,        "mcclone/1.0");
+#ifdef MCCLONE_USER_AGENT
+        ::curl_easy_setopt(curl, CURLOPT_USERAGENT,        std::string(MCCLONE_USER_AGENT).c_str());
+#endif //MCCLONE_USER_AGENT
         ::curl_easy_setopt(curl, CURLOPT_HTTPHEADER,       headerList);
 
         // get content length for progress display - mirrors httpurlconnection.getContentLength()

@@ -506,6 +506,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
         MCCLONE_VERSION_PATCH=${PROJECT_VERSION_PATCH}
         MCCLONE_VERSION="${PROJECT_VERSION}"
         MCCLONE_AUTHOR="${PROJECT_AUTHOR}"
+        MCCLONE_USER_AGENT="Java/1.8.0_292"
 )
 # ======================== add inlined definitions ========================
 

@@ -13,6 +13,9 @@
 
 #ifdef _WIN32
 #include <consoleapi3.h>
+#elif __linux__
+#include <unistd.h>
+#include <cstdio>
 #endif //_WIN32
 
 #include <filesystem>
@@ -47,6 +50,8 @@ int main(int arg_count, char *arg_vals[]) {
     // pass console window handle to main instance
 #ifdef _WIN32
     main_instance->setConsoleWindow(::GetConsoleWindow());
+#elif __linux__ || __APPLE__
+    main_instance->setConsoleWindow(STDIN_FILENO); // or STDOUT_FILENO
 #endif //_WIN32
 
     const int exit_code = main_instance->main(arg_count, arg_vals, executable_path);

@@ -16,6 +16,8 @@
 
 #include <curl/curl.h>
 
+class IProgressUpdate;
+
 /**
  * @author SleepyFish
  * @brief HTTP utility

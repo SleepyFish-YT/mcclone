@@ -26,9 +26,7 @@ class GameConfiguration;
 class Main {
 
 private:
-#ifdef _WIN32
-    ::HWND consoleWindow;
-#endif //_WIN32
+
     ::glm::ivec2 screenSize;
 
     std::string majorVersion;
@@ -44,6 +42,8 @@ private:
 public:
 
     Main();
+
+    ~Main();
 
     static inline const std::string AUTHOR = MCCLONE_AUTHOR;
 
@@ -61,15 +61,22 @@ public:
     int main(int arg_count, char *arg_vals[], const std::filesystem::path &exec_path);
 
     std::string getVersion() const;
-#ifdef _WIN32
-    void setConsoleWindow(::HWND wnd) noexcept {
-        this->consoleWindow = wnd;
-    }
 
-    ::HWND getConsoleWindow() const noexcept {
-        return this->consoleWindow;
-    }
+#ifdef _WIN32
+    using NativeWindow = HWND;
+#elif __linux__ || __APPLE__
+    using NativeWindow = int; // file descriptor
 #endif //_WIN32
+
+private:
+
+    NativeWindow consoleWindow;
+
+public:
+
+    void setConsoleWindow(NativeWindow wnd) noexcept { consoleWindow = wnd; }
+    NativeWindow getConsoleWindow() const noexcept { return consoleWindow; }
+
 };
 
 

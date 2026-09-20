@@ -16,7 +16,7 @@
 #include <windows.h>
 #include <dbghelp.h>
 #pragma comment(lib, "dbghelp.lib")
-#elif defined(__linux__) || defined(__APPLE__)
+#elif __linux__ || __APPLE__
 #include <execinfo.h>
 #include <cxxabi.h>
 #endif //_WIN32
@@ -146,7 +146,7 @@ int CrashReportCategory::getPrunedStackTrace(int size) {
 
         this->stackTrace.push_back(element);
     }
-#elif defined(__linux__) || defined(__APPLE__)
+#elif __linux__ || __APPLE__
     const int MAX_FRAMES = 64;
     void *frames[MAX_FRAMES];
 

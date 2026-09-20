@@ -17,7 +17,12 @@
 Main::Main() {
     // misc
     this->arguments = {};
+
+#if _WIN32
     this->consoleWindow = nullptr;
+#elif __linux__ || __APPLE__
+    this->consoleWindow = ::stdout;
+#endif //_WIN32
 
     // settings
     this->gameConfiguration = new GameConfiguration();
@@ -118,7 +123,7 @@ int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gam
             }
         }
 
-        if (!args_isDebug) {
+        if (!args_isDebug && this->consoleWindow) {
 #ifdef _WIN32
             ::ShowWindow(this->consoleWindow, SW_HIDE);
 #endif //_WIN32
@@ -199,6 +204,8 @@ int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gam
 
     return MCCLONE_ERR_NONE;
 }
+
+Main::~Main() = default;
 
 std::string Main::getVersion() const {
     return this->majorVersion + "." + this->minorVersion + "." + this->patchVersion;

@@ -49,10 +49,6 @@ OpenGLWindow::~OpenGLWindow() {
 }
 
 bool OpenGLWindow::init() {
-    if (!::glfwInit()) {
-        Logger::error("Failed to initialize GLFW (glfwInit)");
-        return false;
-    }
 
     // set glfw hints - version and opengl profile
     ::glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -275,11 +271,17 @@ void OpenGLWindow::toggleFullscreen() {
         ::glfwGetWindowPos(this->window, &this->savedWindowPosX, &this->savedWindowPosY);
         ::glfwGetWindowSize(this->window, &this->savedWindowWidth, &this->savedWindowHeight);
 
+        auto *glfwMonitor = ::glfwGetPrimaryMonitor();
+        if (glfwMonitor == nullptr) {
+            Logger::error("Primary monitor not found");
+            return;
+        }
+
         // go fullscreen
-        const GLFWvidmode *mode = ::glfwGetVideoMode(::glfwGetPrimaryMonitor());
+        const GLFWvidmode *mode = ::glfwGetVideoMode(glfwMonitor);
         ::glfwSetWindowMonitor(
                 this->window,
-                ::glfwGetPrimaryMonitor(),
+                glfwMonitor,
                 0, 0,  // position does not matter in fullscreen
                 mode->width,
                 mode->height,
