@@ -40,11 +40,15 @@ Main::Main() {
 int Main::main(int arg_count, char *arg_vals[], const std::filesystem::path &gameDir_dir) {
     this->arguments = std::vector<std::string>(arg_vals, arg_vals + arg_count);
 
-#ifdef _WIN32
-    this->screenSize = { ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
-#else
-    this->screenSize = { 1920, 1080 };
-#endif //_WIN32
+    if (!::glfwInit()) {
+        Logger::error("Failed to initialize GLFW (glfwInit)");
+        return MCCLONE_ERR_RESOLUTION;
+    }
+
+    if (::GLFWmonitor *m = ::glfwGetPrimaryMonitor()) {
+        if (const ::GLFWvidmode *vm = ::glfwGetVideoMode(m))
+            this->screenSize = { vm->width, vm->height };
+    }
 
     if (this->screenSize.x <= 0 || this->screenSize.y <= 0) {
         Logger::error("Failed to retrieve screen resolution");
