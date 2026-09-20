@@ -33,7 +33,7 @@ public:
     std::unique_ptr<std::istream> getInputStream(const ResourceLocation &location) override;
     bool resourceExists(const ResourceLocation &location) override;
     std::any getPackMetadata(IMetadataSerializer &metadataSerializer, const std::string &metadataSectionName) override;
-    BufferedImage &getPackImage() override;
+    BufferedImage getPackImage() override;
     std::string getPackName() const override;
 
     static std::any readMetadata(IMetadataSerializer &metadataSerializer, std::istream &stream, const std::string &sectionName);

@@ -5,6 +5,7 @@
 
 #include "Minecraft.h"
 #include "../../sava/FutureTaskQueue.h"
+#include "../../sava/BufferedImage.h"
 
 #include "main/GameConfiguration.h"
 #include "settings/GameSettings.h"
@@ -36,6 +37,8 @@
 #include "../util/MovingObjectPosition.h"
 #include "../util/McCloneError.h"
 #include "../crash/CrashReport.h"
+#include "../client/resources/AbstractResourcePack.h"
+#include "renderer/texture/DynamicTexture.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -59,12 +62,12 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->fileResourcepacks = gameConfig->folderInformation.resourcePacksDir;
 
     {
-        auto resIndex = ResourceIndex(
+        ResourceIndex resIndex(
                 gameConfig->folderInformation.assetsDir,
                 gameConfig->folderInformation.assetIndexFile.stem().string()
         );
 
-        this->mcDefaultResourcePack = std::make_unique<DefaultResourcePack>(resIndex.getResourceMap());
+        this->mcDefaultResourcePack = std::make_unique<DefaultResourcePack>(gameConfig->folderInformation.assetsDir / "resources", resIndex.getResourceMap());
     }
 
     this->launchedVersion = gameConfig->gameInformation.version;
@@ -366,23 +369,25 @@ void Minecraft::renderGameLoop(bool hasFocus) {
             if (!this->skipRenderWorld) {
                 this->mcProfiler->startSection("gameRenderer");
                 {
-                    ScaledResolution scaledRes(*this);
-                    double k = scaledRes.getScaledWidth_double();
-                    double l = scaledRes.getScaledHeight_double();
-                    double f = 32.0;
-                    double x = 40.0;
-                    double y = 40.0;
+                    constexpr double x0 = 64.0,  y0 = 64.0;
+                    constexpr double x1 = 128.0, y1 = 128.0;
+
+                    static BufferedImage img = this->mcDefaultResourcePack->getPackImage();
+                    static DynamicTexture texture = DynamicTexture(img);
 
                     static Tessellator &tess = Tessellator::getInstance();
                     WorldRenderer &renderer = tess.getWorldRenderer();
-                    {
-                        renderer.begin(7, DefaultVertexFormats::POSITION_TEX_COLOR);
-                        renderer.pos(x, l, 0).tex(x / f, l / f).color(160, 250, 160, 255).endVertex();
-                        renderer.pos(k, l, 0).tex(k / f, l / f).color(160, 250, 160, 255).endVertex();
-                        renderer.pos(k, y, 0).tex(k / f, y / f).color(160, 250, 160, 255).endVertex();
-                        renderer.pos(x, y, 0).tex(x / f, y / f).color(160, 250, 160, 255).endVertex();
-                    }
+
+                    GlStateManager::bindTexture_(texture.getGlTextureId());
+
+                    renderer.begin(7, DefaultVertexFormats::POSITION_TEX);
+                    renderer.pos(x0, y1, 0).tex(0, 1).endVertex();
+                    renderer.pos(x1, y1, 0).tex(1, 1).endVertex();
+                    renderer.pos(x1, y0, 0).tex(1, 0).endVertex();
+                    renderer.pos(x0, y0, 0).tex(0, 0).endVertex();
                     tess.draw();
+
+                    GlStateManager::bindTexture_(0);
                 }
                 this->mcProfiler->endSection();
             }
@@ -921,4 +926,15 @@ void Minecraft::registerMetadataSerializers() {
     // this->metadataSerializer_->registerMetadataSectionType(new AnimationMetadataSectionSerializer(), AnimationMetadataSection.class);
     // this->metadataSerializer_->registerMetadataSectionType(new PackMetadataSectionSerializer(), PackMetadataSection.class);
     // this->metadataSerializer_->registerMetadataSectionType(new LanguageMetadataSectionSerializer(), LanguageMetadataSection.class);
+}
+
+std::vector<BufferedImage> Minecraft::getIcons() const {
+    const BufferedImage base = this->mcDefaultResourcePack->getPackImage();
+
+    std::vector<BufferedImage> icons;
+    icons.reserve(3);
+    for (const int s : { 64, 32, 16 })
+        icons.push_back(base.sized(s, s));
+
+    return icons;
 }

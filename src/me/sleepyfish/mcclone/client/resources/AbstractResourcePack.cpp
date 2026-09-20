@@ -5,9 +5,11 @@
 
 #include "AbstractResourcePack.h"
 
-#include "data/IMetadataSerializer.h"
 #include "../../debug/Logger.h"
+#include "../renderer/texture/TextureUtil.h"
 #include "../../util/ResourceLocation.h"
+#include "../../../sava/BufferedImage.h"
+#include "data/IMetadataSerializer.h"
 
 #include <stdexcept>
 
@@ -42,8 +44,15 @@ std::any AbstractResourcePack::readMetadata(IMetadataSerializer &metadataSeriali
     }
 }
 
-BufferedImage &AbstractResourcePack::getPackImage() {
-    throw std::runtime_error("getPackImage not implemented");
+BufferedImage AbstractResourcePack::getPackImage() {
+    auto stream = this->getInputStreamByName("pack.png");
+    if (!stream)
+        throw std::ios_base::failure("Could not find pack.png in " + this->resourcePackFile.string());
+
+    int width = 0, height = 0;
+    auto imageData = TextureUtil::readImageData_(*stream, width, height);
+
+    return {imageData, width, height};
 }
 
 std::string AbstractResourcePack::getPackName() const {

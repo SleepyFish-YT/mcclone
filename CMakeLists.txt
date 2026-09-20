@@ -533,6 +533,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 # ======================== include the header only libraries ========================
 
+# ======================== enable language and set sources ========================
+if(WIN32)
+    enable_language(RC)
+    target_sources(${PROJECT_NAME} PRIVATE resources/mcclone.rc)
+endif()
+# ======================== enable language and set sources ========================
+
 # ======================== other information ========================
 # IntelliJ IDEA Project: src (C:/Users/Luca/Desktop/-/-/java/mcp1.8.9op/src)
 #

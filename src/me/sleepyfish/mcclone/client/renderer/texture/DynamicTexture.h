@@ -8,6 +8,7 @@
 
 #include "AbstractTexture.h"
 #include "TextureUtil.h"
+
 #include <vector>
 
 class BufferedImage;

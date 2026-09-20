@@ -17,10 +17,12 @@
  * @brief Throwable interface
  */
 struct Throwable {
+
     std::string message{};
     std::string type{};
     Throwable *cause{};
     std::vector<StackTraceElement> stacktrace{};
+
 };
 
 

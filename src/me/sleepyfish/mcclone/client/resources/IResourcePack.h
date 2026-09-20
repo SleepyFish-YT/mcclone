@@ -36,7 +36,7 @@ public:
     virtual std::any getPackMetadata(IMetadataSerializer &metadataSerializer, const std::string &metadataSectionName) = 0;
 
     // throws std::ios_base::failure
-    virtual BufferedImage &getPackImage() = 0;
+    virtual BufferedImage getPackImage() = 0;
 
     virtual std::string getPackName() const = 0;
 

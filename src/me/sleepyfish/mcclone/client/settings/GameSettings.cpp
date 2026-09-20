@@ -251,7 +251,7 @@ void GameSettings::loadSettings() {
     this->forceUnicodeFont     = this->settingsJson.value("forceUnicodeFont", false);
     this->snooperEnabled       = this->settingsJson.value("snooperEnabled", false);
     this->mipmapLevels         = this->settingsJson.value("mipmapLevels", 4);
-    this->useNativeTransport   = this->settingsJson.value("mipmapLevels", true);
+    this->useNativeTransport   = this->settingsJson.value("useNativeTransport", true);
 
     if (this->settingsJson.contains("resourcePacks") && this->settingsJson["resourcePacks"].is_array()) {
         for (auto &pack: this->settingsJson["resourcePacks"]) {

@@ -36,6 +36,7 @@ class SoundEngine;
 class IResourcePack;
 class DefaultResourcePack;
 class ResourcePackRepository;
+class BufferedImage;
 
 /**
  * @author SleepyFish
@@ -235,6 +236,8 @@ public:
     TextureManager *getTextureManager() noexcept;
 
     void runTick(); // throws IOException
+
+    std::vector<BufferedImage> getIcons() const;
 
 };
 
