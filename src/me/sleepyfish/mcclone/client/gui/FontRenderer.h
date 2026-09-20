@@ -7,6 +7,7 @@
 #define MCCLONE_FONTRENDERER_H
 
 #include "../resources/IResourceManagerReloadListener.h"
+#include "../../util/ResourceLocation.h"
 
 #include <string>
 #include <vector>
@@ -15,7 +16,6 @@
 #include <cstdint>
 
 class GameSettings;
-class ResourceLocation;
 class TextureManager;
 class IResourceManager;
 class BufferedImage;
@@ -45,8 +45,10 @@ private:
 
     std::array<uint8_t, 65536> glyphWidth{};
     std::array<int, 32> colorCode{};
-    ResourceLocation *locationFontTexture{};
+    ResourceLocation locationFontTexture;
     TextureManager* renderEngine{};
+    int fontTextureWidth = 128;
+    int fontTextureHeight = 128;
 
     float posX{};
     float posY{};
@@ -67,9 +69,9 @@ private:
 
 public:
 
-    FontRenderer(GameSettings *gameSettingsIn, ResourceLocation *location, TextureManager* textureManagerIn, bool unicode);
+    FontRenderer(GameSettings *gameSettingsIn, const ResourceLocation& location, TextureManager* textureManagerIn, bool unicode);
 
-    void onResourceManagerReload(IResourceManager* resourceManager);
+    void onResourceManagerReload(IResourceManager &resourceManager) override;
 
 private:
 

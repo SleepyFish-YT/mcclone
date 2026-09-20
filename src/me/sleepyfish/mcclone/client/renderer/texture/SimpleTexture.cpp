@@ -18,7 +18,7 @@
 #include <iostream>
 #endif //MCCLONE_DEBUG
 
-void SimpleTexture::loadTexture(IResourceManager& resourceManager) {
+void SimpleTexture::loadTexture(IResourceManager &resourceManager) {
     this->deleteGlTexture();
 
     try {
@@ -26,34 +26,39 @@ void SimpleTexture::loadTexture(IResourceManager& resourceManager) {
         auto inputStream = iResource->getInputStream();
 
         if (!inputStream || !*inputStream) {
-            Logger::warn("Failed reading texture: {} (Input stream is null)", this->textureLocation.toString());
+            Logger::warn("Failed reading texture: {} (Input stream is null)",
+                         this->textureLocation.toString());
             return;
         }
 
-        int width, height;
+        int width = 0, height = 0;
         auto pixels = TextureUtil::readImageData_(*inputStream, width, height);
-        bool flag = false;
+        bool flag  = false;
         bool flag1 = false;
 
         if (iResource->hasMetadata()) {
             try {
                 std::any metaDataSection = iResource->getMetadata("texture");
                 if (metaDataSection.has_value()) {
-                    auto* textureMetaDataSection = std::any_cast<TextureMetadataSection>(&metaDataSection);
-
-                    if (textureMetaDataSection) {
-                        flag = textureMetaDataSection->getTextureBlur();
-                        flag1 = textureMetaDataSection->getTextureClamp();
+                    auto* tex = std::any_cast<TextureMetadataSection>(&metaDataSection);
+                    if (tex) {
+                        flag  = tex->getTextureBlur();
+                        flag1 = tex->getTextureClamp();
                     }
                 }
-
             } catch (std::exception &e) {
-                Logger::warn("Failed reading metadata of: {} ({})", this->textureLocation.toString(), e.what());
+                Logger::warn("Failed reading metadata of: {} ({})",
+                             this->textureLocation.toString(), e.what());
             }
         }
 
-        TextureUtil::uploadTextureImageAllocate_(this->glTextureId, pixels.data(), width, height, flag, flag1);
+        // *** FIX: regenerate the GL name via the getter, do NOT reuse the field ***
+        TextureUtil::uploadTextureImageAllocate_(
+                this->getGlTextureId(),
+                pixels.data(), width, height, flag, flag1
+        );
     } catch (std::ios_base::failure &e) {
-        Logger::warn("Failed reading texture: {} ({})", this->textureLocation.toString(), e.what());
+        Logger::warn("Failed reading texture: {} ({})",
+                     this->textureLocation.toString(), e.what());
     }
 }

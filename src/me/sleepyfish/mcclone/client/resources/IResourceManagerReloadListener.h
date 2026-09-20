@@ -18,7 +18,7 @@ public:
 
     virtual ~IResourceManagerReloadListener() = default;
 
-    virtual void onResourceManagerReload(IResourceManager& resourceManager) = 0;
+    virtual void onResourceManagerReload(IResourceManager &resourceManager) = 0;
 
 };
 

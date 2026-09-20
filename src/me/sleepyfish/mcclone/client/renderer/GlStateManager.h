@@ -303,6 +303,7 @@ public:
     static void rotate_(float angle, float x, float y, float z);
     static void scale_(float x, float y, float z);
     static void scale_(double x, double y, double z);
+    static void scale_(int x, int y, int z);
     static void translate_(float x, float y, float z);
     static void translate_(double x, double y, double z);
     static void multMatrix_(const float *matrix);

@@ -138,6 +138,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_DIR}/client/gui/ScaledResolution.h
         ${SRC_DIR}/client/gui/IProgressMeter.h
         ${SRC_DIR}/client/gui/GuiYesNoCallback.h
+        ${SRC_DIR}/client/gui/FontRenderer.cpp
+        ${SRC_DIR}/client/gui/FontRenderer.h
 
         # client/settings
         ${SRC_DIR}/client/settings/KeyBinding.cpp

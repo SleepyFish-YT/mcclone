@@ -27,7 +27,9 @@ void ResourcePackRepository::Entry::updateResourcePack() {
     }
 
     std::any metadata = this->reResourcePack->getPackMetadata(*this->metadataSerializer_, "pack");
-    this->rePackMetadataSection = std::any_cast<PackMetadataSection *>(metadata);
+    if (metadata.has_value()) {
+        this->rePackMetadataSection = std::make_shared<PackMetadataSection>(std::any_cast<PackMetadataSection>(metadata));
+    }
 
     this->closeResourcePack();
 }
@@ -92,6 +94,24 @@ ResourcePackRepository::ResourcePackRepository(
 
     const auto &selectedPacks      = settings->resourcePacks;
     const auto &incompatiblePacks  = settings->incompatibleResourcePacks;
+
+    // Always include "default" pack if it exists in resourcepacks folder
+    bool hasDefaultPack = false;
+    for (const auto &entry : this->repositoryEntriesAll) {
+        if (entry.getResourcePackName() == "default") {
+            hasDefaultPack = true;
+            break;
+        }
+    }
+    if (hasDefaultPack) {
+        // Add default pack at the beginning (highest priority)
+        for (const auto &entry : this->repositoryEntriesAll) {
+            if (entry.getResourcePackName() == "default") {
+                this->repositoryEntries.insert(this->repositoryEntries.begin(), entry);
+                break;
+            }
+        }
+    }
 
     for (const auto &packName : selectedPacks) {
         for (const auto &entry : this->repositoryEntriesAll) {

@@ -25,8 +25,8 @@ protected:
 
 public:
 
-    explicit SimpleTexture(ResourceLocation  textureLocation) :
-        textureLocation(std::move(textureLocation))
+    explicit SimpleTexture(const ResourceLocation& textureLocation) :
+        textureLocation(textureLocation)
     {}
 
     virtual ~SimpleTexture() = default;

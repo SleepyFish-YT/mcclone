@@ -25,13 +25,20 @@
 
 #include <glad/glad.h>
 
-const std::wstring FontRenderer::CHAR_MAP = L"\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000";
+namespace {
+    constexpr wchar_t kCharMapData[] = L"\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000";
+    constexpr size_t kCharMapLen = std::size(kCharMapData) - 1;
+    static_assert(kCharMapLen == 256, "CHAR_MAP truncated by embedded NUL");
+}
 
-FontRenderer::FontRenderer(GameSettings *gameSettingsIn, ResourceLocation *location, TextureManager* textureManagerIn, bool unicode) {
-    this->locationFontTexture = location;
+const std::wstring FontRenderer::CHAR_MAP(kCharMapData, kCharMapLen);
+
+FontRenderer::FontRenderer(GameSettings *gameSettingsIn, const ResourceLocation& location, TextureManager* textureManagerIn, bool unicode) :
+    locationFontTexture(location)
+{
     this->renderEngine = textureManagerIn;
     this->unicodeFlag = unicode;
-    textureManagerIn->bindTexture(*this->locationFontTexture);
+    textureManagerIn->bindTexture(this->locationFontTexture);
 
     for (int i = 0; i < 32; ++i) {
         int j = (i >> 3 & 1) * 85;
@@ -61,10 +68,11 @@ FontRenderer::FontRenderer(GameSettings *gameSettingsIn, ResourceLocation *locat
         this->colorCode[i] = (k & 255) << 16 | (l & 255) << 8 | i1 & 255;
     }
 
+    this->readFontTexture();
     this->readGlyphSizes();
 }
 
-void FontRenderer::onResourceManagerReload(IResourceManager* resourceManager) {
+void FontRenderer::onResourceManagerReload(IResourceManager &resourceManager) {
     this->readFontTexture();
 }
 
@@ -73,23 +81,30 @@ void FontRenderer::readFontTexture() {
         int width = 0;
         int height = 0;
 
-        auto stream = Minecraft::getMinecraft()
+        auto res = Minecraft::getMinecraft()
                 ->getResourceManager()
-                ->getResource(*locationFontTexture)
-                ->getInputStream();
+                ->getResource(locationFontTexture);
 
-        // directly read the packed ARGB pixel data
+        if (res == nullptr) {
+            throw std::runtime_error("Can't find font texture: " + this->locationFontTexture.getResourcePath());
+        }
+
+        auto stream = res->getInputStream();
         std::vector<int> pixelData = TextureUtil::readImageData_(*stream, width, height);
 
-        // use the vector's data directly, no need to copy to a new int *array
         const int *aint = pixelData.data();
         const int i = width;
         const int j = height;
+        this->fontTextureWidth = width;
+        this->fontTextureHeight = height;
 
         const int k = j / 16;
         const int l = i / 16;
         const int i1 = 1;
-        const float f = 8.0F / static_cast<float>(l);
+
+        // FIX: Force scale factor to 1.0. The original 1.8.9 code used `8.0F / l`,
+        // which breaks 256x256 textures by halving the width but not the height.
+        const float f = 1.0f;
 
         for (int j1 = 0; j1 < 256; ++j1) {
             const int k1 = j1 % 16;
@@ -100,23 +115,18 @@ void FontRenderer::readFontTexture() {
             }
 
             int i2;
-
             for (i2 = l - 1; i2 >= 0; --i2) {
                 const int j2 = k1 * l + i2;
                 bool flag = true;
 
                 for (int k2 = 0; k2 < k && flag; ++k2) {
                     const int l2 = (l1 * l + k2) * i;
-
                     if ((aint[j2 + l2] >> 24 & 255) != 0) {
                         flag = false;
                         break;
                     }
                 }
-
-                if (!flag) {
-                    break;
-                }
+                if (!flag) break;
             }
 
             ++i2;
@@ -129,12 +139,17 @@ void FontRenderer::readFontTexture() {
 
 void FontRenderer::readGlyphSizes() {
     try {
-        ResourceLocation loc("font/glyph_sizes.bin");
+        ResourceLocation loc("textures/font/glyph_sizes.bin");
 
-        auto stream = Minecraft::getMinecraft()
+        auto res = Minecraft::getMinecraft()
                 ->getResourceManager()
-                ->getResource(loc)
-                ->getInputStream();
+                ->getResource(loc);
+
+        if (res == nullptr) {
+            return;
+        }
+
+        auto stream = res->getInputStream();
 
         stream->read(reinterpret_cast<char*>(this->glyphWidth.data()), 65536);
     } catch (const std::exception& e) {
@@ -152,21 +167,29 @@ float FontRenderer::renderChar(wchar_t ch, bool italic) {
 }
 
 float FontRenderer::renderDefaultChar(int ch, bool italic) {
+    // Multiply by 16 because default.png cells are 16x16
     int i = ch % 16 * 8;
     int j = ch / 16 * 8;
     int k = italic ? 1 : 0;
-    this->renderEngine->bindTexture(*this->locationFontTexture);
+    this->renderEngine->bindTexture(this->locationFontTexture);
     int l = this->charWidth[ch];
     float f = (float) l - 0.01f;
 
+    float texU = 1.0f / static_cast<float>(this->fontTextureWidth);
+    float texV = 1.0f / static_cast<float>(this->fontTextureHeight);
+
     ::glBegin(GL_TRIANGLE_STRIP);
-    ::glTexCoord2f((float) i / 128.0f, (float) j / 128.0f);
+    ::glTexCoord2f((float) i * texU, (float) j * texV);
     ::glVertex3f(this->posX + (float) k, this->posY, 0.0f);
-    ::glTexCoord2f((float) i / 128.0f, ((float) j + 7.99f) / 128.0f);
+
+    // Hardcoded 7.99f keeps the height at exactly 8 pixels on screen
+    ::glTexCoord2f((float) i * texU, ((float) j + 7.99f) * texV);
     ::glVertex3f(this->posX - (float) k, this->posY + 7.99f, 0.0f);
-    ::glTexCoord2f(((float) i + f - 1.0f) / 128.0f, (float) j / 128.0f);
+
+    ::glTexCoord2f(((float) i + f) * texU, (float) j * texV);
     ::glVertex3f(this->posX + f - 1.0f + (float) k, this->posY, 0.0f);
-    ::glTexCoord2f(((float) i + f - 1.0f) / 128.0f, ((float) j + 7.99f) / 128.0f);
+
+    ::glTexCoord2f(((float) i + f) * texU, ((float) j + 7.99f) * texV);
     ::glVertex3f(this->posX + f - 1.0f - (float) k, this->posY + 7.99f, 0.0f);
     ::glEnd();
 
@@ -225,17 +248,20 @@ int FontRenderer::drawString(const std::string &text, int x, int y, int color) {
 }
 
 int FontRenderer::drawString(const std::string &text, float x, float y, int color, bool dropShadow) {
-    GlStateManager::enableAlpha_();
     this->resetStyles();
     int i;
 
+    GlStateManager::enableAlpha_();
+    GlStateManager::alphaFunc_(GL_GREATER, 0.1f);
+
     if (dropShadow) {
-        i = this->renderString(text, x + 1.0f, y + 1.0f, color, true);
-        i = std::max(i, this->renderString(text, x, y, color, false));
+        i = this->renderString(text, x, y, color, false);
+        i = std::max(i, this->renderString(text, x + 1.0f, y + 1.0f, color, true));
     } else {
         i = this->renderString(text, x, y, color, false);
     }
 
+    GlStateManager::disableAlpha_();
     return i;
 }
 
@@ -415,6 +441,7 @@ int FontRenderer::renderString(const std::string &text, float x, float y, int co
         this->blue = (float) (color >> 8 & 255) / 255.0f;
         this->green = (float) (color & 255) / 255.0f;
         this->alpha = (float) (color >> 24 & 255) / 255.0f;
+        GlStateManager::enableTexture2D_();
         GlStateManager::color_(this->red, this->blue, this->green, this->alpha);
         this->posX = x;
         this->posY = y;

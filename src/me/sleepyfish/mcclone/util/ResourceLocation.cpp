@@ -6,6 +6,7 @@
 #include "ResourceLocation.h"
 
 #include "../../sava/SavaUtil.h"
+#include "../debug/Logger.h"
 
 ResourceLocation::ResourceLocation(const std::string &resourceName) {
     auto [domain, path] = ResourceLocation::SplitObjectName(resourceName);

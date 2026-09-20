@@ -341,6 +341,8 @@ void GlStateManager::rotate_(float angle, float x, float y, float z) { ::glRotat
 
 void GlStateManager::scale_(float x, float y, float z) { ::glScalef(x, y, z); }
 
+void GlStateManager::scale_(int x, int y, int z) { ::glScalef((float) x, (float) y, (float) z); }
+
 void GlStateManager::scale_(double x, double y, double z) { ::glScaled(x, y, z); }
 
 void GlStateManager::translate_(float x, float y, float z) { ::glTranslatef(x, y, z); }

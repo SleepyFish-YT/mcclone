@@ -28,6 +28,7 @@ template<typename T>
 class FutureTaskQueue;
 class TextureMap;
 class SoundHandler;
+class FontRenderer;
 class TextureManager;
 class IResourceManager;
 class IReloadableResourceManager;
@@ -159,6 +160,10 @@ public:
 
     std::unique_ptr<SoundHandler> mcSoundHandler{};
 
+    std::unique_ptr<FontRenderer> fontRendererObj{};
+
+    std::unique_ptr<FontRenderer> standardGalacticFontRenderer{};
+
     int displayWidth{};
 
     int displayHeight{};
@@ -238,6 +243,8 @@ public:
     void runTick(); // throws IOException
 
     std::vector<BufferedImage> getIcons() const;
+
+    void refreshResources();
 
 };
 

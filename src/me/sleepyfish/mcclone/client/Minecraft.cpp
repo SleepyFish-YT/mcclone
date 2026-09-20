@@ -26,6 +26,7 @@
 #include "resources/DefaultResourcePack.h"
 #include "resources/ResourceIndex.h"
 #include "resources/data/IMetadataSerializer.h"
+#include "resources/data/PackMetadataSectionSerializer.h"
 #include "shader/Framebuffer.h"
 #include "gui/ScaledResolution.h"
 #include "../debug/Logger.h"
@@ -38,6 +39,7 @@
 #include "../util/McCloneError.h"
 #include "../crash/CrashReport.h"
 #include "../client/resources/AbstractResourcePack.h"
+#include "../client/gui/FontRenderer.h"
 #include "renderer/texture/DynamicTexture.h"
 
 #ifdef _WIN32
@@ -62,13 +64,8 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->fileResourcepacks = gameConfig->folderInformation.resourcePacksDir;
 
     {
-        ResourceIndex resIndex(
-                gameConfig->folderInformation.assetsDir,
-                gameConfig->folderInformation.assetIndexFile.stem().string()
-        );
-
-        this->mcDefaultResourcePack = std::make_unique<DefaultResourcePack>(gameConfig->folderInformation.assetsDir / "resources", resIndex.getResourceMap());
-    }
+    this->mcDefaultResourcePack = nullptr;
+}
 
     this->launchedVersion = gameConfig->gameInformation.version;
     // this->profileProperties = gameConfig->userInformation.profileProperties;
@@ -97,7 +94,6 @@ Minecraft::Minecraft(GameConfiguration *gameConfig) :
     this->mcProfiler->profilingEnabled = true;
 
     this->gameSettings = std::make_unique<GameSettings>(*this, this->mcDataDir);
-    this->defaultResourcePacks.push_back(this->mcDefaultResourcePack);
 
     this->objectMouseOver = std::make_unique<MovingObjectPosition>();
 
@@ -155,7 +151,7 @@ void Minecraft::run(std::stop_token st) {
 
     try {
         while (!st.stop_requested()) {
-            if (!this->hasCrashed /* || this->crashReporter != nullptr */) {
+            if (!this->hasCrashed || this->crashReporter != nullptr) {
                 try {
                     this->runGameLoop();
                 } catch (const std::exception &e) {
@@ -201,8 +197,11 @@ void Minecraft::initializeFramebuffer() {
             this->gameSettings.get()
     );
     this->mcResourceManager = std::make_unique<SimpleReloadableResourceManager>(this->metadataSerializer_.get());
-
-    this->mcResourceManager = std::make_unique<SimpleReloadableResourceManager>(this->metadataSerializer_.get());
+    std::vector<std::shared_ptr<IResourcePack>> packs;
+    for (const auto &entry : this->mcResourcePackRepository->getRepositoryEntries()) {
+        packs.push_back(std::shared_ptr<IResourcePack>(entry.getResourcePack(), [](IResourcePack*) {}));
+    }
+    this->mcResourceManager->reloadResources(packs);
     this->renderEngine = std::make_unique<TextureManager>(this->mcResourceManager.get());
 
     this->mcSoundHandler = std::make_unique<SoundHandler>(this->mcResourceManager.get(), this->gameSettings.get(), this->_soundEngine.get());
@@ -216,6 +215,7 @@ void Minecraft::initializeFramebuffer() {
     this->renderEngine->loadTickableTexture(TextureMap::LOCATION_BLOCKS_TEXTURE, this->textureMapBlocks.get());
     this->renderEngine->bindTexture(TextureMap::LOCATION_BLOCKS_TEXTURE);
     this->textureMapBlocks->setBlurMipmapDirect(false, this->gameSettings->mipmapLevels > 0);
+
     /*
     this->modelManager = new ModelManager(this->textureMapBlocks);
     this->mcResourceManager->registerReloadListener(this->modelManager);
@@ -251,6 +251,10 @@ void Minecraft::initializeFramebuffer() {
 
     this->renderGlobal->makeEntityOutlineShader();
     */
+
+    ResourceLocation resLoc("textures/font/default.png");
+    Logger::log("Loading font {}", resLoc.toString());
+    this->fontRendererObj = std::make_unique<FontRenderer>(this->gameSettings.get(), resLoc, this->renderEngine.get(), true);
 }
 
 void Minecraft::updateFramebufferSize() {
@@ -341,6 +345,8 @@ void Minecraft::renderGameLoop(bool hasFocus) {
 
     const long long time_beforeFramebuffer = Minecraft::getHighResTime();
 
+    ScaledResolution scaledRes(*this);
+
     this->mcProfiler->startSection("render");
 
     this->framebufferMc->bindFramebuffer_(true);
@@ -372,15 +378,18 @@ void Minecraft::renderGameLoop(bool hasFocus) {
                     constexpr double x0 = 64.0,  y0 = 64.0;
                     constexpr double x1 = 128.0, y1 = 128.0;
 
-                    static BufferedImage img = this->mcDefaultResourcePack->getPackImage();
+                    static BufferedImage img = this->mcResourcePackRepository->getRepositoryEntries()[0].getResourcePack()->getPackImage();
                     static DynamicTexture texture = DynamicTexture(img);
 
                     static Tessellator &tess = Tessellator::getInstance();
                     WorldRenderer &renderer = tess.getWorldRenderer();
 
+                    GlStateManager::enableBlend_();
+                    GlStateManager::blendFunc_(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    GlStateManager::disableDepth_();
                     GlStateManager::bindTexture_(texture.getGlTextureId());
 
-                    renderer.begin(7, DefaultVertexFormats::POSITION_TEX);
+                    renderer.begin(7, DefaultVertexFormats::POSITION_TEX_NORMAL);
                     renderer.pos(x0, y1, 0).tex(0, 1).endVertex();
                     renderer.pos(x1, y1, 0).tex(1, 1).endVertex();
                     renderer.pos(x1, y0, 0).tex(1, 0).endVertex();
@@ -388,6 +397,14 @@ void Minecraft::renderGameLoop(bool hasFocus) {
                     tess.draw();
 
                     GlStateManager::bindTexture_(0);
+                    GlStateManager::enableDepth_();
+                    GlStateManager::disableBlend_();
+
+                    GlStateManager::pushMatrix_();
+                    double scale = scaledRes.getScaleFactor();
+                    GlStateManager::scale_(scale, scale, scale);
+                    this->fontRendererObj->drawStringWithShadow("https://github.com/SleepyFish-YT/mcclone", 2, 2, -1);
+                    GlStateManager::popMatrix_();
                 }
                 this->mcProfiler->endSection();
             }
@@ -493,11 +510,11 @@ void Minecraft::handleKeypress(int key, int scancode, int action, int mods) {
 
                     // F3+T - refresh resources
                     if (key == GLFW_KEY_T) {
-                        // this->refreshResources();
+                        this->refreshResources();
                     }
 
                     if (key == GLFW_KEY_R) {
-                        // this->refreshResources();
+                        this->refreshResources();
                     }
 
                     if (key == GLFW_KEY_G) {
@@ -921,15 +938,13 @@ Framebuffer *Minecraft::getFramebuffer() noexcept {
 }
 
 void Minecraft::registerMetadataSerializers() {
-    // this->metadataSerializer_->registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
-    // this->metadataSerializer_->registerMetadataSectionType(new FontMetadataSectionSerializer(), FontMetadataSection.class);
-    // this->metadataSerializer_->registerMetadataSectionType(new AnimationMetadataSectionSerializer(), AnimationMetadataSection.class);
-    // this->metadataSerializer_->registerMetadataSectionType(new PackMetadataSectionSerializer(), PackMetadataSection.class);
-    // this->metadataSerializer_->registerMetadataSectionType(new LanguageMetadataSectionSerializer(), LanguageMetadataSection.class);
+    this->metadataSerializer_->registerMetadataSectionType(new PackMetadataSectionSerializer());
 }
 
 std::vector<BufferedImage> Minecraft::getIcons() const {
-    const BufferedImage base = this->mcDefaultResourcePack->getPackImage();
+    const auto &entries = this->mcResourcePackRepository->getRepositoryEntries();
+    if (entries.empty()) return {};
+    const BufferedImage base = entries[0].getResourcePack()->getPackImage();
 
     std::vector<BufferedImage> icons;
     icons.reserve(3);
@@ -937,4 +952,8 @@ std::vector<BufferedImage> Minecraft::getIcons() const {
         icons.push_back(base.sized(s, s));
 
     return icons;
+}
+
+void Minecraft::refreshResources() {
+
 }

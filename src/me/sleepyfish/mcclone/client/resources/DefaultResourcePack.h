@@ -37,6 +37,10 @@ public:
     BufferedImage getPackImage() override;
     std::string getPackName() const override;
 
+    std::unique_ptr<std::istream> openRootFile(const std::string &name) const;
+
+    std::filesystem::path getResourcesRoot() const { return this->resourcesRoot; }
+
 protected:
 
     std::unique_ptr<std::istream> getInputStreamByName(const std::string& name) override;
@@ -49,7 +53,6 @@ private:
 
     std::unordered_map<std::string, std::filesystem::path> mapAssets;
 
-    std::unique_ptr<std::istream> openRootFile(const std::string &name) const;
     std::filesystem::path resourcesRoot;
 
 };

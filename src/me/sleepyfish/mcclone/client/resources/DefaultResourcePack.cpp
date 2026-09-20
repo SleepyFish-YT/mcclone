@@ -10,18 +10,35 @@
 #include "../../../sava/BufferedImage.h"
 #include "data/IMetadataSerializer.h"
 
+#include <any>
+#include <filesystem>
 #include <fstream>
-#include <stdexcept>
+#include <ios>
+#include <memory>
+#include <system_error>
+#include <utility>
 
 namespace {
 
-    // one stat, rejects directories, never throws
-    std::unique_ptr<std::ifstream> openFile(const std::filesystem::path &p) {
+    namespace fs = std::filesystem;
+
+    std::unique_ptr<std::ifstream> openFile(const fs::path &p) {
         std::error_code ec;
-        if (!std::filesystem::is_regular_file(p, ec)) return nullptr;
+        if (!fs::is_regular_file(p, ec)) return nullptr;
         auto s = std::make_unique<std::ifstream>(p, std::ios::binary);
         if (!*s) return nullptr;
         return s;
+    }
+
+    // Stat only: no stream allocation, no file handle. Never throws.
+    bool isFile(const fs::path &p) noexcept {
+        std::error_code ec;
+        return fs::is_regular_file(p, ec);
+    }
+
+    // assets/mcclone/<domain>/<path>, relative to the working directory.
+    fs::path assetPathFor(const ResourceLocation &loc) {
+        return fs::path("assets/mcclone") / loc.getResourceDomain() / loc.getResourcePath();
     }
 
 } // namespace
@@ -29,50 +46,40 @@ namespace {
 const std::unordered_set<std::string> DefaultResourcePack::defaultResourceDomains = { std::string(MCCLONE_NAME), "realms" };
 
 DefaultResourcePack::DefaultResourcePack(std::filesystem::path root, std::unordered_map<std::string, std::filesystem::path> mapAssets) :
-    AbstractResourcePack(""),
-    mapAssets(std::move(mapAssets)),
-    resourcesRoot(std::move(root))
+        AbstractResourcePack(""),
+        mapAssets(std::move(mapAssets)),
+        resourcesRoot(std::move(root))
 {
-    if (!std::filesystem::exists(resourcesRoot)) {
-        std::filesystem::create_directories(resourcesRoot);
+    // No-op if it already exists. Failure is non-fatal: openRootFile() just misses.
+    if (!this->resourcesRoot.empty()) {
+        std::error_code ec;
+        fs::create_directories(this->resourcesRoot, ec);
     }
 }
 
 std::unique_ptr<std::istream> DefaultResourcePack::getInputStream(const ResourceLocation& location) {
-    auto stream = this->getResourceStream(location);
-    if (stream) return stream;
+    if (auto s = this->getResourceStream(location)) return s;
+    if (auto s = this->getInputStreamAssets(location)) return s;
 
-    stream = this->getInputStreamAssets(location);
-    if (stream) return stream;
-
-    throw std::ios_base::failure("Could not find resource: " + location.getResourcePath());
+    throw std::ios_base::failure("Could not find resource: " + location.toString());
 }
 
 std::unique_ptr<std::istream> DefaultResourcePack::getInputStreamAssets(const ResourceLocation& location) const {
-    auto it = this->mapAssets.find(location.toString());
+    const auto it = this->mapAssets.find(location.toString());
     if (it == this->mapAssets.end()) return nullptr;
 
-    if (!std::filesystem::is_regular_file(it->second)) return nullptr;
-
-    auto stream = std::make_unique<std::ifstream>(it->second, std::ios::binary);
-    if (!stream->is_open()) return nullptr;
-
-    return stream;
+    return openFile(it->second);
 }
 
 std::unique_ptr<std::istream> DefaultResourcePack::getResourceStream(const ResourceLocation& location) const {
-    std::filesystem::path assetPath = std::filesystem::path("assets") / location.getResourceDomain() / location.getResourcePath();
-
-    if (!std::filesystem::exists(assetPath)) return nullptr;
-
-    auto stream = std::make_unique<std::ifstream>(assetPath, std::ios::binary);
-    if (!stream->is_open()) return nullptr;
-
-    return stream;
+    return openFile(assetPathFor(location));
 }
 
 bool DefaultResourcePack::resourceExists(const ResourceLocation& location) {
-    return this->getResourceStream(location) != nullptr || this->mapAssets.count(location.toString()) > 0;
+    if (isFile(assetPathFor(location))) return true;
+
+    const auto it = this->mapAssets.find(location.toString());
+    return it != this->mapAssets.end() && isFile(it->second);
 }
 
 std::unordered_set<std::string> DefaultResourcePack::getResourceDomains() const {
@@ -80,13 +87,11 @@ std::unordered_set<std::string> DefaultResourcePack::getResourceDomains() const 
 }
 
 std::any DefaultResourcePack::getPackMetadata(IMetadataSerializer& metadataSerializer, const std::string& metadataSectionName) {
-    auto it = this->mapAssets.find("pack.mcmeta");
-    if (it == this->mapAssets.end()) return std::any{};
+    auto stream = this->openRootFile("pack.mcmeta");
+    if (!stream) return std::any{};
 
     try {
-        std::ifstream stream(it->second, std::ios::binary);
-        if (!stream.is_open()) return std::any{};
-        return AbstractResourcePack::readMetadata(metadataSerializer, stream, metadataSectionName);
+        return AbstractResourcePack::readMetadata(metadataSerializer, *stream, metadataSectionName);
     } catch (const std::exception&) {
         return std::any{};
     }
@@ -100,7 +105,7 @@ BufferedImage DefaultResourcePack::getPackImage() {
     int width = 0, height = 0;
     auto imageData = TextureUtil::readImageData_(*stream, width, height);
 
-    return {imageData, width, height};
+    return {std::move(imageData), width, height};
 }
 
 std::string DefaultResourcePack::getPackName() const {
@@ -108,17 +113,11 @@ std::string DefaultResourcePack::getPackName() const {
 }
 
 std::unique_ptr<std::istream> DefaultResourcePack::getInputStreamByName(const std::string& name) {
-    std::filesystem::path path(name);
-    if (!std::filesystem::exists(path)) return nullptr;
-
-    auto stream = std::make_unique<std::ifstream>(path, std::ios::binary);
-    if (!stream->is_open()) return nullptr;
-
-    return stream;
+    return openFile(fs::path(name));
 }
 
 bool DefaultResourcePack::hasResourceName(const std::string& name) {
-    return std::filesystem::exists(std::filesystem::path(name));
+    return isFile(fs::path(name));
 }
 
 std::unique_ptr<std::istream> DefaultResourcePack::openRootFile(const std::string &name) const {
@@ -132,4 +131,3 @@ std::unique_ptr<std::istream> DefaultResourcePack::openRootFile(const std::strin
 
     return nullptr;
 }
-

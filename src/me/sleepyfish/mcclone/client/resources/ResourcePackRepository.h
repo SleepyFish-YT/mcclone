@@ -29,7 +29,7 @@ public:
 
         std::filesystem::path resourcePackFile;
         IResourcePack *reResourcePack{};
-        PackMetadataSection *rePackMetadataSection{};
+        std::shared_ptr<PackMetadataSection> rePackMetadataSection{};
         IMetadataSerializer *metadataSerializer_{};
 
     public:

@@ -107,7 +107,7 @@ ResourceIndex::ResourceIndex(const std::filesystem::path &assetsDir, const std::
 
             std::string key = it.key(); // one copy
             if (const auto slash = key.find('/'); slash != std::string::npos) {
-                key[slash] = ':'; // "minecraft/x" -> "minecraft:x" in place
+                key[slash] = ':'; // "mcclone/x" -> "mcclone:x" in place
             }
 
             this->resourceMap.emplace(std::move(key), objectsDir / hash.substr(0, 2) / hash);
