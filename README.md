@@ -27,6 +27,7 @@ OpenGL for rendering and OpenAL for spatial audio.
 
 - CMake 3.31+
 - C++20-compatible compiler (MSVC recommended on Windows)
+- Copy of any original Minecraft 1.8 Resourcepack
 - [vcpkg](https://github.com/microsoft/vcpkg)
 
 ### Dependencies (via vcpkg)
@@ -40,6 +41,9 @@ OpenGL for rendering and OpenAL for spatial audio.
 | [OpenAL Soft](https://github.com/kcat/openal-soft) | Spatial audio |
 | [STB](https://github.com/nothings/stb) | Image loading |
 | [nlohmann/json](https://github.com/nlohmann/json) | JSON parsing |
+| [miniz](https://github.com/richgel999/miniz) | Compression |
+| [libcurl](https://github.com/curl/curl) | HTTP requests |
+| [openssl](https://github.com/openssl/openssl) | Encryption |
 | winmm | Windows multimedia |
 
 ### Steps
