@@ -49,6 +49,10 @@ public:
         return this->scaleFactor;
     }
 
+    int getGlScaleFactor() const noexcept {
+        return this->scaleFactor + 1;
+    }
+
 };
 
 

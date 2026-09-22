@@ -401,7 +401,8 @@ void Minecraft::renderGameLoop(bool hasFocus) {
                     GlStateManager::disableBlend_();
 
                     GlStateManager::pushMatrix_();
-                    double scale = scaledRes.getScaleFactor();
+                    const int scale = scaledRes.getGlScaleFactor();
+                    Logger::log("Scale: {}", scale);
                     GlStateManager::scale_(scale, scale, scale);
                     this->fontRendererObj->drawStringWithShadow("https://github.com/SleepyFish-YT/mcclone", 2, 2, -1);
                     GlStateManager::popMatrix_();

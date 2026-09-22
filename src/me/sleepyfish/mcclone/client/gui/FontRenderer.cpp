@@ -101,9 +101,6 @@ void FontRenderer::readFontTexture() {
         const int k = j / 16;
         const int l = i / 16;
         const int i1 = 1;
-
-        // FIX: Force scale factor to 1.0. The original 1.8.9 code used `8.0F / l`,
-        // which breaks 256x256 textures by halving the width but not the height.
         const float f = 1.0f;
 
         for (int j1 = 0; j1 < 256; ++j1) {
@@ -167,7 +164,6 @@ float FontRenderer::renderChar(wchar_t ch, bool italic) {
 }
 
 float FontRenderer::renderDefaultChar(int ch, bool italic) {
-    // Multiply by 16 because default.png cells are 16x16
     int i = ch % 16 * 8;
     int j = ch / 16 * 8;
     int k = italic ? 1 : 0;
@@ -182,7 +178,6 @@ float FontRenderer::renderDefaultChar(int ch, bool italic) {
     ::glTexCoord2f((float) i * texU, (float) j * texV);
     ::glVertex3f(this->posX + (float) k, this->posY, 0.0f);
 
-    // Hardcoded 7.99f keeps the height at exactly 8 pixels on screen
     ::glTexCoord2f((float) i * texU, ((float) j + 7.99f) * texV);
     ::glVertex3f(this->posX - (float) k, this->posY + 7.99f, 0.0f);
 
@@ -217,10 +212,10 @@ float FontRenderer::renderUnicodeChar(wchar_t ch, bool italic) {
         this->loadGlyphTexture(i);
         int j = this->glyphWidth[ch] >> 4;
         int k = this->glyphWidth[ch] & 15;
-        float f = (float) j;
-        float f1 = (float) (k + 1);
-        float f2 = (float) (ch % 16 * 16) + f;
-        float f3 = (float) ((ch & 255) / 16 * 16);
+        auto f = (float) j;
+        auto f1 = (float) (k + 1);
+        auto f2 = (float) (ch % 16 * 16) + f;
+        auto f3 = (float) ((ch & 255) / 16 * 16);
         float f4 = f1 - f - 0.02f;
         float f5 = italic ? 1.0f : 0.0f;
 
@@ -280,7 +275,7 @@ void FontRenderer::resetStyles() {
 
 void FontRenderer::renderStringAtPos(const std::string &text, bool shadow) {
     for (int i = 0; i < text.length(); ++i) {
-        unsigned char c0 = static_cast<unsigned char>(text[i]);
+        auto c0 = static_cast<unsigned char>(text[i]);
 
         // 167 is the § (section sign) in Latin-1/extended ASCII
         if (c0 == 167 && i + 1 < text.length()) {
@@ -326,7 +321,7 @@ void FontRenderer::renderStringAtPos(const std::string &text, bool shadow) {
 
             ++i;
         } else {
-            wchar_t wc0 = static_cast<wchar_t>(c0);
+            auto wc0 = static_cast<wchar_t>(c0);
             size_t j = CHAR_MAP.find(wc0);
             int j_idx = (j != std::wstring::npos) ? static_cast<int>(j) : -1;
 
@@ -527,7 +522,7 @@ std::string FontRenderer::trimStringToWidth(const std::string &text, int width, 
     bool flag1 = false;
 
     for (int l = j; l >= 0 && l < text.length() && i < width; l += k) {
-        unsigned char c0 = static_cast<unsigned char>(text[l]);
+        auto c0 = static_cast<unsigned char>(text[l]);
         int i1 = this->getCharWidth(static_cast<wchar_t>(c0));
 
         if (flag) {
